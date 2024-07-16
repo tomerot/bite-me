@@ -1,5 +1,6 @@
 package gui;
 
+import client.OrderingClient;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,7 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import logic.OrderingClient;
 
 public class HomeClientPageController {
 

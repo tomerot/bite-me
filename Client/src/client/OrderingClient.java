@@ -1,11 +1,17 @@
-package logic;
+package client;
 
 import java.io.IOException;
 import java.util.List;
+
 import gui.ClientGuiController;
 import gui.HomeClientPageController;
 import gui.ViewAndUpdateController;
 import javafx.application.Platform;
+import logic.ClientActionsEnum;
+import logic.ClientDataContainer;
+import logic.Order;
+import logic.ServerActionsEnum;
+import logic.ServerDataContainer;
 import ocsf.client.AbstractClient;
 
 //class for handling the client's connection to the server, sending requests, and processing responses.
