@@ -24,7 +24,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import logic.Order;
 
-public class ViewAndUpdateController implements Initializable {
+public class ViewAndUpdateController {
 
 	private static ViewAndUpdateController instance;
 
@@ -68,9 +68,9 @@ public class ViewAndUpdateController implements Initializable {
 	// Observable list to hold order data for the table
 	private ObservableList<Order> orderData = FXCollections.observableArrayList();
 
-	@Override
+	@FXML
 	// initialize - first thing to happen when oppening this page
-	public void initialize(URL arg0, ResourceBundle arg1) {
+	public void initialize() {
 		OrderingClient.setViewController(this);
 		// Set up cell value factories for each table column
 		restaurantColumn.setCellValueFactory(new PropertyValueFactory<>("restaurant"));
@@ -104,7 +104,7 @@ public class ViewAndUpdateController implements Initializable {
 	// Method to handle updating an order's price and address by given id
 	public void updateOrderPriceAndAddress() {
 		//make sure all field are entered
-		if (OrderNumberField.getText() == "" || TotalPriceField.getText()== "" || OrderAddressField.getText() == "") {
+		if (OrderNumberField.getText().isEmpty() || TotalPriceField.getText().isEmpty() || OrderAddressField.getText().isEmpty()) {
 			messageLabel.setText("Make Sure all fiels entered!");
 			return;
 		}

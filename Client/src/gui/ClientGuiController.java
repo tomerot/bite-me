@@ -15,8 +15,8 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class ClientGuiController {
-	private HomeClientPageController sfc;
-	private static int itemIndex = 3;
+	//private HomeClientPageController sfc;
+	//private static int itemIndex = 3;
 
 	@FXML
 	private Button btnConnect = null;
