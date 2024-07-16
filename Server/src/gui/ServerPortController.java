@@ -39,6 +39,7 @@ public class ServerPortController {
 	private Label lblServerStatus;
 	@FXML
 	private ListView lvConnectedClients;
+	@FXML
 	
 	private ObservableList<String> connectedClientsList = FXCollections.observableArrayList();
 
@@ -48,7 +49,7 @@ public class ServerPortController {
 
     @FXML
     void initialize() {
-        lvConnectedClients.setItems(connectedClientsList);
+        lvConnectedClients.setItems(connectedClientsList); 
     }
     
 	@FXML

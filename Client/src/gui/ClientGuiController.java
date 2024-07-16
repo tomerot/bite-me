@@ -1,5 +1,6 @@
 package gui;
 
+import client.OrderingClient;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,11 +13,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import logic.OrderingClient;
 
 public class ClientGuiController {
-	private HomeClientPageController sfc;
-	private static int itemIndex = 3;
+	//private HomeClientPageController sfc;
+	//private static int itemIndex = 3;
 
 	@FXML
 	private Button btnConnect = null;
