@@ -24,5 +24,4 @@ public class ClientDataContainer implements Serializable {
 	public Object getMessage() {
 		return message;
 	}
-
 }

@@ -9,6 +9,7 @@ public class ServerDataContainer implements Serializable {
 	private ServerActionsEnum serverAction;
 	private Object message;
 	
+	// Constructor to initialize the serverAction and message fields
 	public ServerDataContainer(ServerActionsEnum action,Object message) 
 	{
 		serverAction=action;

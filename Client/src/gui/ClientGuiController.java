@@ -100,6 +100,7 @@ public class ClientGuiController {
 
 	public void getExitBtn() {
 		System.out.println("Exiting...");
+		Platform.exit();
 		System.exit(1);
 	}
 }
