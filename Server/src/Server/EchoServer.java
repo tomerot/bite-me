@@ -45,7 +45,6 @@ public class EchoServer extends AbstractServer {
 
 	// Method to handle messages received from the client
 	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
-		String clientIp = client.getInetAddress().getHostAddress(); // maybe will need to user client ip
 		ClientDataContainer data = (ClientDataContainer) msg;
 		ClientActionsEnum action = data.getAction();
 		switch (action) {
@@ -55,32 +54,13 @@ public class EchoServer extends AbstractServer {
 		case UPDATE_ORDER:
 			handleUpdateOrder((Order) data.getMessage(), client);
 			break;
+		case DISCONNECT:
+			clientDisconnected(client);
+			break;
 		default:
 			// we will implement here alot of more things in the final project
 			return;
 		}
-	}	
-	
-	//send client message with his IP,host,status
-	private void handleClientConnection(ConnectionToClient client) {
-	    String clientIp = client.getInetAddress().getHostAddress();
-	    String clientHostName = client.getInetAddress().getHostName();
-	    String addressHost;
-	    //if they the same user tried entering server IP as "LOCALHOST" which will get the IP instead the host name
-	    if (clientIp.equals(clientHostName)) {
-	    	try {
-				clientHostName = InetAddress.getLocalHost().getHostName();
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			}
-	    }
-	    addressHost = "Client IP: " + clientIp + "\nClient Host Name: " + clientHostName + "\nStatus: Connected";
-	    ServerDataContainer data = new ServerDataContainer(ServerActionsEnum.UPDATE_CONNECTION_INFO, addressHost);
-	    try {
-	        client.sendToClient(data);
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
 	}
 
 	// Method to handle Updating Order
@@ -114,7 +94,7 @@ public class EchoServer extends AbstractServer {
 	}
 
 	// method to start the server
-	public static boolean  startServer(DBConnectionDetails db, Integer port, ServerPortController serverController) {
+	public static boolean startServer(DBConnectionDetails db, Integer port, ServerPortController serverController) {
 		// try to connect the database
 		Connection dbConn = DBController.connectToMySqlDB(db);
 		// if failed -> can't start the server.
@@ -143,27 +123,81 @@ public class EchoServer extends AbstractServer {
 		}
 	}
 
-	
-	//when client connect call handleClientConnection -> send message to the client with his IP,host,status
+	// send client message with his IP,host,status
+	private void handleClientConnection(ConnectionToClient client) {
+		String clientIP = client.getInetAddress().getHostAddress();
+		String clientHostName = client.getInetAddress().getHostName();
+		if (clientIP.equals(clientHostName)) {
+			try {
+				clientHostName = InetAddress.getLocalHost().getHostName();
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		String clientInfo = "IP:" + clientIP + "\nHOST:" + clientHostName + "\nStatus: Connected";
+		ServerDataContainer data = new ServerDataContainer(ServerActionsEnum.UPDATE_CONNECTION_INFO, clientInfo);
+		try {
+			client.sendToClient(data);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// when client connect call handleClientConnection -> send message to the client
+	// with his IP,host,status
 	@Override
 	protected void clientConnected(ConnectionToClient client) {
-	    super.clientConnected(client);
-	    handleClientConnection(client);
+		super.clientConnected(client);
+		String clientIP = client.getInetAddress().getHostAddress();
+		String clientHostName = client.getInetAddress().getHostName();
+
+		if (clientIP.equals(clientHostName)) {
+			try {
+				clientHostName = InetAddress.getLocalHost().getHostName();
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			}
+		}
+
+		String clientInfo = "IP:" + clientIP + " HOST:" + clientHostName;
+		serverController.addConnectedClient(clientInfo);
+		handleClientConnection(client);
 	}
-	
+
+	@Override
+	protected void clientDisconnected(ConnectionToClient client) {
+		super.clientDisconnected(client);
+		String clientIP = client.getInetAddress().getHostAddress();
+		String clientHostName = client.getInetAddress().getHostName();
+
+		if (clientIP.equals(clientHostName)) {
+			try {
+				clientHostName = InetAddress.getLocalHost().getHostName();
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			}
+		}
+
+		String clientInfo = "IP:" + clientIP + " HOST:" + clientHostName;
+		serverController.removeConnectedClient(clientInfo);
+	}
+
+	// stop server from listening and close him
 	public static void stopServer() {
 		// if there is no server return
-		if(server==null)
+		if (server == null)
 			return;
 		try {
 			server.stopListening();
 			server.close();
-			server=null;
-		}catch(IOException ex) {
+			server = null;
+		} catch (IOException ex) {
 			System.out.println("Error while closing server");
 			ex.printStackTrace();
 		}
 	}
+
 	/**
 	 * This method overrides the one in the superclass. Called when the server
 	 * starts listening for connections.

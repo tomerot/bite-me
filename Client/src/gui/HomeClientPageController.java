@@ -32,22 +32,25 @@ public class HomeClientPageController {
 		Pane root = loader.load(getClass().getResource("/gui/ViewAndUpdate.fxml").openStream());
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add(getClass().getResource("/gui/ViewAndUpdate.css").toExternalForm());
-		primaryStage.setTitle("Client First Page");
+		primaryStage.setTitle("Client First/Home Page");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
 
+	// disconnect user from server, and exit
 	@FXML
 	private void getExitBtn(ActionEvent event) throws Exception {
-		System.out.println("exiting...");
+		OrderingClient.disconnectClientFromServer();
+		Platform.exit();
 		System.exit(0);
 	}
-	
+
 	@FXML
 	public void initialize() {
 		OrderingClient.setHomeController(this);
 	}
 
+	// update the label with relevant string
 	public void updateConnectionLabel(String info) {
 		Platform.runLater(() -> connectionInfoLabel.setText(info));
 	}

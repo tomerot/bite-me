@@ -2,7 +2,6 @@ package logic;
 
 import java.io.IOException;
 import java.util.List;
-
 import gui.ClientGuiController;
 import gui.HomeClientPageController;
 import gui.ViewAndUpdateController;
@@ -11,7 +10,6 @@ import ocsf.client.AbstractClient;
 
 //class for handling the client's connection to the server, sending requests, and processing responses.
 public class OrderingClient extends AbstractClient {
-
 	// Singleton instance of the client
 	private static OrderingClient client = null;
 	private ClientGuiController clientController;
@@ -72,6 +70,21 @@ public class OrderingClient extends AbstractClient {
 			e.printStackTrace();
 		}
 	}
+		
+	// send massage to the server to disconnect the client
+	public static void disconnectClientFromServer() {
+	    try {
+	        if (client != null) {
+	        	ClientDataContainer data = new ClientDataContainer(ClientActionsEnum.DISCONNECT, null);
+	            client.sendToServer(data);
+	            client.closeConnection();
+	            client = null;
+	            System.out.println("Client connection closed");
+	        }
+	    } catch (IOException e) {
+	        System.out.println("Error closing client connection: " + e.getMessage());
+	    }
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -81,11 +94,11 @@ public class OrderingClient extends AbstractClient {
 		ServerDataContainer data = (ServerDataContainer) msg;
 		ServerActionsEnum action = data.getAction();
 		switch (action) {
-		case ALL_ORDERS: //got list of all orders
+		case ALL_ORDERS: // list of all orders
 			List<Order> orders = (List<Order>) data.getMessage();
 			ViewAndUpdateController.updateOrdersInTable(orders);
 			break;
-		case UPDATE_ORDER_RESULT: //update order result
+		case UPDATE_ORDER_RESULT: //update order result msg
 			boolean success = (boolean) data.getMessage();
 			if (success) {
 				viewController.updateMessage("Order updated successfully");

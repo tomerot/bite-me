@@ -76,5 +76,6 @@ public class ClientController implements ChatIF
   {
     System.out.println("> " + message);
   }
+
 }
 //End of ConsoleChat class
