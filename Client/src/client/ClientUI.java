@@ -1,6 +1,6 @@
 package client;
 
-import gui.ClientGuiController;
+import gui.controllers.ClientConnectFormController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -12,7 +12,7 @@ public class ClientUI extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		ClientGuiController aFrame = new ClientGuiController();
+		ClientConnectFormController aFrame = new ClientConnectFormController();
 		aFrame.start(primaryStage); // start the ClientConnect gui (happening inside ClientGuiController start
 									// method)
 	}
