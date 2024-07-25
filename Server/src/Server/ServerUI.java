@@ -1,6 +1,6 @@
 package Server;
 
-import gui.ServerPortController;
+import gui.controllers.ServerPortController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

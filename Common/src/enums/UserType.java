@@ -1,0 +1,11 @@
+package enums;
+
+public enum UserType {
+	CUSTOMER,
+	CEO,
+	NORTH_MANAGER,
+	CENTER_MANAGER,
+	SOUTH_MANAGER,
+	SUPPLIER,
+	EMPLOYEE;
+}
