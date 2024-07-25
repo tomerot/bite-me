@@ -16,7 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-public class LoginPageController {
+public class LoginController {
 
 	@FXML
 	private Button btnConnect;
@@ -70,10 +70,33 @@ public class LoginPageController {
 					}
 					else {
 						if(userData.getUserType().equals("Customer")) {
-							displayWindow(event,"Customer Home Page", "CustomerPage");
-							// update isLoggedIn!
+							displayWindow(event, "Customer Home Page", "CustomerHomeScreen");
+							// update isLoggedIn in Db!
 						}
-						// ADD if Customer','CEO','North Manager','Center Manager','South Manager','Supplier','Employee'
+						if(userData.getUserType().equals("CEO")) {
+							displayWindow(event, "CEO Home Page", "CeoScreen");
+							// update isLoggedIn in Db!!
+						}
+						if(userData.getUserType().equals("North Manager")) {
+							displayWindow(event, "North Manager Home Page", "BranchManagerScreen");
+							// update isLoggedIn in Db!
+						}
+						if(userData.getUserType().equals("South Manager")) {
+							displayWindow(event, "South Home Page", "BranchManagerScreen");
+							// update isLoggedIn in Db!
+						}
+						if(userData.getUserType().equals("Center Manager")) {
+							displayWindow(event, "Center Home Page", "BranchManagerScreen");
+							// update isLoggedIn in Db!
+						}
+						if(userData.getUserType().equals("Supplier")) {
+							displayWindow(event, "Supplier Home Page", "SupplierScreen");
+							// update isLoggedIn in Db!
+						}
+						if(userData.getUserType().equals("Employee")) {
+							displayWindow(event, "Employee Home Page", "EmployeeScreen");
+							// update isLoggedIn in Db!
+						}
 					}
 				}
 			}

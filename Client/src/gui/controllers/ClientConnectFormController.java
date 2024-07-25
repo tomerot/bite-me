@@ -90,9 +90,9 @@ public class ClientConnectFormController {
 		FXMLLoader loader = new FXMLLoader();
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 		Stage primaryStage = new Stage();
-		Pane root = loader.load(getClass().getResource("/gui/view/LoginPageController.fxml").openStream());
+		Pane root = loader.load(getClass().getResource("/gui/view/LoginScreen.fxml").openStream());
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(getClass().getResource("/gui/view/LoginPageController.css").toExternalForm());
+		scene.getStylesheets().add(getClass().getResource("/gui/view/LoginScreen.css").toExternalForm());
 		primaryStage.setTitle("Main");
 		primaryStage.setScene(scene);
 		primaryStage.show();
