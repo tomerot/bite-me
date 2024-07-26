@@ -4,5 +4,6 @@ package enums;
 public enum ServerResponse {
 	UPDATE_CONNECTION_INFO, //call client with STRING containing his IP + HOST + STATUS
 	USER_FOUND,
-	USER_NOT_FOUND;
+	USER_NOT_FOUND,
+	BRANCH_MANAGER_DATA;
 }

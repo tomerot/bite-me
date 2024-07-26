@@ -4,5 +4,6 @@ package enums;
 public enum ClientRequest {
 	DISCONNECT, //call server to disconnect client from server 
 	CHECK_USER_DATA,
-	UPDATE_USER_DATA;
+	UPDATE_USER_DATA,
+	FETCH_BRANCH_MANAGER_DATA;
 }

@@ -72,31 +72,31 @@ public class LoginController {
 						user.setisLoggedIn(1);
 						ClientMainController.requestUpdateUserData(user);
 						if(userData.getUserType().equals("Customer")) {
-							displayWindow(event, "Customer Home Page", "CustomerHomeScreen");
+							displayWindow(event, "Customer Home Page", "CustomerHomeScreen", user);
 							// update isLoggedIn in Db!
 						}
 						if(userData.getUserType().equals("CEO")) {
-							displayWindow(event, "CEO Home Page", "CeoScreen");
+							displayWindow(event, "CEO Home Page", "CeoScreen", user);
 							// update isLoggedIn in Db!!
 						}
 						if(userData.getUserType().equals("North Manager")) {
-							displayWindow(event, "North Manager Home Page", "BranchManagerScreen");
+							displayWindow(event, "North Manager Home Page", "BranchManagerScreen", user);
 							// update isLoggedIn in Db!
 						}
 						if(userData.getUserType().equals("South Manager")) {
-							displayWindow(event, "South Home Page", "BranchManagerScreen");
+							displayWindow(event, "South Home Page", "BranchManagerScreen", user);
 							// update isLoggedIn in Db!
 						}
 						if(userData.getUserType().equals("Center Manager")) {
-							displayWindow(event, "Center Home Page", "BranchManagerScreen");
+							displayWindow(event, "Center Home Page", "BranchManagerScreen", user);
 							// update isLoggedIn in Db!
 						}
 						if(userData.getUserType().equals("Supplier")) {
-							displayWindow(event, "Supplier Home Page", "SupplierScreen");
+							displayWindow(event, "Supplier Home Page", "SupplierScreen", user);
 							// update isLoggedIn in Db!
 						}
 						if(userData.getUserType().equals("Employee")) {
-							displayWindow(event, "Employee Home Page", "EmployeeScreen");
+							displayWindow(event, "Employee Home Page", "EmployeeScreen", user);
 							// update isLoggedIn in Db!
 						}
 					}
@@ -110,16 +110,20 @@ public class LoginController {
 		}
 	}
 	
-	public void displayWindow(ActionEvent event, String title, String page) throws Exception {
+	public void displayWindow(ActionEvent event, String title, String page, User user) throws Exception {
 		String view = "/gui/view/" + page + ".fxml";
-		FXMLLoader loader = new FXMLLoader();
+	    FXMLLoader loader = new FXMLLoader(getClass().getResource(view));
+	    Pane root = loader.load();
+	    BranchManagerHomeScreenController controller = loader.getController();
+	    controller.setUser(user);
+	    
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 		Stage primaryStage = new Stage();
-		Pane root = loader.load(getClass().getResource(view).openStream());
 		Scene scene = new Scene(root);
 		primaryStage.setTitle(title);
 		primaryStage.setScene(scene);
 		primaryStage.show();
+		
 	}
 	
 	

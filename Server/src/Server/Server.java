@@ -66,6 +66,9 @@ public class Server extends AbstractServer {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		case FETCH_BRANCH_MANAGER_DATA:
+			user= (User) data.getMessage();
+			handleBranchManagerData(user, client);
 		default:
 			return;
 		}
@@ -80,12 +83,14 @@ public class Server extends AbstractServer {
 	
 	
 	
-	
-	
-	
-	
-	
-	
+	private void handleBranchManagerData(User user, ConnectionToClient client) {
+		ServerResponseDataContainer response = QueryControl.userQueries.FetchBranchManagerData(dbConn, user);
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	
 	private void handleUpdateUser(User user, ConnectionToClient client) throws Exception {
