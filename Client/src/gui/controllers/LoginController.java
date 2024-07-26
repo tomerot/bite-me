@@ -69,6 +69,8 @@ public class LoginController {
 						return;
 					}
 					else {
+						user.setisLoggedIn(1);
+						ClientMainController.requestUpdateUserData(user);
 						if(userData.getUserType().equals("Customer")) {
 							displayWindow(event, "Customer Home Page", "CustomerHomeScreen");
 							// update isLoggedIn in Db!

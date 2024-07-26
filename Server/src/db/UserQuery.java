@@ -46,4 +46,21 @@ public class UserQuery {
 		}
 		return response;
 	}
+	public void UpdateUserData(Connection dbConn, User user) throws Exception {
+		int affectedRows;
+		String query = "UPDATE users SET username=? ,password=? ,isLoggedIn=? ,Type=? ,Registered=? WHERE username = ?";
+		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+			stmt.setString(1, user.getUserName());
+			stmt.setString(2, user.getPassword());
+			stmt.setInt(3, user.getisLoggedIn());
+			stmt.setString(4, user.getUserType());
+			stmt.setInt(5, user.getRegistered());
+			stmt.setString(6, user.getUserName());
+			affectedRows = stmt.executeUpdate();
+			if (affectedRows == 0)
+				throw new Exception("User update IsLoggedIn failed\n");
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+	}
 }
