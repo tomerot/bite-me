@@ -22,4 +22,9 @@ public class ClientMainController {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.FETCH_BRANCH_MANAGER_DATA, user);
 		ClientMainController.accept(request);
 	}
+	
+	public static void requestCeoData(User user) {
+		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.FETCH_CEO_DATA, user);
+		ClientMainController.accept(request);
+	}
 }

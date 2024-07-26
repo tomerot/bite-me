@@ -69,6 +69,9 @@ public class Server extends AbstractServer {
 		case FETCH_BRANCH_MANAGER_DATA:
 			user= (User) data.getMessage();
 			handleBranchManagerData(user, client);
+		case FETCH_CEO_DATA:
+			user= (User) data.getMessage();
+			handleCeoData(user, client);
 		default:
 			return;
 		}
@@ -81,6 +84,15 @@ public class Server extends AbstractServer {
 	
 	
 	
+	
+	private void handleCeoData(User user, ConnectionToClient client) {
+		ServerResponseDataContainer response = QueryControl.userQueries.FetchCeoData(dbConn, user);
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	
 	private void handleBranchManagerData(User user, ConnectionToClient client) {

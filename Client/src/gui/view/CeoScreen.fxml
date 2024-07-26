@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.CeoHomeScreenController">
+   <children>
+      <Button fx:id="QuarterlyReports" layoutX="247.0" layoutY="226.0" mnemonicParsing="false" text="Quarterly Repors" onAction="#ShowQuarterlyReports"/>
+      <Label fx:id="WelcomeLabel" layoutX="222.0" layoutY="63.0" prefHeight="49.0" prefWidth="156.0" text="Label" textAlignment="CENTER" underline="true" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+      <Text layoutX="222.0" layoutY="57.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CEO Scren" textAlignment="CENTER" wrappingWidth="156.0">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Text>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+      <Text layoutX="162.0" layoutY="215.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Click here to view quarterly reports" textAlignment="CENTER" wrappingWidth="274.63671875">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Text>
+   </children>
+</Pane>
