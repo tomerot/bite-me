@@ -62,6 +62,7 @@ public class ClientConsole extends AbstractClient {
     protected void handleMessageFromServer(Object msg) {
         awaitResponse = false;
         responseFromServer = (ServerResponseDataContainer) msg;
+        System.out.println(msg);
     }
 
 	public static void handleMessageFromClientUI(ClientRequestDataContainer message) {

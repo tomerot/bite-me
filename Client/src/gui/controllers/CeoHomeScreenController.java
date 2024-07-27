@@ -19,17 +19,20 @@ public class CeoHomeScreenController {
 	private Label WelcomeLabel;
 	
 	private User user;
+	private Ceo ceo;
 	
 	public void setUser(User user) {
         this.user = user;
         ClientMainController.requestCeoData(user);
         ServerResponseDataContainer response = ClientConsole.responseFromServer;
+        System.out.println("CeoHomeScreenController" + (User)response.getMessage());
         Ceo ceo = (Ceo)response.getMessage();
+        this.ceo = ceo;
         UpdateLabel(ceo);
     }
 	
 	public void UpdateLabel(Ceo ceo) {
-		WelcomeLabel.setText("Welcome" + ceo.GetFirstName() + ceo.GetLastName());
+		WelcomeLabel.setText("Welcome" + " " + ceo.GetFirstName() + " " + ceo.GetLastName());
 	}
 	
 	public void ShowQuarterlyReports() {

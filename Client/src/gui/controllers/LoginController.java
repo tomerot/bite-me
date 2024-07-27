@@ -37,6 +37,7 @@ public class LoginController {
 	private void onConnectClicked(ActionEvent event) throws Exception {
 		String username = usernameField.getText();
 		String password = passwordField.getText();
+		System.out.println("LoginController 40" + username + password);
 		
 		if (username.isEmpty() || password.isEmpty()) {
 			infoLabel.setText("Username and password cannot be empty.");
@@ -46,6 +47,8 @@ public class LoginController {
 		User user = new User(username,password);
 		ClientMainController.requestUserData(user);
 		ServerResponseDataContainer response = ClientConsole.responseFromServer;
+		System.out.println("LoginController 50" + response.getMessage() + response.getResponse());
+		System.out.println("LoginController 51" + (User)response.getMessage() + response.getResponse());
 		switch(response.getResponse()) {
 		
 		case USER_NOT_FOUND:
@@ -55,6 +58,7 @@ public class LoginController {
 			
 		case USER_FOUND:
 			User userData = (User) response.getMessage();
+			System.out.println("Login controller 60" + userData.getUserName());
 			if (password.equals(userData.getPassword())) {
 				//CORRECT
 				if(userData.getisLoggedIn() == 1) {
@@ -69,34 +73,34 @@ public class LoginController {
 						return;
 					}
 					else {
-						user.setisLoggedIn(1);
-						ClientMainController.requestUpdateUserData(user);
+						userData.setisLoggedIn(1);
+						ClientMainController.requestUpdateUserData(userData);
 						if(userData.getUserType().equals("Customer")) {
-							displayWindow(event, "Customer Home Page", "CustomerHomeScreen", user);
+							displayWindow(event, "Customer Home Page", "CustomerHomeScreen", userData);
 							// update isLoggedIn in Db!
 						}
 						if(userData.getUserType().equals("CEO")) {
-							displayWindow(event, "CEO Home Page", "CeoScreen", user);
+							displayWindow(event, "CEO Home Page", "CeoScreen", userData);
 							// update isLoggedIn in Db!!
 						}
 						if(userData.getUserType().equals("North Manager")) {
-							displayWindow(event, "North Manager Home Page", "BranchManagerScreen", user);
+							displayWindow(event, "North Manager Home Page", "BranchManagerScreen", userData);
 							// update isLoggedIn in Db!
 						}
 						if(userData.getUserType().equals("South Manager")) {
-							displayWindow(event, "South Home Page", "BranchManagerScreen", user);
+							displayWindow(event, "South Home Page", "BranchManagerScreen", userData);
 							// update isLoggedIn in Db!
 						}
 						if(userData.getUserType().equals("Center Manager")) {
-							displayWindow(event, "Center Home Page", "BranchManagerScreen", user);
+							displayWindow(event, "Center Home Page", "BranchManagerScreen", userData);
 							// update isLoggedIn in Db!
 						}
 						if(userData.getUserType().equals("Supplier")) {
-							displayWindow(event, "Supplier Home Page", "SupplierScreen", user);
+							displayWindow(event, "Supplier Home Page", "SupplierScreen", userData);
 							// update isLoggedIn in Db!
 						}
 						if(userData.getUserType().equals("Employee")) {
-							displayWindow(event, "Employee Home Page", "EmployeeScreen", user);
+							displayWindow(event, "Employee Home Page", "EmployeeScreen", userData);
 							// update isLoggedIn in Db!
 						}
 					}
@@ -107,6 +111,8 @@ public class LoginController {
 				infoLabel.setStyle("-fx-text-fill: red;");
 				return;
 			}
+		default:
+			break;
 		}
 	}
 	
@@ -114,7 +120,7 @@ public class LoginController {
 		String view = "/gui/view/" + page + ".fxml";
 	    FXMLLoader loader = new FXMLLoader(getClass().getResource(view));
 	    Pane root = loader.load();
-	    BranchManagerHomeScreenController controller = loader.getController();
+	    CeoHomeScreenController controller = loader.getController();
 	    controller.setUser(user);
 	    
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window

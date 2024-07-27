@@ -49,16 +49,16 @@ public class Server extends AbstractServer {
 		ClientRequest request = data.getRequest();
 		User user;
 		// switch case on the request from server
+		System.out.println("server 52" + request);
 		switch (request) {
 		// all cases
 		case DISCONNECT:
 			clientDisconnected(client);
 			break;
-
 		case CHECK_USER_DATA:
 			user = (User) data.getMessage();
 			handleUserData(user, client);
-		
+			break;
 		case UPDATE_USER_DATA:
 			user= (User) data.getMessage();
 			try {
@@ -66,12 +66,17 @@ public class Server extends AbstractServer {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			break;
 		case FETCH_BRANCH_MANAGER_DATA:
 			user= (User) data.getMessage();
+			System.out.println("server 72" + request + " " +user.getUserName());
 			handleBranchManagerData(user, client);
+			break;
 		case FETCH_CEO_DATA:
 			user= (User) data.getMessage();
+			System.out.println("server 76" + request + " " +user.getUserName());
 			handleCeoData(user, client);
+			break;
 		default:
 			return;
 		}
@@ -107,13 +112,20 @@ public class Server extends AbstractServer {
 	
 	private void handleUpdateUser(User user, ConnectionToClient client) throws Exception {
 		QueryControl.userQueries.UpdateUserData(dbConn, user);
+		try {
+			client.sendToClient(new ServerResponseDataContainer());
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
 	
 	
 	private void handleUserData(User user, ConnectionToClient client) {
+		System.out.println("Server 117" + user.getUserName() + user.getPassword());
 		ServerResponseDataContainer response = QueryControl.userQueries.FatchUserInfo(dbConn, user);
+		System.out.println("Server 118" + QueryControl.userQueries.FatchUserInfo(dbConn, user).toString());
 		try {
 			client.sendToClient(response);
 		} catch (IOException e) {

@@ -46,6 +46,7 @@ public class UserQuery {
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
+		System.out.println("UserQuery 49 res:" + response.getMessage() + response.getResponse());
 		return response;
 	}
 
@@ -105,7 +106,7 @@ public class UserQuery {
 	}
 	
 	public ServerResponseDataContainer FetchCeoData(Connection dbConn, User user) {
-		String query = "SELECT * FROM Users WHERE username = ?";
+		String query = "SELECT * FROM managers WHERE username = ?";
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
 
 		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
@@ -119,18 +120,12 @@ public class UserQuery {
 					String LastName = rs.getString("LastName");
 					String Email = rs.getString("Email");
 					String Phone = rs.getString("Phone");
-					String branch = rs.getString("Branch");
-					Branch temp;
-					if (branch.equals("North Branch"))
-						temp = Branch.NORTHBRANCH;
-					else if (branch.equals("South Branch"))
-						temp = Branch.SOUTHBRANCH;
-					else
-						temp = Branch.CENTERBRANCH;
+					System.out.println("UserQuery 123 res:" + FirstName + LastName + Email);
 					Ceo ceo = new Ceo(ID, FirstName, LastName, Email, Phone,
-							user.getUserName(), user.getPassword(), temp);
+							user.getUserName(), user.getPassword());
 					response.setMessage(ceo);
-					response.setResponse(ServerResponse.BRANCH_MANAGER_DATA);
+					
+					response.setResponse(ServerResponse.CEO_DATA);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
