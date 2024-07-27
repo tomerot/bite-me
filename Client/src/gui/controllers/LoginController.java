@@ -47,8 +47,6 @@ public class LoginController {
 		User user = new User(username,password);
 		ClientMainController.requestUserData(user);
 		ServerResponseDataContainer response = ClientConsole.responseFromServer;
-		System.out.println("LoginController 50" + response.getMessage() + response.getResponse());
-		System.out.println("LoginController 51" + (User)response.getMessage() + response.getResponse());
 		switch(response.getResponse()) {
 		
 		case USER_NOT_FOUND:
@@ -120,7 +118,7 @@ public class LoginController {
 		String view = "/gui/view/" + page + ".fxml";
 	    FXMLLoader loader = new FXMLLoader(getClass().getResource(view));
 	    Pane root = loader.load();
-	    CeoHomeScreenController controller = loader.getController();
+	    BranchManagerController controller = loader.getController();
 	    controller.setUser(user);
 	    
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
