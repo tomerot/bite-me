@@ -60,27 +60,31 @@ public class Server extends AbstractServer {
 			handleUserData(user, client);
 			break;
 		case UPDATE_USER_DATA:
-			user= (User) data.getMessage();
-			try {
-				handleUpdateUser(user, client);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			break;
+		    user= (User) data.getMessage();
+		    try {
+		        handleUpdateUser(user, client);
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		    break;
+
 		case FETCH_BRANCH_MANAGER_DATA:
-			user= (User) data.getMessage();
-			System.out.println("server 72" + request + " " +user.getUserName());
-			handleBranchManagerData(user, client);
-			break;
+		    user= (User) data.getMessage();
+		    System.out.println("server 72" + request + " " + user.getUserName());
+		    handleBranchManagerData(user, client);
+		    break;
+
 		case FETCH_CEO_DATA:
-			user= (User) data.getMessage();
-			System.out.println("server 76" + request + " " +user.getUserName());
-			handleCeoData(user, client);
-			break;
+		    user= (User) data.getMessage();
+		    System.out.println("server 76" + request + " " + user.getUserName());
+		    handleCeoData(user, client);
+		    break;
+
 		default:
-			return;
-		}
+		    return;
+
 	}
+}
 
 	
 	
@@ -111,13 +115,14 @@ public class Server extends AbstractServer {
 	
 	
 	private void handleUpdateUser(User user, ConnectionToClient client) throws Exception {
-		QueryControl.userQueries.UpdateUserData(dbConn, user);
-		try {
-			client.sendToClient(new ServerResponseDataContainer());
-		}catch(IOException e) {
-			e.printStackTrace();
-		}
+	    QueryControl.userQueries.UpdateUserData(dbConn, user);
+	    try {
+	        client.sendToClient(new ServerResponseDataContainer());
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
 	}
+
 	
 	
 	

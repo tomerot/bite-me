@@ -46,15 +46,19 @@ public class LoginController {
 		}
 		User user = new User(username,password);
 		ClientMainController.requestUserData(user);
+		System.out.println("requestUserData work");
 		ServerResponseDataContainer response = ClientConsole.responseFromServer;
+		System.out.println("responseFromServer work");
 		switch(response.getResponse()) {
 		
 		case USER_NOT_FOUND:
+			System.out.println("user not found work");
 			infoLabel.setText("Username Not Found");
 			infoLabel.setStyle("-fx-text-fill: red;");
 			break;
 			
 		case USER_FOUND:
+			System.out.println("server did find the user in db");
 			User userData = (User) response.getMessage();
 			System.out.println("Login controller 60" + userData.getUserName());
 			if (password.equals(userData.getPassword())) {
