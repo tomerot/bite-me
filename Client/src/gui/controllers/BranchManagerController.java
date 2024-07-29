@@ -8,7 +8,7 @@ import entities.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class BranchManagerHomeScreenController {
+public class BranchManagerController {
 
     @FXML
     private Label WelcomeMessageLabel;

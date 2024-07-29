@@ -45,15 +45,19 @@ public class LoginController {
 		}
 		User user = new User(username,password);
 		ClientMainController.requestUserData(user);
+		System.out.println("requestUserData work");
 		ServerResponseDataContainer response = ClientConsole.responseFromServer;
+		System.out.println("responseFromServer work");
 		switch(response.getResponse()) {
 		
 		case USER_NOT_FOUND:
+			System.out.println("user not found work");
 			infoLabel.setText("Username Not Found");
 			infoLabel.setStyle("-fx-text-fill: red;");
 			break;
 			
 		case USER_FOUND:
+			System.out.println("server did find the user in db");
 			User userData = (User) response.getMessage();
 			if (password.equals(userData.getPassword())) {
 				//CORRECT
@@ -69,34 +73,37 @@ public class LoginController {
 						return;
 					}
 					else {
-						user.setisLoggedIn(1);
-						ClientMainController.requestUpdateUserData(user);
+						userData.setisLoggedIn(1);
+						System.out.println("got in before update user");
+						ClientMainController.requestUpdateUserData(userData);
+						System.out.println("Server updated the userData");
 						if(userData.getUserType().equals("Customer")) {
-							displayWindow(event, "Customer Home Page", "CustomerHomeScreen", user);
+							displayWindow(event, "Customer Home Page", "CustomerHomeScreen", userData);
 							// update isLoggedIn in Db!
 						}
 						if(userData.getUserType().equals("CEO")) {
-							displayWindow(event, "CEO Home Page", "CeoScreen", user);
+							displayWindow(event, "CEO Home Page", "CeoScreen", userData);
 							// update isLoggedIn in Db!!
 						}
 						if(userData.getUserType().equals("North Manager")) {
-							displayWindow(event, "North Manager Home Page", "BranchManagerScreen", user);
+							System.out.println("got to North Manager if");
+							displayWindow(event, "North Manager Home Page", "BranchManagerScreen", userData);
 							// update isLoggedIn in Db!
 						}
 						if(userData.getUserType().equals("South Manager")) {
-							displayWindow(event, "South Home Page", "BranchManagerScreen", user);
+							displayWindow(event, "South Home Page", "BranchManagerScreen", userData);
 							// update isLoggedIn in Db!
 						}
 						if(userData.getUserType().equals("Center Manager")) {
-							displayWindow(event, "Center Home Page", "BranchManagerScreen", user);
+							displayWindow(event, "Center Home Page", "BranchManagerScreen", userData);
 							// update isLoggedIn in Db!
 						}
 						if(userData.getUserType().equals("Supplier")) {
-							displayWindow(event, "Supplier Home Page", "SupplierScreen", user);
+							displayWindow(event, "Supplier Home Page", "SupplierScreen", userData);
 							// update isLoggedIn in Db!
 						}
 						if(userData.getUserType().equals("Employee")) {
-							displayWindow(event, "Employee Home Page", "EmployeeScreen", user);
+							displayWindow(event, "Employee Home Page", "EmployeeScreen", userData);
 							// update isLoggedIn in Db!
 						}
 					}
@@ -114,7 +121,7 @@ public class LoginController {
 		String view = "/gui/view/" + page + ".fxml";
 	    FXMLLoader loader = new FXMLLoader(getClass().getResource(view));
 	    Pane root = loader.load();
-	    BranchManagerHomeScreenController controller = loader.getController();
+	    BranchManagerController controller = loader.getController();
 	    controller.setUser(user);
 	    
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window

@@ -58,6 +58,7 @@ public class Server extends AbstractServer {
 		case CHECK_USER_DATA:
 			user = (User) data.getMessage();
 			handleUserData(user, client);
+			break;
 		
 		case UPDATE_USER_DATA:
 			user= (User) data.getMessage();
@@ -66,9 +67,12 @@ public class Server extends AbstractServer {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			break;
+			
 		case FETCH_BRANCH_MANAGER_DATA:
 			user= (User) data.getMessage();
 			handleBranchManagerData(user, client);
+			break;
 		default:
 			return;
 		}
@@ -95,6 +99,11 @@ public class Server extends AbstractServer {
 	
 	private void handleUpdateUser(User user, ConnectionToClient client) throws Exception {
 		QueryControl.userQueries.UpdateUserData(dbConn, user);
+		try {
+			client.sendToClient(new ServerResponseDataContainer());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
