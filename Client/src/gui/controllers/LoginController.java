@@ -74,9 +74,7 @@ public class LoginController {
 					}
 					else {
 						userData.setisLoggedIn(1);
-						System.out.println("got in before update user");
 						ClientMainController.requestUpdateUserData(userData);
-						System.out.println("Server updated the userData");
 						if(userData.getUserType().equals("Customer")) {
 							displayWindow(event, "Customer Home Page", "CustomerHomeScreen", userData);
 							// update isLoggedIn in Db!
@@ -86,7 +84,6 @@ public class LoginController {
 							// update isLoggedIn in Db!!
 						}
 						if(userData.getUserType().equals("North Manager")) {
-							System.out.println("got to North Manager if");
 							displayWindow(event, "North Manager Home Page", "BranchManagerScreen", userData);
 							// update isLoggedIn in Db!
 						}
