@@ -49,7 +49,6 @@ public class Server extends AbstractServer {
 		ClientRequest request = data.getRequest();
 		User user;
 		// switch case on the request from server
-		System.out.println("server 52" + request);
 		switch (request) {
 		// all cases
 		case DISCONNECT:
@@ -70,13 +69,11 @@ public class Server extends AbstractServer {
 
 		case FETCH_BRANCH_MANAGER_DATA:
 		    user= (User) data.getMessage();
-		    System.out.println("server 72" + request + " " + user.getUserName());
 		    handleBranchManagerData(user, client);
 		    break;
 
 		case FETCH_CEO_DATA:
 		    user= (User) data.getMessage();
-		    System.out.println("server 76" + request + " " + user.getUserName());
 		    handleCeoData(user, client);
 		    break;
 
@@ -128,9 +125,7 @@ public class Server extends AbstractServer {
 	
 	
 	private void handleUserData(User user, ConnectionToClient client) {
-		System.out.println("Server 117" + user.getUserName() + user.getPassword());
 		ServerResponseDataContainer response = QueryControl.userQueries.FatchUserInfo(dbConn, user);
-		System.out.println("Server 118" + QueryControl.userQueries.FatchUserInfo(dbConn, user).toString());
 		try {
 			client.sendToClient(response);
 		} catch (IOException e) {

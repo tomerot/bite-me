@@ -37,7 +37,6 @@ public class LoginController {
 	private void onConnectClicked(ActionEvent event) throws Exception {
 		String username = usernameField.getText();
 		String password = passwordField.getText();
-		System.out.println("LoginController 40" + username + password);
 		
 		if (username.isEmpty() || password.isEmpty()) {
 			infoLabel.setText("Username and password cannot be empty.");
@@ -46,21 +45,16 @@ public class LoginController {
 		}
 		User user = new User(username,password);
 		ClientMainController.requestUserData(user);
-		System.out.println("requestUserData work");
 		ServerResponseDataContainer response = ClientConsole.responseFromServer;
-		System.out.println("responseFromServer work");
 		switch(response.getResponse()) {
 		
 		case USER_NOT_FOUND:
-			System.out.println("user not found work");
 			infoLabel.setText("Username Not Found");
 			infoLabel.setStyle("-fx-text-fill: red;");
 			break;
 			
 		case USER_FOUND:
-			System.out.println("server did find the user in db");
 			User userData = (User) response.getMessage();
-			System.out.println("Login controller 60" + userData.getUserName());
 			if (password.equals(userData.getPassword())) {
 				//CORRECT
 				if(userData.getisLoggedIn() == 1) {
@@ -122,8 +116,21 @@ public class LoginController {
 		String view = "/gui/view/" + page + ".fxml";
 	    FXMLLoader loader = new FXMLLoader(getClass().getResource(view));
 	    Pane root = loader.load();
-	    BranchManagerController controller = loader.getController();
-	    controller.setUser(user);
+	    Object controller;
+    	controller= loader.getController();
+	    switch(user.getUserType()) {
+	    case "CEO":
+    	    ((CeoHomeScreenController) controller).setUser(user);
+
+    	case "North Branch":
+    	    ((BranchManagerController) controller).setUser(user);
+    	    
+    	case "South Branch":
+    	    ((BranchManagerController) controller).setUser(user);
+    	
+    	case "Center Branch":
+    	    ((BranchManagerController) controller).setUser(user);
+	    }
 	    
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 		Stage primaryStage = new Stage();

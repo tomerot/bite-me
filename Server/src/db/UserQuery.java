@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import containers.ServerResponseDataContainer;
-import entities.Branch;
 import entities.BranchManager;
 import entities.Ceo;
 import entities.User;
@@ -36,12 +35,8 @@ public class UserQuery {
 					User userInfo = new User(username, password, isLoggedIn, type, registered);
 					response.setMessage(userInfo);
 					response.setResponse(ServerResponse.USER_FOUND);
-					System.out.println(response);
-					System.out.println(response.getResponse());
 				} else {
 					response.setResponse(ServerResponse.USER_NOT_FOUND);
-					System.out.println(response);
-					System.out.println(response.getResponse());
 				}
 
 			} catch (SQLException e) {
@@ -50,12 +45,11 @@ public class UserQuery {
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-		System.out.println("UserQuery 49 res:" + response.getMessage() + response.getResponse());
 		return response;
 	}
 
 	public void UpdateUserData(Connection dbConn, User user) throws Exception {
-		//int affectedRows;
+		int affectedRows;
 		String query = "UPDATE users SET username=? ,password=? ,isLoggedIn=? ,Type=? ,Registered=? WHERE username = ?";
 		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
 			stmt.setString(1, user.getUserName());
@@ -64,16 +58,16 @@ public class UserQuery {
 			stmt.setString(4, user.getUserType());
 			stmt.setInt(5, user.getRegistered());
 			stmt.setString(6, user.getUserName());
-			//affectedRows = stmt.executeUpdate();
-			//if (affectedRows == 0)
-			//	throw new Exception("User update IsLoggedIn failed\n");
+			affectedRows = stmt.executeUpdate();
+			if (affectedRows == 0)
+				throw new Exception("User update IsLoggedIn failed\n");
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
 	}
 
 	public ServerResponseDataContainer FetchBranchManagerData(Connection dbConn, User user) {
-		String query = "SELECT ID, FirstName, LastName, Email, Phone, Branch FROM BranchManager WHERE username = ?";
+		String query = "SELECT ID, FirstName, LastName, Email, Phone, Branch FROM managers WHERE username = ?";
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
 
 		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
@@ -87,16 +81,7 @@ public class UserQuery {
 					String LastName = rs.getString("LastName");
 					String Email = rs.getString("Email");
 					String Phone = rs.getString("Phone");
-					String branch = rs.getString("Branch");
-					Branch temp;
-					if (branch.equals("North Branch"))
-						temp = Branch.NORTHBRANCH;
-					else if (branch.equals("South Branch"))
-						temp = Branch.SOUTHBRANCH;
-					else
-						temp = Branch.CENTERBRANCH;
-					BranchManager manager = new BranchManager(ID, FirstName, LastName, Email, Phone,
-							user.getUserName(), user.getPassword(), temp);
+					BranchManager manager = new BranchManager(ID, FirstName, LastName, Email, Phone,user.getUserName(), user.getPassword());
 					response.setMessage(manager);
 					response.setResponse(ServerResponse.BRANCH_MANAGER_DATA);
 				}

@@ -27,6 +27,6 @@ public class BranchManagerController {
 
     private void updateUI(BranchManager manager) {
         WelcomeMessageLabel.setText("Welcome, " + manager.getFirstName());
-        homeBranchLabel.setText(manager.getbranchType().toString());
+        homeBranchLabel.setText(manager.getUserType());
     }
 }

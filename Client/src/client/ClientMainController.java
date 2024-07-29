@@ -12,7 +12,6 @@ public class ClientMainController {
 	
 	public static void requestUserData(User user) {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.CHECK_USER_DATA, user);
-		System.out.println("ClientMainController" + request.getRequest());
 		ClientMainController.accept(request);
 	}
 	public static void requestUpdateUserData(User user) {
