@@ -1,5 +1,7 @@
 package entities;
 
+import enums.Branch;
+
 public class Supplier extends User {
 	private int supplierID;
 	private String name;

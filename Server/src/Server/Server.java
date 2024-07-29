@@ -54,38 +54,49 @@ public class Server extends AbstractServer {
 			clientDisconnected(client);
 			break;
 
-		case CHECK_USER_DATA:
+		case GET_USER_DATA:
 			User user = (User) data.getMessage();
 			handleUserData(user, client);
+			break;
+
+		case GET_SPECIFIC_USER_DATA:
+			User specificUser = (User) data.getMessage();
+			handleSpecificUserData(specificUser, client);
+			break;
 		default:
 			return;
 		}
+
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	private void handleSpecificUserData(User user, ConnectionToClient client) {
+		String type = user.getUserType();
+		ServerResponseDataContainer response = null;
+		switch (type) {
+		case "Manager":
+			response = QueryControl.userQueries.importManagerInfo(dbConn, user);
+			break;
+		case "Supplier:":
+			response = QueryControl.userQueries.importSupplierInfo(dbConn, user);
+			break;
+		case "Employee":
+			response = QueryControl.userQueries.importEmployeeInfo(dbConn, user);
+			break;
+		case "Customer":
+			response = QueryControl.userQueries.importCustomerInfo(dbConn, user);
+			break;
+		default:
+			break;
+		}
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void handleUserData(User user, ConnectionToClient client) {
-		ServerResponseDataContainer response = QueryControl.userQueries.FatchUserInfo(dbConn, user);
+		ServerResponseDataContainer response = QueryControl.userQueries.importUserInfo(dbConn, user);
 		try {
 			client.sendToClient(response);
 		} catch (IOException e) {

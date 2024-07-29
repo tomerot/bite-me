@@ -1,9 +1,9 @@
-package entities;
+package enums;
 
 public enum Branch {
-	NORTHBRANCH("North Branch"),
-    CENTERBRANCH("Center Branch"),
-	SOUTHBRANCH("South Branch");
+	NORTH("North Branch"),
+    CENTER("Center Branch"),
+	SOUTH("South Branch");
     private final String name;
     Branch(String name) {
         this.name = name;

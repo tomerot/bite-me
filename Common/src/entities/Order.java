@@ -2,6 +2,8 @@ package entities;
 
 import java.util.List;
 
+import enums.Branch;
+
 public class Order {
 	private List<ItemInOrder> itemsList;
     private int orderID;
