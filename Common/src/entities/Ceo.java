@@ -11,7 +11,7 @@ public class Ceo extends Person {
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
-	
+
 	public String GetFirstName() {
 		return this.firstName;
 	}

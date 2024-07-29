@@ -6,5 +6,5 @@ public enum ServerResponse {
 	USER_FOUND,
 	USER_NOT_FOUND,
 	BRANCH_MANAGER_DATA,
-	CEO_DATA
+	CEO_DATA;
 }

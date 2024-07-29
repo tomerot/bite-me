@@ -124,9 +124,7 @@ public class UserQuery {
 					String LastName = rs.getString("LastName");
 					String Email = rs.getString("Email");
 					String Phone = rs.getString("Phone");
-					System.out.println("UserQuery 123 res:" + FirstName + LastName + Email);
-					Ceo ceo = new Ceo(ID, FirstName, LastName, Email, Phone,
-							user.getUserName(), user.getPassword());
+					Ceo ceo = new Ceo(ID, FirstName, LastName, Email, Phone,user.getUserName(), user.getPassword());
 					response.setMessage(ceo);
 					
 					response.setResponse(ServerResponse.CEO_DATA);

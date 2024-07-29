@@ -32,7 +32,7 @@ public class CeoHomeScreenController {
     }
 	
 	public void UpdateLabel(Ceo ceo) {
-		WelcomeLabel.setText("Welcome" + " " + ceo.GetFirstName() + " " + ceo.GetLastName());
+		WelcomeLabel.setText("Welcome" + " " + ceo.getFirstName() + " " + ceo.getLastName());
 	}
 	
 	public void ShowQuarterlyReports() {
