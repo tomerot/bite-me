@@ -37,6 +37,7 @@ public class LoginController {
 	private void onConnectClicked(ActionEvent event) throws Exception {
 		String username = usernameField.getText();
 		String password = passwordField.getText();
+		System.out.println("LoginController 40" + username + password);
 		
 		if (username.isEmpty() || password.isEmpty()) {
 			infoLabel.setText("Username and password cannot be empty.");
@@ -59,6 +60,7 @@ public class LoginController {
 		case USER_FOUND:
 			System.out.println("server did find the user in db");
 			User userData = (User) response.getMessage();
+			System.out.println("Login controller 60" + userData.getUserName());
 			if (password.equals(userData.getPassword())) {
 				//CORRECT
 				if(userData.getisLoggedIn() == 1) {
@@ -111,6 +113,8 @@ public class LoginController {
 				infoLabel.setStyle("-fx-text-fill: red;");
 				return;
 			}
+		default:
+			break;
 		}
 	}
 	
