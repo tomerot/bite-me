@@ -67,7 +67,7 @@ public class UserQuery {
 	}
 
 	public ServerResponseDataContainer FetchBranchManagerData(Connection dbConn, User user) {
-		String query = "SELECT ID, FirstName, LastName, Email, Phone, Branch FROM managers WHERE username = ?";
+		String query = "SELECT ID, FirstName, LastName, Email, Phone FROM managers WHERE username = ?";
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
 
 		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
@@ -82,6 +82,9 @@ public class UserQuery {
 					String Email = rs.getString("Email");
 					String Phone = rs.getString("Phone");
 					BranchManager manager = new BranchManager(ID, FirstName, LastName, Email, Phone,user.getUserName(), user.getPassword());
+					manager.setUserType(user.getUserType());
+					manager.setisLoggedIn(user.getisLoggedIn());
+					manager.setRegistered(user.getRegistered());
 					response.setMessage(manager);
 					response.setResponse(ServerResponse.BRANCH_MANAGER_DATA);
 				}
@@ -110,6 +113,9 @@ public class UserQuery {
 					String Email = rs.getString("Email");
 					String Phone = rs.getString("Phone");
 					Ceo ceo = new Ceo(ID, FirstName, LastName, Email, Phone,user.getUserName(), user.getPassword());
+					ceo.setUserType(user.getUserType());
+					ceo.setisLoggedIn(user.getisLoggedIn());
+					ceo.setRegistered(user.getRegistered());
 					response.setMessage(ceo);
 					
 					response.setResponse(ServerResponse.CEO_DATA);

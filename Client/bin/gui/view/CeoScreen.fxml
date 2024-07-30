@@ -20,7 +20,7 @@
          </font>
       </Text>
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-      <Button id="MonthlyReportsBtn" layoutX="42.0" layoutY="313.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="109.0" style="-fx-background-color: #9c886d;" text="Monthly Reports" />
+      <Button id="MonthlyReportsBtn" layoutX="42.0" layoutY="313.0" mnemonicParsing="false" onAction="#displayMonthlyReportScreen" prefHeight="25.0" prefWidth="109.0" style="-fx-background-color: #9c886d;" text="Monthly Reports" />
       <Button id="LogOutBtn" layoutX="42.0" layoutY="353.0" mnemonicParsing="false" onAction="#logOut" style="-fx-background-color: #9c886d;" text="Log Out" />
    </children>
 </Pane>

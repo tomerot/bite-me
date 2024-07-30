@@ -35,6 +35,12 @@ public class CeoHomeScreenController {
         this.ceo = ceo;
         UpdateLabel(ceo);
     }
+	public Ceo getCeo() {
+		return ceo;
+	}
+	public User getUser() {
+		return user;
+	}
 	
 	public void UpdateLabel(Ceo ceo) {
 		WelcomeLabel.setText("Welcome, " + ceo.getFirstName() + " " + ceo.getLastName());
@@ -46,11 +52,11 @@ public class CeoHomeScreenController {
     public void logOut(ActionEvent event) throws Exception{
 		user.setisLoggedIn(0);
 		ClientMainController.requestUpdateUserData(user);
-		displayWindow(event);
+		displayLogin(event);
     }
     
 	// Method to display the Client Home Page (HomeClientPage GUI)
-	public void displayWindow(ActionEvent event) throws Exception {
+	public void displayLogin(ActionEvent event) throws Exception {
 		FXMLLoader loader = new FXMLLoader();
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 		Stage primaryStage = new Stage();
@@ -58,6 +64,19 @@ public class CeoHomeScreenController {
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add(getClass().getResource("/gui/view/LoginScreen.css").toExternalForm());
 		primaryStage.setTitle("Main");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
+	
+	public void displayMonthlyReportScreen(ActionEvent event) throws Exception {
+    	FXMLLoader loader = new FXMLLoader();
+    	ReportController ReportController=new ReportController(this);//this is a mistake- should init a ReportController with appropriate ceo\branchmanager controller, and use it
+	    loader.setController(ReportController);
+		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+		Stage primaryStage = new Stage();
+		Pane root = loader.load(getClass().getResource("/gui/view/MonthlyReportScreen.fxml").openStream());
+		Scene scene = new Scene(root);
+		primaryStage.setTitle("Monthly Reports");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}

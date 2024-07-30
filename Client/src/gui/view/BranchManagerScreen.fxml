@@ -8,8 +8,8 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #deb887;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.BranchManagerController">
    <children>
       <Button fx:id="logOutButton" layoutX="29.0" layoutY="348.0" mnemonicParsing="false" onAction="#logOut" style="-fx-background-color: #9c886d;" text="Log out" />
-      <Button fx:id="RegisterCustomerButton" layoutX="29.0" layoutY="305.0" mnemonicParsing="false" style="-fx-background-color: #9c886d;" text="Register customers" />
-      <Button fx:id="MontlyReports" layoutX="29.0" layoutY="264.0" mnemonicParsing="false" style="-fx-background-color: #9c886d;" text=" Montly Reports" />
+      <Button fx:id="RegisterCustomerButton" layoutX="29.0" layoutY="305.0" mnemonicParsing="false" onAction="#displayRegistrationScreen" style="-fx-background-color: #9c886d;" text="Register customers" />
+      <Button fx:id="MontlyReports" layoutX="29.0" layoutY="264.0" mnemonicParsing="false" onAction="#displayMonthlyReportScreen" style="-fx-background-color: #9c886d;" text=" Montly Reports" />
       <Label fx:id="homeBranchLabel" layoutX="97.0" layoutY="68.0" prefHeight="90.0" prefWidth="392.0" style="-fx-background-color: #9c886d;" textAlignment="CENTER">
          <font>
             <Font size="57.0" />

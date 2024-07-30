@@ -84,11 +84,11 @@ public class LoginController {
 							// update isLoggedIn in Db!
 						}
 						if(userData.getUserType().equals("South Manager")) {
-							displayWindow(event, "South Home Page", "BranchManagerScreen", userData);
+							displayWindow(event, "South Manager Home Page", "BranchManagerScreen", userData);
 							// update isLoggedIn in Db!
 						}
 						if(userData.getUserType().equals("Center Manager")) {
-							displayWindow(event, "Center Home Page", "BranchManagerScreen", userData);
+							displayWindow(event, "Center Manager Home Page", "BranchManagerScreen", userData);
 							// update isLoggedIn in Db!
 						}
 						if(userData.getUserType().equals("Supplier")) {
