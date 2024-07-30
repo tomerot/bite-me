@@ -1,5 +1,7 @@
 package entities;
 
+import enums.Branch;
+
 public class Delivery extends Order {
 	private SupplyMethod supplyMethod;
 	private String address;

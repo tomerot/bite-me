@@ -1,5 +1,7 @@
 package entities;
 
+import enums.Branch;
+
 public class Robot extends Delivery {
 	private float robotFee=0;
 	public Robot(int orderID, Supplier supplier, RegisteredCustomer customer, Branch branchName, String desiredDate,

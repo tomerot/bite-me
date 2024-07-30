@@ -1,5 +1,7 @@
 package entities;
 
+import enums.Branch;
+
 public class TakeAway extends Order {
 	private SupplyMethod supplyMethod;
 	public TakeAway(int orderID, Supplier supplier, RegisteredCustomer customer, Branch branchName, String desiredDate,

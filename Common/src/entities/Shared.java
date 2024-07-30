@@ -1,5 +1,7 @@
 package entities;
 
+import enums.Branch;
+
 public class Shared extends Delivery{
 	private float initialSharedFee=25;
 	private float minSharedFee=15;

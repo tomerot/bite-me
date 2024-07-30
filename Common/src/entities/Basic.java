@@ -1,5 +1,7 @@
 package entities;
 
+import enums.Branch;
+
 public class Basic extends Delivery {
 	private float basicFee=0;
 	public Basic(int orderID, Supplier supplier, RegisteredCustomer customer, Branch branchName, String desiredDate,
