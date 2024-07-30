@@ -19,6 +19,11 @@ public class ClientMainController {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.GET_SPECIFIC_USER_DATA, user);
 		ClientMainController.accept(request);
 	}
+	
+	public static void requestUpdateUserData(User user) {
+        ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.UPDATE_USER_DATA, user);
+        ClientMainController.accept(request);
+    }
 //	
 //	public static void requestManagerData(User user) {
 //		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.GET_MANAGER_DATA, user);
@@ -39,4 +44,5 @@ public class ClientMainController {
 //		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.GET_CUSTOMER_DATA, user);
 //		ClientMainController.accept(request);
 //	}
+
 }

@@ -47,6 +47,7 @@ public class Server extends AbstractServer {
 	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
 		ClientRequestDataContainer data = (ClientRequestDataContainer) msg;
 		ClientRequest request = data.getRequest();
+		User user;
 		// switch case on the request from server
 		switch (request) {
 		// all cases
@@ -55,7 +56,7 @@ public class Server extends AbstractServer {
 			break;
 
 		case GET_USER_DATA:
-			User user = (User) data.getMessage();
+			user = (User) data.getMessage();
 			handleUserData(user, client);
 			break;
 
@@ -63,11 +64,21 @@ public class Server extends AbstractServer {
 			User specificUser = (User) data.getMessage();
 			handleSpecificUserData(specificUser, client);
 			break;
+
+		case UPDATE_USER_DATA:
+			user = (User) data.getMessage();
+			try {
+				handleUpdateUser(user, client);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;
+
 		default:
 			return;
 		}
-
 	}
+
 
 	private void handleSpecificUserData(User user, ConnectionToClient client) {
 		String type = user.getUserType();
@@ -95,6 +106,12 @@ public class Server extends AbstractServer {
 		}
 	}
 
+
+	
+	private void handleUpdateUser(User user, ConnectionToClient client) throws Exception {
+		QueryControl.userQueries.UpdateUserData(dbConn, user);
+	}
+	
 	private void handleUserData(User user, ConnectionToClient client) {
 		ServerResponseDataContainer response = QueryControl.userQueries.importUserInfo(dbConn, user);
 		try {

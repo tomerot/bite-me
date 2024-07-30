@@ -52,7 +52,7 @@ public class UserQuery {
 		}
 		return response;
 	}
-	
+
 	public ServerResponseDataContainer importManagerInfo(Connection dbConn, User user) {
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
 		String query = "SELECT * FROM managers WHERE username = ?";
@@ -68,7 +68,7 @@ public class UserQuery {
 					String lastName = rs.getString("LastName");
 					String email = rs.getString("Email");
 					String phone = rs.getString("Phone");
-					
+
 					switch(type) {
 						case "CEO":
 							Ceo ceo = new Ceo(id, firstName, lastName, email, phone, user.getUserName(), user.getPassword());
@@ -103,7 +103,7 @@ public class UserQuery {
 		}
 		return response;
 	}
-	
+
 	public ServerResponseDataContainer importSupplierInfo(Connection dbConn, User user) {
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
 		String query = "SELECT * FROM suppliers WHERE username = ?";
@@ -123,7 +123,7 @@ public class UserQuery {
 					//Can get also Branch
 
 					Supplier supplier = new Supplier(supplierID, name, city, address, null, user.getUserName(), user.getPassword());
-					
+
 					response.setMessage(supplier);
 					response.setResponse(ServerResponse.SUPPLIER_FOUND);
 				}
@@ -136,7 +136,7 @@ public class UserQuery {
 		}
 		return response;
 	}
-	
+
 	public ServerResponseDataContainer importEmployeeInfo(Connection dbConn, User user) {
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
 		String query = "SELECT * FROM employees WHERE username = ?";
@@ -154,7 +154,7 @@ public class UserQuery {
 					String phone = rs.getString("Phone");
 
 					AuthorizedEmployee employee = new AuthorizedEmployee(id, firstName, lastName, email, phone, user.getUserName(), user.getPassword(), supplierID);
-					
+
 					response.setMessage(employee);
 					response.setResponse(ServerResponse.EMPLOYEE_FOUND);
 				}
@@ -167,7 +167,7 @@ public class UserQuery {
 		}
 		return response;
 	}
-	
+
 	public ServerResponseDataContainer importCustomerInfo(Connection dbConn, User user) {
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
 		String query = "SELECT * FROM customers WHERE username = ?";
@@ -188,7 +188,7 @@ public class UserQuery {
 					//Can get also companyID and Credit Card
 
 					RegisteredCustomer customer = null;
-					
+
 					switch(homeBranch) {
 						case "North":
 							if(type.equals("Private"))
@@ -211,7 +211,7 @@ public class UserQuery {
 						default:
 							break;
 					}
-					
+
 					response.setMessage(customer);
 					response.setResponse(ServerResponse.CUSTOMER_FOUND);
 				}
@@ -223,5 +223,23 @@ public class UserQuery {
 			e1.printStackTrace();
 		}
 		return response;
+	}
+
+	public void UpdateUserData(Connection dbConn, User user) throws Exception {
+		int affectedRows;
+		String query = "UPDATE users SET username=? ,password=? ,isLoggedIn=? ,Type=? ,Registered=? WHERE username = ?";
+		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+			stmt.setString(1, user.getUserName());
+			stmt.setString(2, user.getPassword());
+			stmt.setInt(3, user.getisLoggedIn());
+			stmt.setString(4, user.getUserType());
+			stmt.setInt(5, user.getRegistered());
+			stmt.setString(6, user.getUserName());
+			affectedRows = stmt.executeUpdate();
+			if (affectedRows == 0)
+				throw new Exception("User update IsLoggedIn failed\n");
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
 	}
 }
