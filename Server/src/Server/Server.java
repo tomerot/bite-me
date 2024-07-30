@@ -54,28 +54,26 @@ public class Server extends AbstractServer {
 		case DISCONNECT:
 			clientDisconnected(client);
 			break;
-		case CHECK_USER_DATA:
+
+		case GET_USER_DATA:
 			user = (User) data.getMessage();
 			handleUserData(user, client);
 			break;
+
+		case GET_SPECIFIC_USER_DATA:
+			User specificUser = (User) data.getMessage();
+			handleSpecificUserData(specificUser, client);
+			break;
+
 		case UPDATE_USER_DATA:
-		    user= (User) data.getMessage();
-		    try {
-		        handleUpdateUser(user, client);
-		    } catch (Exception e) {
-		        e.printStackTrace();
-		    }
-		    break;
-
-		case FETCH_BRANCH_MANAGER_DATA:
-		    user= (User) data.getMessage();
-		    handleBranchManagerData(user, client);
-		    break;
-
-		case FETCH_CEO_DATA:
-		    user= (User) data.getMessage();
-		    handleCeoData(user, client);
-		    break;
+			user = (User) data.getMessage();
+			try {
+				handleUpdateUser(user, client);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;
+		
 
 		default:
 		    return;
@@ -83,33 +81,32 @@ public class Server extends AbstractServer {
 	}
 }
 
-	
-	
-	
-	
-	
-	
-	
-	
-	private void handleCeoData(User user, ConnectionToClient client) {
-		ServerResponseDataContainer response = QueryControl.userQueries.FetchCeoData(dbConn, user);
+
+	private void handleSpecificUserData(User user, ConnectionToClient client) {
+		String type = user.getUserType();
+		ServerResponseDataContainer response = null;
+		switch (type) {
+		case "Manager":
+			response = QueryControl.userQueries.importManagerInfo(dbConn, user);
+			break;
+		case "Supplier:":
+			response = QueryControl.userQueries.importSupplierInfo(dbConn, user);
+			break;
+		case "Employee":
+			response = QueryControl.userQueries.importEmployeeInfo(dbConn, user);
+			break;
+		case "Customer":
+			response = QueryControl.userQueries.importCustomerInfo(dbConn, user);
+			break;
+		default:
+			break;
+		}
 		try {
 			client.sendToClient(response);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	private void handleBranchManagerData(User user, ConnectionToClient client) {
-		ServerResponseDataContainer response = QueryControl.userQueries.FetchBranchManagerData(dbConn, user);
-		try {
-			client.sendToClient(response);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	
 	private void handleUpdateUser(User user, ConnectionToClient client) throws Exception {
 	    QueryControl.userQueries.UpdateUserData(dbConn, user);
@@ -121,11 +118,8 @@ public class Server extends AbstractServer {
 	}
 
 	
-	
-	
-	
 	private void handleUserData(User user, ConnectionToClient client) {
-		ServerResponseDataContainer response = QueryControl.userQueries.FatchUserInfo(dbConn, user);
+		ServerResponseDataContainer response = QueryControl.userQueries.importUserInfo(dbConn, user);
 		try {
 			client.sendToClient(response);
 		} catch (IOException e) {

@@ -3,6 +3,7 @@ package gui.controllers;
 import client.ClientConsole;
 import client.ClientMainController;
 import containers.ServerResponseDataContainer;
+import entities.RegisteredCustomer;
 import entities.User;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -45,6 +46,7 @@ public class LoginController {
 		}
 		User user = new User(username,password);
 		ClientMainController.requestUserData(user);
+		//
 		ServerResponseDataContainer response = ClientConsole.responseFromServer;
 		switch(response.getResponse()) {
 		
@@ -69,35 +71,34 @@ public class LoginController {
 						return;
 					}
 					else {
-						userData.setisLoggedIn(1);
-						ClientMainController.requestUpdateUserData(userData);
-						if(userData.getUserType().equals("Customer")) {
-							displayWindow(event, "Customer Home Page", "CustomerHomeScreen", userData);
-							// update isLoggedIn in Db!
-						}
-						if(userData.getUserType().equals("CEO")) {
-							displayWindow(event, "CEO Home Page", "CeoScreen", userData);
-							// update isLoggedIn in Db!!
-						}
-						if(userData.getUserType().equals("North Manager")) {
-							displayWindow(event, "North Manager Home Page", "BranchManagerScreen", userData);
-							// update isLoggedIn in Db!
-						}
-						if(userData.getUserType().equals("South Manager")) {
-							displayWindow(event, "South Manager Home Page", "BranchManagerScreen", userData);
-							// update isLoggedIn in Db!
-						}
-						if(userData.getUserType().equals("Center Manager")) {
-							displayWindow(event, "Center Manager Home Page", "BranchManagerScreen", userData);
-							// update isLoggedIn in Db!
-						}
-						if(userData.getUserType().equals("Supplier")) {
-							displayWindow(event, "Supplier Home Page", "SupplierScreen", userData);
-							// update isLoggedIn in Db!
-						}
-						if(userData.getUserType().equals("Employee")) {
-							displayWindow(event, "Employee Home Page", "EmployeeScreen", userData);
-							// update isLoggedIn in Db!
+						ClientMainController.requestUserSpecificData(userData);
+						ServerResponseDataContainer entityResponse = ClientConsole.responseFromServer;
+						switch(entityResponse.getResponse()) {
+							case CEO_FOUND:
+								displayWindow(event, "CEO Home Page", "CeoScreen", userData);
+								//Need to pass entity to the controller
+								//Need to update IsLoggedIn at the DB
+								break;
+							case MANAGER_FOUND:
+								displayWindow(event, "North Manager Home Page", "BranchManagerScreen", userData);
+								//Need to pass entity to the controller
+								//Need to update IsLoggedIn at the DB
+								break;
+							case SUPPLIER_FOUND:
+								displayWindow(event, "Supplier Home Page", "SupplierScreen", userData);
+								//Need to pass entity to the controller
+								//Need to update IsLoggedIn at the DB
+								break;
+							case EMPLOYEE_FOUND:
+								displayWindow(event, "Employee Home Page", "EmployeeScreen", userData);
+								//Need to pass entity to the controller
+								//Need to update IsLoggedIn at the DB
+								break;
+							case CUSTOMER_FOUND:
+								displayWindow(event, "Customer Home Page", "CustomerHomeScreen", userData);
+								//Need to pass entity to the controller
+								//Need to update IsLoggedIn at the DB
+								break;
 						}
 					}
 				}

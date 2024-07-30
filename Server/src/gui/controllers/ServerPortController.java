@@ -26,6 +26,8 @@ public class ServerPortController {
 	@FXML
 	private Button exitBtn;
 	@FXML
+	private Button disconnectBtn;
+	@FXML
 	private TextField ipField;
 	@FXML
 	private TextField portField;
@@ -98,6 +100,7 @@ public class ServerPortController {
 		if (serverStatus) {
 			updateServerStatus("Server successfully started.\n ip to connect is: " + ipv4 + "\n " + "on Port: " + portNumber);
 			connectBtn.setDisable(true);
+			disconnectBtn.setDisable(false);
 		} else {
 			updateServerStatus("Failed to start server.");
 		}
@@ -125,11 +128,23 @@ public class ServerPortController {
 		Platform.exit();
 		System.exit(0);
 	}
+	
+	@FXML
+	private void onDisconnectClicked(ActionEvent event) {
+		System.out.println("Server Disconnected from Db");
+		lblServerStatus.setText("Server Disconnected successfully");
+		connectedClientsList.clear();
+		Server.stopServer();
+		connectBtn.setDisable(false);
+		disconnectBtn.setDisable(true);
+	}
 
+	
 	// Method to start/show the Server Porn GUI
 	public void start(Stage primaryStage) throws Exception {
 		Pane root = FXMLLoader.load(getClass().getResource("/gui/view/ServerPort.fxml"));
 		Scene scene = new Scene(root);
+		scene.getStylesheets().add(getClass().getResource("/gui/view/ServerPort.css").toExternalForm());
 		primaryStage.setTitle("ServerPort");
 		primaryStage.setScene(scene);
 		primaryStage.show();

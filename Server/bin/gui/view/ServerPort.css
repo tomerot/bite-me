@@ -1,12 +1,27 @@
-/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
-#btnStudentInfo {
-	/*-fx-background-color: rgba(255, 255, 255, .80);*/
-	-fx-background-color: skyblue;
-	-fx-text-fill: red;
-	-fx-padding: 6 6 6 6;
-	-fx-border-radius: 8;
-	-fx-font-weight : bold;
+.connectBtn:hover {
+    -fx-background-color: #34c759; /* Light green for hover effect */
+    -fx-border-color: #218838; /* Darker green border */
+    -fx-border-width: 2px 2px 2px 2px;  /* Adds a 5px border on the left side */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 15, 0, 0, 0);
 }
-.root {
-	-fx-background-color: #deb887;
+
+.disconnectBtn:hover {
+    -fx-background-color: #ffca28; /* Lighter yellow for hover effect */
+    -fx-border-color: #e0a800; /* Darker yellow border */
+    -fx-border-width: 2px 2px 2px 2px;  /* Adds a 5px border on the left side */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 15, 0, 0, 0);
+}
+
+.exitBtn:hover {
+    -fx-background-color: #e57373; /* Lighter red for hover effect */
+    -fx-border-color: #c62828; /* Darker red border */
+    -fx-border-width: 2px 2px 2px 2px;  /* Adds a 5px border on the left side */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 15, 0, 0, 0);
+}
+
+.lblServerStatus{
+	 -fx-font-weight: bold; /* Makes text bold */
+    -fx-text-fill: #333; /* Dark gray text color for good contrast */
+    -fx-padding: 10px; /* Padding around the text */
+    -fx-font-family: "Arial"; /* Font family, adjust as needed */
 }
