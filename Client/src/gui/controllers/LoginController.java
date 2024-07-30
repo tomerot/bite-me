@@ -121,15 +121,19 @@ public class LoginController {
 	    switch(user.getUserType()) {
 	    case "CEO":
     	    ((CeoHomeScreenController) controller).setUser(user);
+    	    break;
 
-    	case "North Branch":
+    	case "North Manager":
     	    ((BranchManagerController) controller).setUser(user);
+    	    break;
     	    
-    	case "South Branch":
+    	case "South Manager":
     	    ((BranchManagerController) controller).setUser(user);
+    	    break;
     	
-    	case "Center Branch":
+    	case "Center Manager":
     	    ((BranchManagerController) controller).setUser(user);
+    	    break;
 	    }
 	    
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
