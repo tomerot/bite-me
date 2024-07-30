@@ -75,27 +75,27 @@ public class LoginController {
 						ServerResponseDataContainer entityResponse = ClientConsole.responseFromServer;
 						switch(entityResponse.getResponse()) {
 							case CEO_FOUND:
-								displayWindow(event, "CEO Home Page", "CeoScreen");
+								displayWindow(event, "CEO Home Page", "CeoScreen", userData);
 								//Need to pass entity to the controller
 								//Need to update IsLoggedIn at the DB
 								break;
 							case MANAGER_FOUND:
-								displayWindow(event, "North Manager Home Page", "BranchManagerScreen");
+								displayWindow(event, "North Manager Home Page", "BranchManagerScreen", userData);
 								//Need to pass entity to the controller
 								//Need to update IsLoggedIn at the DB
 								break;
 							case SUPPLIER_FOUND:
-								displayWindow(event, "Supplier Home Page", "SupplierScreen");
+								displayWindow(event, "Supplier Home Page", "SupplierScreen", userData);
 								//Need to pass entity to the controller
 								//Need to update IsLoggedIn at the DB
 								break;
 							case EMPLOYEE_FOUND:
-								displayWindow(event, "Employee Home Page", "EmployeeScreen");
+								displayWindow(event, "Employee Home Page", "EmployeeScreen", userData);
 								//Need to pass entity to the controller
 								//Need to update IsLoggedIn at the DB
 								break;
 							case CUSTOMER_FOUND:
-								displayWindow(event, "Customer Home Page", "CustomerHomeScreen");
+								displayWindow(event, "Customer Home Page", "CustomerHomeScreen", userData);
 								//Need to pass entity to the controller
 								//Need to update IsLoggedIn at the DB
 								break;
@@ -108,19 +108,42 @@ public class LoginController {
 				infoLabel.setStyle("-fx-text-fill: red;");
 				return;
 			}
+		default:
+			break;
 		}
 	}
 	
-	public void displayWindow(ActionEvent event, String title, String page) throws Exception {
+	public void displayWindow(ActionEvent event, String title, String page, User user) throws Exception {
 		String view = "/gui/view/" + page + ".fxml";
-		FXMLLoader loader = new FXMLLoader();
+	    FXMLLoader loader = new FXMLLoader(getClass().getResource(view));
+	    Pane root = loader.load();
+	    Object controller;
+    	controller= loader.getController();
+	    switch(user.getUserType()) {
+	    case "CEO":
+    	    ((CeoHomeScreenController) controller).setUser(user);
+    	    break;
+
+    	case "North Manager":
+    	    ((BranchManagerController) controller).setUser(user);
+    	    break;
+    	    
+    	case "South Manager":
+    	    ((BranchManagerController) controller).setUser(user);
+    	    break;
+    	
+    	case "Center Manager":
+    	    ((BranchManagerController) controller).setUser(user);
+    	    break;
+	    }
+	    
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 		Stage primaryStage = new Stage();
-		Pane root = loader.load(getClass().getResource(view).openStream());
 		Scene scene = new Scene(root);
 		primaryStage.setTitle(title);
 		primaryStage.setScene(scene);
 		primaryStage.show();
+		
 	}
 	
 	

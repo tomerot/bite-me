@@ -16,6 +16,7 @@ import enums.Branch;
 import enums.CustomerType;
 import enums.ServerResponse;
 
+
 public class UserQuery {
 
 	public UserQuery() {

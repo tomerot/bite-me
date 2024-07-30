@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #deb887;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TableView layoutX="21.0" layoutY="72.0" prefHeight="200.0" prefWidth="572.0">
+        <columns>
+            <TableColumn minWidth="15.0" prefWidth="15.0" />
+          <TableColumn minWidth="49.0" prefWidth="45.0" text="Username" />
+          <TableColumn minWidth="30.0" prefWidth="30.0" text="ID" />
+            <TableColumn minWidth="49.0" prefWidth="45.0" text="Type" />
+            <TableColumn minWidth="49.0" prefWidth="45.0" text="CompanyID" />
+            <TableColumn minWidth="49.0" prefWidth="45.0" text="FirstName" />
+            <TableColumn minWidth="49.0" prefWidth="45.0" text="LastName" />
+            <TableColumn minWidth="49.0" prefWidth="45.0" text="Email" />
+            <TableColumn minWidth="49.0" prefWidth="45.0" text="HomeBranch" />
+            <TableColumn minWidth="49.0" prefWidth="45.0" text="Credit" />
+            <TableColumn minWidth="35.0" prefWidth="35.0" text="CVV" />
+            <TableColumn minWidth="49.0" prefWidth="45.0" text="ValidDate" />
+            <TableColumn minWidth="49.0" prefWidth="40.0" text="WalletBallance" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

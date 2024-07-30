@@ -73,11 +73,13 @@ public class Server extends AbstractServer {
 				e.printStackTrace();
 			}
 			break;
+		
 
 		default:
-			return;
-		}
+		    return;
+
 	}
+}
 
 
 	private void handleSpecificUserData(User user, ConnectionToClient client) {
@@ -105,12 +107,16 @@ public class Server extends AbstractServer {
 			e.printStackTrace();
 		}
 	}
-
-
 	
 	private void handleUpdateUser(User user, ConnectionToClient client) throws Exception {
-		QueryControl.userQueries.UpdateUserData(dbConn, user);
+	    QueryControl.userQueries.UpdateUserData(dbConn, user);
+	    try {
+	        client.sendToClient(new ServerResponseDataContainer());
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
 	}
+
 	
 	private void handleUserData(User user, ConnectionToClient client) {
 		ServerResponseDataContainer response = QueryControl.userQueries.importUserInfo(dbConn, user);
