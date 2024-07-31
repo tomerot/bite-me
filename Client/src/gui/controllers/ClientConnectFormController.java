@@ -69,7 +69,7 @@ public class ClientConnectFormController {
 		if (isConnected) {
 			System.out.println("connected succesfully.");
 			try {
-				this.displayClientHomeWindow(event);
+				this.displayLoginScreen(event);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -86,8 +86,9 @@ public class ClientConnectFormController {
 
 	
 	// Method to display the Client Home Page (HomeClientPage GUI)
-	public void displayClientHomeWindow(ActionEvent event) throws Exception {
+	public void displayLoginScreen(ActionEvent event) throws Exception {
 		FXMLLoader loader = new FXMLLoader();
+		loader.setController(new LoginController());
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 		Stage primaryStage = new Stage();
 		Pane root = loader.load(getClass().getResource("/gui/view/LoginScreen.fxml").openStream());

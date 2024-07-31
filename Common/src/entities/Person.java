@@ -1,5 +1,7 @@
 package entities;
 
+import enums.UserType;
+
 public class Person extends User {
 	private int id;
 	private String firstName;
@@ -8,8 +10,8 @@ public class Person extends User {
 	private String phoneNumber;
 
     // Constructor
-    public Person(int id, String firstName, String lastName, String email, String phoneNumber, String userName, String password) {
-        super(userName, password);
+    public Person(int id, String firstName, String lastName, String email, String phoneNumber, String userName, String password, UserType type) {
+        super(userName, password, type);
     	this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

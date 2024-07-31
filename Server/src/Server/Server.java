@@ -16,6 +16,7 @@ import db.QueryControl;
 import entities.User;
 import enums.ClientRequest;
 import enums.ServerResponse;
+import enums.UserType;
 import gui.controllers.ServerPortController;
 import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
@@ -73,6 +74,15 @@ public class Server extends AbstractServer {
 				e.printStackTrace();
 			}
 			break;
+			
+		case UPDATE_IS_LOGGED_IN:
+			user = (User) data.getMessage();
+			try {
+				handleUpdateIsLoggedIn(user, client);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;
 		
 
 		default:
@@ -83,19 +93,19 @@ public class Server extends AbstractServer {
 
 
 	private void handleSpecificUserData(User user, ConnectionToClient client) {
-		String type = user.getUserType();
+		UserType type = user.getUserType();
 		ServerResponseDataContainer response = null;
 		switch (type) {
-		case "Manager":
+		case MANAGER:
 			response = QueryControl.userQueries.importManagerInfo(dbConn, user);
 			break;
-		case "Supplier:":
+		case SUPPLIER:
 			response = QueryControl.userQueries.importSupplierInfo(dbConn, user);
 			break;
-		case "Employee":
+		case EMPLOYEE:
 			response = QueryControl.userQueries.importEmployeeInfo(dbConn, user);
 			break;
-		case "Customer":
+		case CUSTOMER:
 			response = QueryControl.userQueries.importCustomerInfo(dbConn, user);
 			break;
 		default:
@@ -109,7 +119,16 @@ public class Server extends AbstractServer {
 	}
 	
 	private void handleUpdateUser(User user, ConnectionToClient client) throws Exception {
-	    QueryControl.userQueries.UpdateUserData(dbConn, user);
+	    QueryControl.userQueries.updateUserData(dbConn, user);
+	    try {
+	        client.sendToClient(new ServerResponseDataContainer());
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	private void handleUpdateIsLoggedIn(User user, ConnectionToClient client) throws Exception {
+	    QueryControl.userQueries.updateIsLoggedIn(dbConn, user);
 	    try {
 	        client.sendToClient(new ServerResponseDataContainer());
 	    } catch (IOException e) {

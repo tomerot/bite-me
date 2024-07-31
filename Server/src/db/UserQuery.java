@@ -15,7 +15,7 @@ import entities.User;
 import enums.Branch;
 import enums.CustomerType;
 import enums.ServerResponse;
-
+import enums.UserType;
 
 public class UserQuery {
 
@@ -38,7 +38,27 @@ public class UserQuery {
 					String type = rs.getString("Type");
 					int registered = rs.getInt("Registered");
 
-					User userInfo = new User(username, password, isLoggedIn, type, registered);
+					// UserType t;
+					User userInfo = null;
+
+					switch (type) {
+					case "Manager":
+						userInfo = new User(username, password, isLoggedIn, UserType.MANAGER, registered);
+						break;
+					case "Customer":
+						userInfo = new User(username, password, isLoggedIn, UserType.CUSTOMER, registered);
+						break;
+					case "Supplier":
+						userInfo = new User(username, password, isLoggedIn, UserType.SUPPLIER, registered);
+						break;
+					case "Employee":
+						userInfo = new User(username, password, isLoggedIn, UserType.EMPLOYEE, registered);
+						break;
+					default:
+						break;
+					}
+
+					// User userInfo = new User(username, password, isLoggedIn, t, registered);
 					response.setMessage(userInfo);
 					response.setResponse(ServerResponse.USER_FOUND);
 				} else {
@@ -70,29 +90,33 @@ public class UserQuery {
 					String email = rs.getString("Email");
 					String phone = rs.getString("Phone");
 
-					switch(type) {
-						case "CEO":
-							Ceo ceo = new Ceo(id, firstName, lastName, email, phone, user.getUserName(), user.getPassword());
-							response.setMessage(ceo);
-							response.setResponse(ServerResponse.CEO_FOUND);
-							break;
-						case "North Manager":
-							BranchManager nManager = new BranchManager(id, firstName, lastName, email, phone, user.getUserName(), user.getPassword(), Branch.NORTH);
-							response.setMessage(nManager);
-							response.setResponse(ServerResponse.MANAGER_FOUND);
-							break;
-						case "Center Manager":
-							BranchManager cManager = new BranchManager(id, firstName, lastName, email, phone, user.getUserName(), user.getPassword(), Branch.CENTER);
-							response.setMessage(cManager);
-							response.setResponse(ServerResponse.MANAGER_FOUND);
-							break;
-						case "South Manager":
-							BranchManager sManager = new BranchManager(id, firstName, lastName, email, phone, user.getUserName(), user.getPassword(), Branch.SOUTH);
-							response.setMessage(sManager);
-							response.setResponse(ServerResponse.MANAGER_FOUND);
-							break;
-						default:
-							break;
+					switch (type) {
+					case "CEO":
+						Ceo ceo = new Ceo(id, firstName, lastName, email, phone, user.getUserName(),
+								user.getPassword());
+						response.setMessage(ceo);
+						response.setResponse(ServerResponse.CEO_FOUND);
+						break;
+					case "North Manager":
+						BranchManager nManager = new BranchManager(id, firstName, lastName, email, phone,
+								user.getUserName(), user.getPassword(), Branch.NORTH);
+						response.setMessage(nManager);
+						response.setResponse(ServerResponse.MANAGER_FOUND);
+						break;
+					case "Center Manager":
+						BranchManager cManager = new BranchManager(id, firstName, lastName, email, phone,
+								user.getUserName(), user.getPassword(), Branch.CENTER);
+						response.setMessage(cManager);
+						response.setResponse(ServerResponse.MANAGER_FOUND);
+						break;
+					case "South Manager":
+						BranchManager sManager = new BranchManager(id, firstName, lastName, email, phone,
+								user.getUserName(), user.getPassword(), Branch.SOUTH);
+						response.setMessage(sManager);
+						response.setResponse(ServerResponse.MANAGER_FOUND);
+						break;
+					default:
+						break;
 					}
 				}
 
@@ -121,9 +145,10 @@ public class UserQuery {
 					String phone = rs.getString("Phone");
 					String city = rs.getString("City");
 					String address = rs.getString("Address");
-					//Can get also Branch
+					// Can get also Branch
 
-					Supplier supplier = new Supplier(supplierID, name, city, address, null, user.getUserName(), user.getPassword());
+					Supplier supplier = new Supplier(supplierID, name, city, address, null, user.getUserName(),
+							user.getPassword());
 
 					response.setMessage(supplier);
 					response.setResponse(ServerResponse.SUPPLIER_FOUND);
@@ -154,7 +179,8 @@ public class UserQuery {
 					String email = rs.getString("Email");
 					String phone = rs.getString("Phone");
 
-					AuthorizedEmployee employee = new AuthorizedEmployee(id, firstName, lastName, email, phone, user.getUserName(), user.getPassword(), supplierID);
+					AuthorizedEmployee employee = new AuthorizedEmployee(id, firstName, lastName, email, phone,
+							user.getUserName(), user.getPassword(), supplierID);
 
 					response.setMessage(employee);
 					response.setResponse(ServerResponse.EMPLOYEE_FOUND);
@@ -186,31 +212,37 @@ public class UserQuery {
 					String phone = rs.getString("Phone");
 					String homeBranch = rs.getString("HomeBranch");
 					float walletBalance = rs.getFloat("WalletBalance");
-					//Can get also companyID and Credit Card
+					// Can get also companyID and Credit Card
 
 					RegisteredCustomer customer = null;
 
-					switch(homeBranch) {
-						case "North":
-							if(type.equals("Private"))
-								customer = new RegisteredCustomer(id, firstName, lastName, email, phone, user.getUserName(), user.getPassword(), Branch.NORTH, walletBalance, CustomerType.PRIVATE);
-							else
-								customer = new RegisteredCustomer(id, firstName, lastName, email, phone, user.getUserName(), user.getPassword(), Branch.NORTH, walletBalance, CustomerType.BUSINESS);
-							break;
-						case "Center":
-							if(type.equals("Private"))
-								customer = new RegisteredCustomer(id, firstName, lastName, email, phone, user.getUserName(), user.getPassword(), Branch.CENTER, walletBalance, CustomerType.PRIVATE);
-							else
-								customer = new RegisteredCustomer(id, firstName, lastName, email, phone, user.getUserName(), user.getPassword(), Branch.CENTER, walletBalance, CustomerType.BUSINESS);
-							break;
-						case "South":
-							if(type.equals("Private"))
-								customer = new RegisteredCustomer(id, firstName, lastName, email, phone, user.getUserName(), user.getPassword(), Branch.SOUTH, walletBalance, CustomerType.PRIVATE);
-							else
-								customer = new RegisteredCustomer(id, firstName, lastName, email, phone, user.getUserName(), user.getPassword(), Branch.SOUTH, walletBalance, CustomerType.BUSINESS);
-							break;
-						default:
-							break;
+					switch (homeBranch) {
+					case "North":
+						if (type.equals("Private"))
+							customer = new RegisteredCustomer(id, firstName, lastName, email, phone, user.getUserName(),
+									user.getPassword(), Branch.NORTH, walletBalance, CustomerType.PRIVATE);
+						else
+							customer = new RegisteredCustomer(id, firstName, lastName, email, phone, user.getUserName(),
+									user.getPassword(), Branch.NORTH, walletBalance, CustomerType.BUSINESS);
+						break;
+					case "Center":
+						if (type.equals("Private"))
+							customer = new RegisteredCustomer(id, firstName, lastName, email, phone, user.getUserName(),
+									user.getPassword(), Branch.CENTER, walletBalance, CustomerType.PRIVATE);
+						else
+							customer = new RegisteredCustomer(id, firstName, lastName, email, phone, user.getUserName(),
+									user.getPassword(), Branch.CENTER, walletBalance, CustomerType.BUSINESS);
+						break;
+					case "South":
+						if (type.equals("Private"))
+							customer = new RegisteredCustomer(id, firstName, lastName, email, phone, user.getUserName(),
+									user.getPassword(), Branch.SOUTH, walletBalance, CustomerType.PRIVATE);
+						else
+							customer = new RegisteredCustomer(id, firstName, lastName, email, phone, user.getUserName(),
+									user.getPassword(), Branch.SOUTH, walletBalance, CustomerType.BUSINESS);
+						break;
+					default:
+						break;
 					}
 
 					response.setMessage(customer);
@@ -226,19 +258,36 @@ public class UserQuery {
 		return response;
 	}
 
-	public void UpdateUserData(Connection dbConn, User user) throws Exception {
+	public void updateUserData(Connection dbConn, User user) throws Exception {
 		int affectedRows;
 		String query = "UPDATE users SET username=? ,password=? ,isLoggedIn=? ,Type=? ,Registered=? WHERE username = ?";
 		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
 			stmt.setString(1, user.getUserName());
 			stmt.setString(2, user.getPassword());
 			stmt.setInt(3, user.getisLoggedIn());
-			stmt.setString(4, user.getUserType());
+			UserType t = user.getUserType();
+			if (t.equals(UserType.CEO))
+				stmt.setString(4, UserType.MANAGER.toString());
+			else
+				stmt.setString(4, user.getUserType().toString());
 			stmt.setInt(5, user.getRegistered());
 			stmt.setString(6, user.getUserName());
 			affectedRows = stmt.executeUpdate();
 			if (affectedRows == 0)
-				throw new Exception("User update IsLoggedIn failed\n");
+				throw new Exception("User update failed\n");
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	public void updateIsLoggedIn(Connection dbConn, User user) throws Exception {
+		String query = "UPDATE users SET isLoggedIn = ? WHERE username = ?";
+		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+			stmt.setInt(1, user.getisLoggedIn());
+			stmt.setString(2, user.getUserName());
+			int affectedRow = stmt.executeUpdate();
+			if (affectedRow == 0)
+				throw new Exception("IsLoggedIn update failed\n");
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}

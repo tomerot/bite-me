@@ -3,7 +3,11 @@ package gui.controllers;
 import client.ClientConsole;
 import client.ClientMainController;
 import containers.ServerResponseDataContainer;
+import entities.AuthorizedEmployee;
+import entities.BranchManager;
+import entities.Ceo;
 import entities.RegisteredCustomer;
+import entities.Supplier;
 import entities.User;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -71,33 +75,32 @@ public class LoginController {
 						return;
 					}
 					else {
+						/*UPDATE ISLOGGEDIN, REMOVE THIS IN THE END*/
+						userData.setisLoggedIn(1);
+						ClientMainController.requestUpdateIsLoggedIn(userData);
 						ClientMainController.requestUserSpecificData(userData);
 						ServerResponseDataContainer entityResponse = ClientConsole.responseFromServer;
 						switch(entityResponse.getResponse()) {
 							case CEO_FOUND:
-								displayWindow(event, "CEO Home Page", "CeoScreen", userData);
-								//Need to pass entity to the controller
-								//Need to update IsLoggedIn at the DB
+								Ceo ceo = (Ceo) entityResponse.getMessage();
+								System.out.println(ceo.getRegistered());
+								displayWindow(event, "CEO Home Page", "CeoScreen", ceo);
 								break;
 							case MANAGER_FOUND:
-								displayWindow(event, "North Manager Home Page", "BranchManagerScreen", userData);
-								//Need to pass entity to the controller
-								//Need to update IsLoggedIn at the DB
+								BranchManager manager = (BranchManager) entityResponse.getMessage();
+								displayWindow(event, "North Manager Home Page", "BranchManagerScreen", manager);
 								break;
 							case SUPPLIER_FOUND:
-								displayWindow(event, "Supplier Home Page", "SupplierScreen", userData);
-								//Need to pass entity to the controller
-								//Need to update IsLoggedIn at the DB
+								Supplier supplier = (Supplier) entityResponse.getMessage();
+								displayWindow(event, "Supplier Home Page", "SupplierScreen", supplier);
 								break;
 							case EMPLOYEE_FOUND:
-								displayWindow(event, "Employee Home Page", "EmployeeScreen", userData);
-								//Need to pass entity to the controller
-								//Need to update IsLoggedIn at the DB
+								AuthorizedEmployee employee = (AuthorizedEmployee) entityResponse.getMessage();
+								displayWindow(event, "Employee Home Page", "EmployeeScreen", employee);
 								break;
 							case CUSTOMER_FOUND:
-								displayWindow(event, "Customer Home Page", "CustomerHomeScreen", userData);
-								//Need to pass entity to the controller
-								//Need to update IsLoggedIn at the DB
+								RegisteredCustomer customer = (RegisteredCustomer) entityResponse.getMessage();
+								displayWindow(event, "Customer Home Page", "CustomerHomeScreen", customer);
 								break;
 						}
 					}
@@ -116,26 +119,43 @@ public class LoginController {
 	public void displayWindow(ActionEvent event, String title, String page, User user) throws Exception {
 		String view = "/gui/view/" + page + ".fxml";
 	    FXMLLoader loader = new FXMLLoader(getClass().getResource(view));
-	    Pane root = loader.load();
-	    Object controller;
-    	controller= loader.getController();
 	    switch(user.getUserType()) {
-	    case "CEO":
-    	    ((CeoHomeScreenController) controller).setUser(user);
+	    case CEO:
+	    	CeoHomeScreenController controller = new CeoHomeScreenController();
+	    	loader.setController(controller);
+	    	controller.setUser(user);
     	    break;
 
-    	case "North Manager":
-    	    ((BranchManagerController) controller).setUser(user);
+    	case MANAGER:
+    	    //((BranchManagerController) controller).setUser(user);
+//    		CeoHomeScreenController controller = new CeoHomeScreenController();
+//	    	loader.setController(controller);
+//	    	controller.setUser(user);
     	    break;
     	    
-    	case "South Manager":
-    	    ((BranchManagerController) controller).setUser(user);
-    	    break;
-    	
-    	case "Center Manager":
-    	    ((BranchManagerController) controller).setUser(user);
-    	    break;
+    	case SUPPLIER:
+    		//((SupplierController) controller).setUser(user);
+//    		CeoHomeScreenController controller = new CeoHomeScreenController();
+//	    	loader.setController(controller);
+//	    	controller.setUser(user);
+    		break;
+	    
+	    case EMPLOYEE:
+	    	//((SupplierController) controller).setUser(user);
+//	    	CeoHomeScreenController controller = new CeoHomeScreenController();
+//	    	loader.setController(controller);
+//	    	controller.setUser(user);
+    		break;
+    		
+	    case CUSTOMER:
+	    	//((SupplierController) controller).setUser(user);
+//	    	CeoHomeScreenController controller = new CeoHomeScreenController();
+//	    	loader.setController(controller);
+//	    	controller.setUser(user);
+    		break;
 	    }
+	    
+	    Pane root = loader.load();
 	    
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 		Stage primaryStage = new Stage();
