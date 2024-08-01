@@ -1,11 +1,15 @@
 package gui.controllers;
 
+import java.util.Stack;
+
 import client.ClientConsole;
 import client.ClientMainController;
 import containers.ServerResponseDataContainer;
 import entities.BranchManager;
 import entities.Ceo;
 import entities.User;
+import gui.loader.Screen;
+import gui.loader.ScreenLoader;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,6 +18,8 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -24,6 +30,12 @@ public class CeoHomeScreenController {
 	
 	@FXML
 	private Label welcomeLbl;
+	
+	@FXML
+	private AnchorPane dashboard;
+	
+	@FXML
+	private HBox screen;
 	
 	private User user;
 	private Ceo ceo;
@@ -72,16 +84,11 @@ public class CeoHomeScreenController {
 	}
 	
 	public void displayMonthlyReportScreen(ActionEvent event) throws Exception {
-//    	FXMLLoader loader = new FXMLLoader();
-//    	ReportController ReportController=new ReportController(this);//this is a mistake- should init a ReportController with appropriate ceo\branchmanager controller, and use it
-//	    loader.setController(ReportController);
-//		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-//		Stage primaryStage = new Stage();
-//		Pane root = loader.load(getClass().getResource("/gui/view/MonthlyReportScreen.fxml").openStream());
-//		Scene scene = new Scene(root);
-//		primaryStage.setTitle("Monthly Reports");
-//		primaryStage.setScene(scene);
-//		primaryStage.show();
+    	ScreenLoader screenLoader = new ScreenLoader();
+    	String path = "/gui/view/MonthlyReportScreen.fxml";
+    	AnchorPane nextDash = screenLoader.loadOnDashboard(screen, path, Screen.MONTHLY_REPORT_SCREEN, this, null);
+    	dashboard.getChildren().clear(); //Clear current dashboard
+    	dashboard.getChildren().add(nextDash); //Assign the new dashboard
 	}
     
 }

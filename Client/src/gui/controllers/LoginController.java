@@ -75,8 +75,8 @@ public class LoginController {
 						return;
 					}
 					else {
-						/*UPDATE ISLOGGEDIN, REMOVE THIS IN THE END*/
-						userData.setisLoggedIn(1);
+						/*UPDATE ISLOGGEDIN, REMOVE THIS COMMENT IN THE END*/
+						//userData.setisLoggedIn(1);
 						ClientMainController.requestUpdateIsLoggedIn(userData);
 						ClientMainController.requestUserSpecificData(userData);
 						ServerResponseDataContainer entityResponse = ClientConsole.responseFromServer;
