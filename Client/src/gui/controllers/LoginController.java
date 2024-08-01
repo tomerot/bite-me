@@ -83,7 +83,6 @@ public class LoginController {
 						switch(entityResponse.getResponse()) {
 							case CEO_FOUND:
 								Ceo ceo = (Ceo) entityResponse.getMessage();
-								System.out.println(ceo.getRegistered());
 								displayWindow(event, "CEO Home Page", "CeoScreen", ceo);
 								break;
 							case MANAGER_FOUND:

@@ -86,7 +86,7 @@ public class CeoHomeScreenController {
 	public void displayMonthlyReportScreen(ActionEvent event) throws Exception {
     	ScreenLoader screenLoader = new ScreenLoader();
     	String path = "/gui/view/MonthlyReportScreen.fxml";
-    	AnchorPane nextDash = screenLoader.loadOnDashboard(screen, path, Screen.MONTHLY_REPORT_SCREEN, this, null);
+    	AnchorPane nextDash = screenLoader.loadOnDashboard(screen, path, Screen.MONTHLY_REPORT_SCREEN, this);
     	dashboard.getChildren().clear(); //Clear current dashboard
     	dashboard.getChildren().add(nextDash); //Assign the new dashboard
 	}
