@@ -3,7 +3,11 @@ import client.ClientConsole;
 import client.ClientMainController;
 import containers.ServerResponseDataContainer;
 import entities.BranchManager;
+import entities.Ceo;
 import entities.User;
+import gui.loader.Screen;
+import gui.loader.ScreenLoader;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +15,8 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -20,42 +26,48 @@ public class BranchManagerController {
 	@FXML
 	private Button RegisterCustomerButton;
 	@FXML
-    private Label WelcomeMessageLabel;
+    private Label welcomeLbl;
     @FXML
-    private Label homeBranchLabel;
+    private Label homeBranchLbl;
+	@FXML
+	private AnchorPane dashboard;
+	@FXML
+	private HBox screen;
     
 	private User user;
 	private BranchManager manager;
     
-	public void setUser(User user) {
-        this.user = user;
-        ClientMainController.requestBranchManagerData(user);
-        ServerResponseDataContainer response = ClientConsole.responseFromServer;
-        BranchManager manager=(BranchManager) response.getMessage();
-        this.manager=manager;
-        updateUI(manager);
-    }
-	public User getUser() {
-		return user;
+	public BranchManagerController(User user) {
+		this.user = user;
+		this.manager=(BranchManager)user;
+        UpdateLabel((BranchManager)user);
 	}
+	
 	public BranchManager getBranchManager() {
 		return manager;
 	}
-
-    public void updateUI(BranchManager manager) {
-        WelcomeMessageLabel.setText("Welcome, " + manager.getFirstName()+ " " + manager.getLastName());
-        homeBranchLabel.setText(manager.getUserType());
+	
+	public User getUser() {
+		return user;
+	}
+	
+    public void UpdateLabel(BranchManager manager) {
+	    Platform.runLater(() -> {
+	    	welcomeLbl.setText("Welcome, " + manager.getFirstName()+ " " + manager.getLastName());
+	    	homeBranchLbl.setText(manager.getbranchType()+" Manager Screen");
+	    });
     }
     
     public void logOut(ActionEvent event) throws Exception{
 		user.setisLoggedIn(0);
-		ClientMainController.requestUpdateUserData(user);
+		ClientMainController.requestUpdateIsLoggedIn(user);
 		displayLogin(event);
     }
     
 	// Method to display the Client Home Page (HomeClientPage GUI)
 	public void displayLogin(ActionEvent event) throws Exception {
 		FXMLLoader loader = new FXMLLoader();
+		loader.setController(new LoginController());
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 		Stage primaryStage = new Stage();
 		Pane root = loader.load(getClass().getResource("/gui/view/LoginScreen.fxml").openStream());
@@ -66,28 +78,21 @@ public class BranchManagerController {
 		primaryStage.show();
 	}
 	public void displayMonthlyReportScreen(ActionEvent event) throws Exception {
-    	FXMLLoader loader = new FXMLLoader();
-    	ReportController ReportController=new ReportController(this);//this is a mistake- should init a ReportController with appropriate ceo\branchmanager controller, and use it
-	    loader.setController(ReportController);
-		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-		Stage primaryStage = new Stage();
-		Pane root = loader.load(getClass().getResource("/gui/view/MonthlyReportScreen.fxml").openStream());
-		Scene scene = new Scene(root);
-		primaryStage.setTitle("Monthly Reports");
-		primaryStage.setScene(scene);
-		primaryStage.show();
+    	ScreenLoader screenLoader = new ScreenLoader();
+    	String path = "/gui/view/MonthlyReportScreen.fxml";
+    	AnchorPane nextDash = screenLoader.loadOnDashboard(screen, path, Screen.MONTHLY_REPORT_SCREEN, this);
+    	dashboard.getChildren().clear(); //Clear current dashboard
+    	dashboard.getChildren().add(nextDash); //Assign the new dashboard
 	}
 	
 	public void displayRegistrationScreen(ActionEvent event) throws Exception {
-    	FXMLLoader loader = new FXMLLoader();
-	    loader.setController(this);
-		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-		Stage primaryStage = new Stage();
-		Pane root = loader.load(getClass().getResource("/gui/view/RegistrationScreen.fxml").openStream());
-		Scene scene = new Scene(root);
-		primaryStage.setTitle("Register Customers");
-		primaryStage.setScene(scene);
-		primaryStage.show();
+    	ScreenLoader screenLoader = new ScreenLoader();
+    	String path = "/gui/view/RegistrationScreen.fxml";
+    	AnchorPane nextDash = screenLoader.loadOnDashboard(screen, path, Screen.REGISTRATION_SCREEN, this);
+    	String css = getClass().getResource("/gui/view/RegistrationScreen.css").toExternalForm();
+        nextDash.getStylesheets().add(css);
+    	dashboard.getChildren().clear(); //Clear current dashboard
+    	dashboard.getChildren().add(nextDash); //Assign the new dashboard
 		//setupRegistrationTable();
 	}
 	/*

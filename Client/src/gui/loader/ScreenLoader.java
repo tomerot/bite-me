@@ -2,9 +2,11 @@ package gui.loader;
 
 import java.io.IOException;
 
+import gui.controllers.BranchManagerController;
 import gui.controllers.CeoHomeScreenController;
 import gui.controllers.MonthlyReportScreenController;
 import gui.controllers.MonthlyReportScreenController2;
+import gui.controllers.RegistrationScreenController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -20,7 +22,7 @@ public class ScreenLoader {
 	//currController - in case it's needed to pass the current controller (for example for "Back")
 	//data - contains entities we need to pass to the next screen, MAYBE WE CAN USE LIST INSTEAD?
 	
-	public AnchorPane loadOnDashboard(HBox wholeScreen, String path, Screen toLoad, Object currController, EntitiesContainer data) throws IOException {
+	public AnchorPane loadOnDashboard(HBox wholeScreen, String path, Screen toLoad, Object currController) throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(path)); //The FXML is actually an AnchorPane
 		switch(toLoad) {
 			case MONTHLY_REPORT_SCREEN: {
@@ -30,6 +32,11 @@ public class ScreenLoader {
 			}
 			case MONTHLY_REPORT_SCREEN_TWO: {
 				MonthlyReportScreenController2 controller = new MonthlyReportScreenController2(wholeScreen, currController);
+				loader.setController(controller);
+				break;
+			}
+			case REGISTRATION_SCREEN: {
+				RegistrationScreenController controller = new RegistrationScreenController(wholeScreen, currController);
 				loader.setController(controller);
 				break;
 			}
@@ -48,10 +55,12 @@ public class ScreenLoader {
 			case CEO_SCREEN:
 				loader.setController((CeoHomeScreenController) prevController);
 				break;
+			case MANAGER_SCREEN:
+				loader.setController((BranchManagerController) prevController);
+				break;
 			default:
 				break;
 		}
-		//loader.setController(prevController);
 		loader.load();
 		wholeScreen = loader.getRoot();
 		return wholeScreen;

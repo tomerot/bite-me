@@ -1,6 +1,7 @@
 package client;
 
 import containers.ClientRequestDataContainer;
+import entities.BranchManager;
 import entities.User;
 import enums.ClientRequest;
 
@@ -37,6 +38,10 @@ public class ClientMainController {
     
     public static void requestUpdateIsLoggedIn(User user) {
         ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.UPDATE_IS_LOGGED_IN, user);
+        ClientMainController.accept(request);
+    }
+    public static void requestUnregisteredCustomersData(BranchManager manager) {
+        ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.FETCH_CUSTOMERS_DATA, manager);
         ClientMainController.accept(request);
     }
 }

@@ -8,7 +8,7 @@ public class Order {
 	private List<ItemInOrder> itemsList;
     private int orderID;
     private Supplier supplier;
-    private RegisteredCustomer customer;
+    private Customer customer;
     private Branch branchName;
     private String desiredDate;
     private String desiredHour;
@@ -17,7 +17,7 @@ public class Order {
     private String acceptanceHour;
     private String confirmedHour;
     
-    public Order(List<ItemInOrder> itemsList, int orderID, Supplier supplier, RegisteredCustomer customer, Branch branchName, String desiredDate,
+    public Order(List<ItemInOrder> itemsList, int orderID, Supplier supplier, Customer customer, Branch branchName, String desiredDate,
             String desiredHour, OrderType type, float totalPrice, String acceptanceHour, String confirmedHour) {
     	this.itemsList=itemsList;
     	this.orderID = orderID;
@@ -44,8 +44,8 @@ public class Order {
     public void setSupplier(Supplier supplier) { this.supplier = supplier; }
     
     //RegisteredCustomer getter and setter
-    public RegisteredCustomer getCustomer() { return customer; }
-    public void setCustomer(RegisteredCustomer customer) { this.customer = customer; }
+    public Customer getCustomer() { return customer; }
+    public void setCustomer(Customer customer) { this.customer = customer; }
     
     //Branch getter and setter
     public Branch getBranchName() { return branchName; }

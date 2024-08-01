@@ -1,6 +1,7 @@
 package db;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,13 +10,15 @@ import containers.ServerResponseDataContainer;
 import entities.AuthorizedEmployee;
 import entities.BranchManager;
 import entities.Ceo;
-import entities.RegisteredCustomer;
+import entities.Customer;
 import entities.Supplier;
 import entities.User;
 import enums.Branch;
 import enums.CustomerType;
 import enums.ServerResponse;
 import enums.UserType;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserQuery {
 
@@ -93,25 +96,25 @@ public class UserQuery {
 					switch (type) {
 					case "CEO":
 						Ceo ceo = new Ceo(id, firstName, lastName, email, phone, user.getUserName(),
-								user.getPassword());
+								user.getPassword(),user.getisLoggedIn(),user.getRegistered());
 						response.setMessage(ceo);
 						response.setResponse(ServerResponse.CEO_FOUND);
 						break;
 					case "North Manager":
 						BranchManager nManager = new BranchManager(id, firstName, lastName, email, phone,
-								user.getUserName(), user.getPassword(), Branch.NORTH);
+								user.getUserName(), user.getPassword(), Branch.NORTH, user.getisLoggedIn(),user.getRegistered());
 						response.setMessage(nManager);
 						response.setResponse(ServerResponse.MANAGER_FOUND);
 						break;
 					case "Center Manager":
 						BranchManager cManager = new BranchManager(id, firstName, lastName, email, phone,
-								user.getUserName(), user.getPassword(), Branch.CENTER);
+								user.getUserName(), user.getPassword(), Branch.CENTER, user.getisLoggedIn(),user.getRegistered());
 						response.setMessage(cManager);
 						response.setResponse(ServerResponse.MANAGER_FOUND);
 						break;
 					case "South Manager":
 						BranchManager sManager = new BranchManager(id, firstName, lastName, email, phone,
-								user.getUserName(), user.getPassword(), Branch.SOUTH);
+								user.getUserName(), user.getPassword(), Branch.SOUTH, user.getisLoggedIn(),user.getRegistered());
 						response.setMessage(sManager);
 						response.setResponse(ServerResponse.MANAGER_FOUND);
 						break;
@@ -206,40 +209,50 @@ public class UserQuery {
 					// Extract data from the result set
 					int id = rs.getInt("ID");
 					String type = rs.getString("Type");
+					int companyId = rs.getInt("CompanyID");
 					String firstName = rs.getString("FirstName");
 					String lastName = rs.getString("LastName");
 					String email = rs.getString("Email");
 					String phone = rs.getString("Phone");
 					String homeBranch = rs.getString("HomeBranch");
+					String credit = rs.getString("Credit");
+					String cvv = rs.getString("CVV");
+					Date validDate = rs.getDate("validDate");
 					float walletBalance = rs.getFloat("WalletBalance");
 					// Can get also companyID and Credit Card
 
-					RegisteredCustomer customer = null;
+					Customer customer = null;
 
 					switch (homeBranch) {
 					case "North":
 						if (type.equals("Private"))
-							customer = new RegisteredCustomer(id, firstName, lastName, email, phone, user.getUserName(),
-									user.getPassword(), Branch.NORTH, walletBalance, CustomerType.PRIVATE);
+							customer = new Customer(user.getUserName(), id, CustomerType.PRIVATE, companyId, firstName, 
+									lastName, email, phone, Branch.NORTH, credit, cvv, validDate, walletBalance, 
+									user.getisLoggedIn(), user.getRegistered(), user.getPassword());
 						else
-							customer = new RegisteredCustomer(id, firstName, lastName, email, phone, user.getUserName(),
-									user.getPassword(), Branch.NORTH, walletBalance, CustomerType.BUSINESS);
+							customer = new Customer(user.getUserName(), id, CustomerType.BUSINESS, companyId, firstName, 
+									lastName, email, phone, Branch.NORTH, credit, cvv, validDate, walletBalance, 
+									user.getisLoggedIn(), user.getRegistered(), user.getPassword());
 						break;
 					case "Center":
 						if (type.equals("Private"))
-							customer = new RegisteredCustomer(id, firstName, lastName, email, phone, user.getUserName(),
-									user.getPassword(), Branch.CENTER, walletBalance, CustomerType.PRIVATE);
+							customer = new Customer(user.getUserName(), id, CustomerType.PRIVATE, companyId, firstName, 
+									lastName, email, phone, Branch.CENTER, credit, cvv, validDate, walletBalance, 
+									user.getisLoggedIn(), user.getRegistered(), user.getPassword());
 						else
-							customer = new RegisteredCustomer(id, firstName, lastName, email, phone, user.getUserName(),
-									user.getPassword(), Branch.CENTER, walletBalance, CustomerType.BUSINESS);
+							customer = new Customer(user.getUserName(), id, CustomerType.BUSINESS, companyId, firstName, 
+									lastName, email, phone, Branch.CENTER, credit, cvv, validDate, walletBalance, 
+									user.getisLoggedIn(), user.getRegistered(), user.getPassword());
 						break;
 					case "South":
 						if (type.equals("Private"))
-							customer = new RegisteredCustomer(id, firstName, lastName, email, phone, user.getUserName(),
-									user.getPassword(), Branch.SOUTH, walletBalance, CustomerType.PRIVATE);
+							customer = new Customer(user.getUserName(), id, CustomerType.PRIVATE, companyId, firstName, 
+									lastName, email, phone, Branch.SOUTH, credit, cvv, validDate, walletBalance, 
+									user.getisLoggedIn(), user.getRegistered(), user.getPassword());
 						else
-							customer = new RegisteredCustomer(id, firstName, lastName, email, phone, user.getUserName(),
-									user.getPassword(), Branch.SOUTH, walletBalance, CustomerType.BUSINESS);
+							customer = new Customer(user.getUserName(), id, CustomerType.BUSINESS, companyId, firstName, 
+									lastName, email, phone, Branch.SOUTH, credit, cvv, validDate, walletBalance, 
+									user.getisLoggedIn(), user.getRegistered(), user.getPassword());
 						break;
 					default:
 						break;
@@ -291,5 +304,84 @@ public class UserQuery {
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
+	}
+	public ServerResponseDataContainer importCustomerList(Connection dbConn, BranchManager manager) throws SQLException {
+		ServerResponseDataContainer response = new ServerResponseDataContainer();
+		List<Customer> unRegisteredCustomers= new ArrayList<Customer>();
+		Customer customer = null;
+		String innerQuery = "SELECT * FROM customers WHERE WHERE username = ?";
+		String query = "SELECT * FROM users WHERE Type = ? AND Registered = ?";
+		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+			stmt.setString(1, "Customer");
+			stmt.setInt(2, 0);
+			try (ResultSet rs = stmt.executeQuery()) {
+				if (rs.next()) {
+					String username = rs.getString("username");
+					String password = rs.getString("password");
+					int isLoggedIn = rs.getInt("isLoggedIn");
+					int registered = rs.getInt("Registered");
+
+					// Extract data from the result set
+					try (PreparedStatement stmt1 = dbConn.prepareStatement(innerQuery)) {
+						stmt1.setString(1, username);
+						try (ResultSet rs1 = stmt1.executeQuery()){
+							if (rs1.next()) {
+								int id = rs.getInt("ID");
+								String type = rs.getString("Type");
+								int companyId = rs.getInt("CompanyID");
+								String firstName = rs.getString("FirstName");
+								String lastName = rs.getString("LastName");
+								String email = rs.getString("Email");
+								String phone = rs.getString("Phone");
+								String homeBranch = rs.getString("HomeBranch");
+								String credit = rs.getString("Credit");
+								String cvv = rs.getString("CVV");
+								Date validDate = rs.getDate("validDate");
+								float walletBalance = rs.getFloat("WalletBalance");
+								switch (homeBranch) {
+								case "North":
+									if (type.equals("Private"))
+										customer = new Customer(username, id, CustomerType.PRIVATE, companyId, firstName, 
+												lastName, email, phone, Branch.NORTH, credit, cvv, validDate, walletBalance, 
+												isLoggedIn, registered, password);
+									else
+										customer = new Customer(username, id, CustomerType.BUSINESS, companyId, firstName, 
+												lastName, email, phone, Branch.NORTH, credit, cvv, validDate, walletBalance, 
+												isLoggedIn, registered, password);
+									break;
+								case "Center":
+									if (type.equals("Private"))
+										customer = new Customer(username, id, CustomerType.PRIVATE, companyId, firstName, 
+												lastName, email, phone, Branch.CENTER, credit, cvv, validDate, walletBalance, 
+												isLoggedIn, registered, password);
+									else
+										customer = new Customer(username, id, CustomerType.BUSINESS, companyId, firstName, 
+												lastName, email, phone, Branch.CENTER, credit, cvv, validDate, walletBalance, 
+												isLoggedIn, registered, password);
+									break;
+								case "South":
+									if (type.equals("Private"))
+										customer = new Customer(username, id, CustomerType.PRIVATE, companyId, firstName, 
+												lastName, email, phone, Branch.SOUTH, credit, cvv, validDate, walletBalance, 
+												isLoggedIn, registered, password);
+									else
+										customer = new Customer(username, id, CustomerType.BUSINESS, companyId, firstName, 
+												lastName, email, phone, Branch.SOUTH, credit, cvv, validDate, walletBalance, 
+												isLoggedIn, registered, password);
+									break;
+								default:
+									break;
+								}
+								unRegisteredCustomers.add(customer);
+							}
+						}
+							
+					}
+				}
+			}
+		}
+		response.setMessage(unRegisteredCustomers);
+		response.setResponse(ServerResponse.UNREGISTERED_CUSTOMERS_FOUND);
+		return response;
 	}
 }

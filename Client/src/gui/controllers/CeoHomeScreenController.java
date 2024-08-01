@@ -40,10 +40,11 @@ public class CeoHomeScreenController {
 	private User user;
 	private Ceo ceo;
 	
-	public void setUser(User user) {
-        this.user = user;
+	public CeoHomeScreenController(User user) {
+		this.user = user;
+		this.ceo=(Ceo)user;
         UpdateLabel((Ceo)user);
-    }
+	}
 	
 	public Ceo getCeo() {
 		return ceo;
@@ -78,7 +79,7 @@ public class CeoHomeScreenController {
 		Pane root = loader.load(getClass().getResource("/gui/view/LoginScreen.fxml").openStream());
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add(getClass().getResource("/gui/view/LoginScreen.css").toExternalForm());
-		primaryStage.setTitle("Main");
+		primaryStage.setTitle("Login");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
@@ -86,7 +87,7 @@ public class CeoHomeScreenController {
 	public void displayMonthlyReportScreen(ActionEvent event) throws Exception {
     	ScreenLoader screenLoader = new ScreenLoader();
     	String path = "/gui/view/MonthlyReportScreen.fxml";
-    	AnchorPane nextDash = screenLoader.loadOnDashboard(screen, path, Screen.MONTHLY_REPORT_SCREEN, this, null);
+    	AnchorPane nextDash = screenLoader.loadOnDashboard(screen, path, Screen.MONTHLY_REPORT_SCREEN, this);
     	dashboard.getChildren().clear(); //Clear current dashboard
     	dashboard.getChildren().add(nextDash); //Assign the new dashboard
 	}

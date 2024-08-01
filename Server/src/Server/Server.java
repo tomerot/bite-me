@@ -7,12 +7,14 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import containers.ClientRequestDataContainer;
 import containers.ServerResponseDataContainer;
 import db.DBConnectionDetails;
 import db.DBController;
 import db.QueryControl;
+import entities.BranchManager;
 import entities.User;
 import enums.ClientRequest;
 import enums.ServerResponse;
@@ -83,8 +85,14 @@ public class Server extends AbstractServer {
 				e.printStackTrace();
 			}
 			break;
-		
-
+		case FETCH_CUSTOMERS_DATA:
+			BranchManager manager = (BranchManager) data.getMessage();
+			try {
+				handleCustomersData(manager, client);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;
 		default:
 		    return;
 
@@ -135,7 +143,15 @@ public class Server extends AbstractServer {
 	        e.printStackTrace();
 	    }
 	}
-
+	
+	private void handleCustomersData(BranchManager manager, ConnectionToClient client) throws SQLException {
+		ServerResponseDataContainer response = QueryControl.userQueries.importCustomerList(dbConn, manager);
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	private void handleUserData(User user, ConnectionToClient client) {
 		ServerResponseDataContainer response = QueryControl.userQueries.importUserInfo(dbConn, user);
