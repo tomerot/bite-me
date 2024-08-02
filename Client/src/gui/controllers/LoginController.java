@@ -21,6 +21,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+/**
+ * Controller for handling user login interactions.
+ * Manages the login process, validates user credentials, and navigates to the appropriate user-specific home page.
+ */
 public class LoginController {
 
 	@FXML
@@ -38,6 +42,13 @@ public class LoginController {
 	@FXML
 	private Label infoLabel;
 	
+    /**
+     * Handles the event when the connect button is clicked.
+     * Validates user credentials, requests user data from the server, and navigates to the appropriate home page.
+     * 
+     * @param event the action event triggered by clicking the connect button
+     * @throws Exception if an error occurs during the connection or screen transition
+     */
 	@FXML
 	private void onConnectClicked(ActionEvent event) throws Exception {
 		String username = usernameField.getText();
@@ -114,6 +125,15 @@ public class LoginController {
 		}
 	}
 	
+    /**
+     * Displays the appropriate user-specific home page based on the user's type.
+     * 
+     * @param event the action event that triggered this method
+     * @param title the title of the new stage
+     * @param page the FXML file name for the user-specific home page
+     * @param user the user for whom the home page is to be displayed
+     * @throws Exception if an error occurs while loading the FXML file or creating the new stage
+     */
 	public void displayWindow(ActionEvent event, String title, String page, User user) throws Exception {
 		String view = "/gui/view/" + page + ".fxml";
 	    FXMLLoader loader = new FXMLLoader(getClass().getResource(view));
@@ -144,14 +164,13 @@ public class LoginController {
     		
 	    case CUSTOMER:
 	    	//((SupplierController) controller).setUser(user);
-//	    	CeoHomeScreenController controller = new CeoHomeScreenController();
-//	    	loader.setController(controller);
+	    	CustomerHomeScreenController customerContoller = new CustomerHomeScreenController(user);
+	    	loader.setController(customerContoller);
 //	    	controller.setUser(user);
     		break;
 	    }
 	    
-	    Pane root = loader.load();
-	    
+	    Pane root = loader.load();   
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
@@ -162,7 +181,13 @@ public class LoginController {
 	}
 	
 	
-	// disconnect user from server, and exit
+    /**
+     * Handles the event when the exit button is clicked.
+     * Disconnects the client from the server and exits the application.
+     * 
+     * @param event the action event triggered by clicking the exit button
+     * @throws Exception if an error occurs during the disconnection process
+     */
 	@FXML
 	private void getExitBtn(ActionEvent event) throws Exception {
 		ClientConsole.disconnectClientFromServer();

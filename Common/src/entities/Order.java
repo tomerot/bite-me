@@ -4,6 +4,10 @@ import java.util.List;
 
 import enums.Branch;
 
+/**
+ * This class represents an order in the system.
+ * It includes details about the items in the order, the supplier, the customer, and various order attributes.
+ */
 public class Order {
 	private List<ItemInOrder> itemsList;
     private int orderID;

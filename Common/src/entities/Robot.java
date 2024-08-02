@@ -2,6 +2,10 @@ package entities;
 
 import enums.Branch;
 
+/**
+ * Represents a robot delivery for an order. Extends the {@link Delivery} class to include
+ * additional attributes and behaviors specific to robot deliveries.
+ */
 public class Robot extends Delivery {
 	private float robotFee=0;
 	public Robot(int orderID, Supplier supplier, Customer customer, Branch branchName, String desiredDate,

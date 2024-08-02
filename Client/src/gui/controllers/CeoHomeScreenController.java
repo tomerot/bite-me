@@ -23,6 +23,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+/**
+ * The controller for the CEO's home screen user interface.
+ * It manages interactions for CEO-specific actions and UI updates.
+ */
+
 public class CeoHomeScreenController {
 	
 	@FXML
@@ -40,6 +45,11 @@ public class CeoHomeScreenController {
 	private User user;
 	private Ceo ceo;
 	
+    /**
+     * Constructs a CeoHomeScreenController with the given user.
+     * 
+     * @param user the user for whom this controller is created, expected to be a Ceo
+     */
 	public CeoHomeScreenController(User user) {
 		this.user = user;
 		this.ceo=(Ceo)user;
@@ -54,6 +64,12 @@ public class CeoHomeScreenController {
 		return user;
 	}
 	
+    /**
+     * Updates the welcome label on the UI with the CEO's information.
+     * This method is run on the JavaFX Application Thread.
+     * 
+     * @param ceo the CEO whose details are to be displayed
+     */
 	public void UpdateLabel(Ceo ceo) {
 	    Platform.runLater(() -> {
 	        welcomeLbl.setText("Welcome, " + ceo.getFirstName() + " " + ceo.getLastName());
@@ -64,13 +80,24 @@ public class CeoHomeScreenController {
 		
 	}
 	
+    /**
+     * Handles the logout action, updates the user's login status, and displays the login screen.
+     * 
+     * @param event the action event triggered by the logout button
+     * @throws Exception if an error occurs while updating the login status or displaying the login screen
+     */
     public void logOut(ActionEvent event) throws Exception{
 		user.setisLoggedIn(0);
 		ClientMainController.requestUpdateIsLoggedIn(user);
 		displayLogin(event);
     }
     
-	// Method to display the Client Home Page (HomeClientPage GUI)
+    /**
+     * Displays the login screen by hiding the current window and showing a new stage with the login UI.
+     * 
+     * @param event the action event triggered by the logout button
+     * @throws Exception if an error occurs while loading the login screen
+     */
 	public void displayLogin(ActionEvent event) throws Exception {
 		FXMLLoader loader = new FXMLLoader();
 		loader.setController(new LoginController());
@@ -84,6 +111,12 @@ public class CeoHomeScreenController {
 		primaryStage.show();
 	}
 	
+    /**
+     * Displays the monthly report screen on the dashboard.
+     * 
+     * @param event the action event triggered by the corresponding button
+     * @throws Exception if an error occurs while loading the monthly report screen
+     */
 	public void displayMonthlyReportScreen(ActionEvent event) throws Exception {
     	ScreenLoader screenLoader = new ScreenLoader();
     	String path = "/gui/view/MonthlyReportScreen.fxml";

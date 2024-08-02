@@ -20,11 +20,22 @@ import enums.UserType;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Provides methods to interact with user-related data in the database.
+ * Handles importing, updating, and querying user information.
+ */
 public class UserQuery {
 
 	public UserQuery() {
 	}
 
+    /**
+     * Imports user information from the database based on the provided user.
+     * 
+     * @param dbConn the database connection to use
+     * @param user the user whose information is to be imported
+     * @return a {@link ServerResponseDataContainer} ServerResponseDataContainer containing the user information or response status
+     */
 	public ServerResponseDataContainer importUserInfo(Connection dbConn, User user) {
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
 		String query = "SELECT * FROM users WHERE username = ?";
@@ -77,6 +88,13 @@ public class UserQuery {
 		return response;
 	}
 
+	   /**
+     * Imports manager information from the database based on the provided user.
+     * 
+     * @param dbConn the database connection to use
+     * @param user the user whose manager information is to be imported
+     * @return a {@link ServerResponseDataContainer} containing the manager information or response status
+     */
 	public ServerResponseDataContainer importManagerInfo(Connection dbConn, User user) {
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
 		String query = "SELECT * FROM managers WHERE username = ?";
@@ -132,6 +150,13 @@ public class UserQuery {
 		return response;
 	}
 
+    /**
+     * Imports supplier information from the database based on the provided user.
+     * 
+     * @param dbConn the database connection to use
+     * @param user the user whose supplier information is to be imported
+     * @return a {@link ServerResponseDataContainer} containing the supplier information or response status
+     */
 	public ServerResponseDataContainer importSupplierInfo(Connection dbConn, User user) {
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
 		String query = "SELECT * FROM suppliers WHERE username = ?";
@@ -149,8 +174,9 @@ public class UserQuery {
 					String city = rs.getString("City");
 					String address = rs.getString("Address");
 					// Can get also Branch
-
-					Supplier supplier = new Supplier(supplierID, name, city, address, null, user.getUserName(),
+					
+					
+					Supplier supplier = new Supplier(supplierID, name, city, address, null, email,phone, user.getUserName(),
 							user.getPassword());
 
 					response.setMessage(supplier);
@@ -166,6 +192,13 @@ public class UserQuery {
 		return response;
 	}
 
+    /**
+     * Imports employee information from the database based on the provided user.
+     * 
+     * @param dbConn the database connection to use
+     * @param user the user whose employee information is to be imported
+     * @return a {@link ServerResponseDataContainer} containing the employee information or response status
+     */
 	public ServerResponseDataContainer importEmployeeInfo(Connection dbConn, User user) {
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
 		String query = "SELECT * FROM employees WHERE username = ?";
@@ -198,6 +231,13 @@ public class UserQuery {
 		return response;
 	}
 
+    /**
+     * Imports customer information from the database based on the provided user.
+     * 
+     * @param dbConn the database connection to use
+     * @param user the user whose customer information is to be imported
+     * @return a {@link ServerResponseDataContainer} containing the customer information or response status
+     */
 	public ServerResponseDataContainer importCustomerInfo(Connection dbConn, User user) {
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
 		String query = "SELECT * FROM customers WHERE username = ?";
@@ -271,6 +311,13 @@ public class UserQuery {
 		return response;
 	}
 
+    /**
+     * Updates user data in the database.
+     * 
+     * @param dbConn the database connection to use
+     * @param user the user whose data is to be updated
+     * @throws Exception if the update fails
+     */
 	public void updateUserData(Connection dbConn, User user) throws Exception {
 		int affectedRows;
 		String query = "UPDATE users SET username=? ,password=? ,isLoggedIn=? ,Type=? ,Registered=? WHERE username = ?";
@@ -293,6 +340,13 @@ public class UserQuery {
 		}
 	}
 
+    /**
+     * Updates the login status of a user in the database.
+     * 
+     * @param dbConn the database connection to use
+     * @param user the user whose login status is to be updated
+     * @throws Exception if the update fails
+     */
 	public void updateIsLoggedIn(Connection dbConn, User user) throws Exception {
 		String query = "UPDATE users SET isLoggedIn = ? WHERE username = ?";
 		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
@@ -305,6 +359,15 @@ public class UserQuery {
 			e1.printStackTrace();
 		}
 	}
+	
+    /**
+     * Imports a list of unregistered customers for a branch managed by the given manager.
+     * 
+     * @param dbConn the database connection to use
+     * @param manager the manager whose branch customers are to be imported
+     * @return a {@link ServerResponseDataContainer} containing the list of unregistered customers or response status
+     * @throws SQLException if a database access error occurs
+     */
 	public ServerResponseDataContainer importCustomerList(Connection dbConn, BranchManager manager) throws SQLException {
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
 		List<Customer> unRegisteredCustomers= new ArrayList<Customer>();
@@ -373,6 +436,14 @@ public class UserQuery {
 		return response;
 	}
 	
+
+    /**
+     * Updates the registration status of a list of users.
+     * 
+     * @param dbConn the database connection to use
+     * @param userList a list of usernames of the users to be updated
+     * @throws Exception if the update fails
+     */
 	public void updateUsersRegister(Connection dbConn, List<String> userList) throws Exception {
 		int affectedRows=0;
 		String query = "UPDATE users SET Registered=1 WHERE username = ?";

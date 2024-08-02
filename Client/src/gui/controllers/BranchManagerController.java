@@ -20,6 +20,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+
+/**
+ * The controller for the branch manager's user interface.
+ * It manages interactions for branch manager-specific actions and UI updates.
+ */
 public class BranchManagerController {
 	@FXML
 	private Button logOutButton;
@@ -37,6 +42,11 @@ public class BranchManagerController {
 	private User user;
 	private BranchManager manager;
     
+    /**
+     * Constructs a BranchManagerController with the given user.
+     * 
+     * @param user the user for whom this controller is created, expected to be a BranchManager
+     */
 	public BranchManagerController(User user) {
 		this.user = user;
 		this.manager=(BranchManager)user;
@@ -51,6 +61,12 @@ public class BranchManagerController {
 		return user;
 	}
 	
+    /**
+     * Updates the labels on the UI with the branch manager's information.
+     * This method is run on the JavaFX Application Thread.
+     * 
+     * @param manager the branch manager whose details are to be displayed
+     */
     public void UpdateLabel(BranchManager manager) {
 	    Platform.runLater(() -> {
 	    	welcomeLbl.setText("Welcome, " + manager.getFirstName()+ " " + manager.getLastName());
@@ -58,13 +74,24 @@ public class BranchManagerController {
 	    });
     }
     
+    /**
+     * Handles the logout action, updates the user's login status, and displays the login screen.
+     * 
+     * @param event the action event triggered by the logout button
+     * @throws Exception if an error occurs while updating the login status or displaying the login screen
+     */
     public void logOut(ActionEvent event) throws Exception{
 		user.setisLoggedIn(0);
 		ClientMainController.requestUpdateIsLoggedIn(user);
 		displayLogin(event);
     }
     
-	// Method to display the Client Home Page (HomeClientPage GUI)
+    /**
+     * Displays the login screen by hiding the current window and showing a new stage with the login UI.
+     * 
+     * @param event the action event triggered by the logout button
+     * @throws Exception if an error occurs while loading the login screen
+     */
 	public void displayLogin(ActionEvent event) throws Exception {
 		FXMLLoader loader = new FXMLLoader();
 		loader.setController(new LoginController());
@@ -77,6 +104,13 @@ public class BranchManagerController {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
+	
+    /**
+     * Displays the monthly report screen on the dashboard.
+     * 
+     * @param event the action event triggered by the corresponding button
+     * @throws Exception if an error occurs while loading the monthly report screen
+     */
 	public void displayMonthlyReportScreen(ActionEvent event) throws Exception {
     	ScreenLoader screenLoader = new ScreenLoader();
     	String path = "/gui/view/MonthlyReportScreen.fxml";
@@ -85,6 +119,12 @@ public class BranchManagerController {
     	dashboard.getChildren().add(nextDash); //Assign the new dashboard
 	}
 	
+    /**
+     * Displays the registration screen on the dashboard.
+     * 
+     * @param event the action event triggered by the corresponding button
+     * @throws Exception if an error occurs while loading the registration screen
+     */
 	public void displayRegistrationScreen(ActionEvent event) throws Exception {
     	ScreenLoader screenLoader = new ScreenLoader();
     	String path = "/gui/view/RegistrationScreen.fxml";

@@ -2,6 +2,10 @@ package db;
 
 public class QueryControl {
 
-	// all queries public static instance here
+	/**
+	 * Centralizes access to various query classes.
+	 * All queries public static instance here (maybe change later, so we wont create new instance every time)
+	 */
 	public static UserQuery userQueries = new UserQuery();
+	public static OrderQuery orderQueries = new OrderQuery();
 }

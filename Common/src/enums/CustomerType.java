@@ -1,5 +1,8 @@
 package enums;
 
+/**
+ * Enum representing different types of customers.
+ */
 public enum CustomerType {
 	PRIVATE("Private"),
 	BUSINESS("Business");

@@ -1,5 +1,8 @@
 package enums;
 
+/**
+ * Enum representing different types of users in the system.
+ */
 public enum UserType {
     CUSTOMER("Customer"),
     CEO("CEO"),

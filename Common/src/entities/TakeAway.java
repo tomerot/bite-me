@@ -2,6 +2,10 @@ package entities;
 
 import enums.Branch;
 
+/**
+ * Represents a takeaway order. Extends the {@link Order} class to include
+ * additional attributes and behaviors specific to takeaway orders.
+ */
 public class TakeAway extends Order {
 	private SupplyMethod supplyMethod;
 	public TakeAway(int orderID, Supplier supplier, Customer customer, Branch branchName, String desiredDate,

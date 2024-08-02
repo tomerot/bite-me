@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 import enums.UserType;
 
+/**
+ * Represents a user in the system. Implements {@link Serializable} to allow instances to be serialized.
+ */
 public class User implements Serializable {
 	/**
 	 * 

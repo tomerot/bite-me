@@ -1,5 +1,8 @@
 package enums;
 
+/**
+ * Enum representing the different branches available in the system.
+ */
 public enum Branch {
 	NORTH("North Branch"),
     CENTER("Center Branch"),
