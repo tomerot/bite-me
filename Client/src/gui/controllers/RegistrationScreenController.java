@@ -9,6 +9,9 @@ import entities.Customer;
 import gui.loader.Screen;
 import gui.loader.ScreenLoader;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,8 +34,6 @@ public class RegistrationScreenController {
 	@FXML
     private TableView<Customer> CustomersTable;
     @FXML
-    private TableColumn<Customer, Boolean> selectColumn;
-    @FXML
     private TableColumn<Customer, String> userName;
     @FXML
     private TableColumn<Customer, Integer> Id;
@@ -46,6 +47,8 @@ public class RegistrationScreenController {
     private TableColumn<Customer, String> lastName;
     @FXML
     private TableColumn<Customer, String> email;
+    @FXML
+    private TableColumn<Customer, String> phone;
     @FXML
     private TableColumn<Customer, String> homeBranch;
     @FXML
@@ -62,7 +65,7 @@ public class RegistrationScreenController {
 	public RegistrationScreenController(HBox wholeScreen , Object prevController) {
 		this.prevManagerController=(BranchManagerController)prevController;
 		this.wholeScreen = wholeScreen;
-		setupRegistrationTable();
+		//setupRegistrationTable();
 	}
 	public void goBack(ActionEvent event) throws Exception {
 		ScreenLoader screenLoader = new ScreenLoader();
@@ -74,22 +77,33 @@ public class RegistrationScreenController {
 	}
 	
 	public void setupRegistrationTable() {
-        // Initialize the columns
-        selectColumn.setCellValueFactory(cellData -> new SimpleBooleanProperty(false));
-        selectColumn.setCellFactory(CheckBoxTableCell.forTableColumn(selectColumn));
-
-        userName.setCellValueFactory(new PropertyValueFactory<>("userNameData"));
-        Id.setCellValueFactory(new PropertyValueFactory<>("IdData"));
-        type.setCellValueFactory(new PropertyValueFactory<>("typeData"));
-        companyId.setCellValueFactory(new PropertyValueFactory<>("companyIdData"));
-        firstName.setCellValueFactory(new PropertyValueFactory<>("firstNameData"));
-        lastName.setCellValueFactory(new PropertyValueFactory<>("lastNameData"));
-        email.setCellValueFactory(new PropertyValueFactory<>("emailData"));
-        homeBranch.setCellValueFactory(new PropertyValueFactory<>("homeBranchData"));
-        creditCardNumber.setCellValueFactory(new PropertyValueFactory<>("creditCardNumberData"));
-        cvv.setCellValueFactory(new PropertyValueFactory<>("cvvData"));
-        validDate.setCellValueFactory(new PropertyValueFactory<>("validDateData"));
-        walletBallance.setCellValueFactory(new PropertyValueFactory<>("walletBallanceData"));
+		// Initialize the columns
+		userName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUserName()));
+		Id.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getId()).asObject());
+		type.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustomerType().toString()));
+		companyId.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getCompanyId()).asObject());
+		firstName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFirstName()));
+		lastName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLastName()));
+		email.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmail()));
+		phone.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPhoneNumber()));
+		homeBranch.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHomeBranch().toString()));
+		creditCardNumber.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCredit()));
+		cvv.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCvv()));
+		validDate.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getValidDate()));
+		walletBallance.setCellValueFactory(cellData -> new SimpleFloatProperty(cellData.getValue().getWalletBalance()).asObject());
+		    
+//        userName.setCellValueFactory(new PropertyValueFactory<>("customerData.getUserName()"));
+  //      Id.setCellValueFactory(new PropertyValueFactory<>("customerData.getId()"));
+    //    type.setCellValueFactory(new PropertyValueFactory<>("type"));
+     //   companyId.setCellValueFactory(new PropertyValueFactory<>("companyId"));
+//        firstName.setCellValueFactory(new PropertyValueFactory<>("customerData.getFirstName()"));
+  //      lastName.setCellValueFactory(new PropertyValueFactory<>("customerData.getLastName()"));
+    //    email.setCellValueFactory(new PropertyValueFactory<>("customerData.getEmail()"));
+      //  homeBranch.setCellValueFactory(new PropertyValueFactory<>("homeBranch"));
+ //       creditCardNumber.setCellValueFactory(new PropertyValueFactory<>("credit"));
+   //     cvv.setCellValueFactory(new PropertyValueFactory<>("cvv"));
+     //   validDate.setCellValueFactory(new PropertyValueFactory<>("validDate"));
+       // walletBallance.setCellValueFactory(new PropertyValueFactory<>("walletBalance"));
         
         ClientMainController.requestUnregisteredCustomersData(prevManagerController.getBranchManager());
 		ServerResponseDataContainer entityResponse = ClientConsole.responseFromServer;

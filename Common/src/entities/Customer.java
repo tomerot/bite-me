@@ -52,6 +52,6 @@ public class Customer extends Person {
     public void setCvv(String cvv) { this.cvv=cvv; }
     
     // validDate getter and setter
-    public Date getvalidDate() { return validDate; }
+    public Date getValidDate() { return validDate; }
     public void setValidDate(Date validDate) { this.validDate=validDate; }
 }

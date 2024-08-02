@@ -17,19 +17,19 @@
       <Button fx:id="backBtn" layoutX="396.0" layoutY="686.0" mnemonicParsing="false" onAction="#goBack" prefHeight="69.0" prefWidth="105.0" text="Back" />
       <TableView fx:id="CustomersTable" layoutX="10.0" layoutY="132.0" prefHeight="536.0" prefWidth="932.0">
          <columns>
-            <TableColumn fx:id="selectColumn" minWidth="15.0" prefWidth="16.0" text="selectColumn" />
             <TableColumn fx:id="userName" minWidth="41.0" prefWidth="53.0" text="Username" />
-            <TableColumn fx:id="Id" minWidth="0.0" prefWidth="116.0" text="ID" />
-            <TableColumn fx:id="type" minWidth="49.0" prefWidth="61.0" text="Type" />
-            <TableColumn fx:id="companyId" minWidth="49.0" prefWidth="62.0" text="CompanyID" />
-            <TableColumn fx:id="firstName" minWidth="49.0" text="FirstName" />
-            <TableColumn fx:id="lastName" minWidth="49.0" prefWidth="73.0" text="LastName" />
-            <TableColumn fx:id="email" minWidth="42.0" prefWidth="109.0" text="Email" />
-            <TableColumn fx:id="homeBranch" minWidth="49.0" prefWidth="74.0" text="Home Branch" />
-            <TableColumn fx:id="creditCardNumber" minWidth="43.0" prefWidth="103.0" text="Credit Card Number" />
-            <TableColumn fx:id="cvv" minWidth="35.0" prefWidth="41.0" text="CVV" />
-            <TableColumn fx:id="validDate" minWidth="49.0" prefWidth="68.0" text="Valid Date" />
-            <TableColumn fx:id="walletBallance" minWidth="49.0" prefWidth="75.0" text="Wallet Ballance" />
+            <TableColumn fx:id="Id" minWidth="0.0" prefWidth="67.0" text="ID" />
+            <TableColumn fx:id="type" minWidth="34.0" prefWidth="51.0" text="Type" />
+            <TableColumn fx:id="companyId" minWidth="49.0" prefWidth="68.0" text="CompanyID" />
+            <TableColumn fx:id="firstName" minWidth="49.0" prefWidth="56.0" text="FirstName" />
+            <TableColumn fx:id="lastName" minWidth="49.0" prefWidth="57.0" text="LastName" />
+            <TableColumn fx:id="email" minWidth="42.0" prefWidth="125.0" text="Email" />
+            <TableColumn fx:id="phone" prefWidth="88.0" text="Phone" />
+            <TableColumn fx:id="homeBranch" minWidth="49.0" prefWidth="71.0" text="Home Branch" />
+            <TableColumn fx:id="creditCardNumber" minWidth="43.0" prefWidth="108.0" text="Credit Card Number" />
+            <TableColumn fx:id="cvv" minWidth="24.0" prefWidth="27.0" text="CVV" />
+            <TableColumn fx:id="validDate" minWidth="32.0" prefWidth="58.0" text="Valid Date" />
+            <TableColumn fx:id="walletBallance" minWidth="37.0" prefWidth="102.0" text="Wallet Ballance" />
          </columns>
       </TableView>
    </children>

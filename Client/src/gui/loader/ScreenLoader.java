@@ -28,23 +28,26 @@ public class ScreenLoader {
 			case MONTHLY_REPORT_SCREEN: {
 				MonthlyReportScreenController controller = new MonthlyReportScreenController(wholeScreen, currController);
 				loader.setController(controller);
+				loader.load();
 				break;
 			}
 			case MONTHLY_REPORT_SCREEN_TWO: {
 				MonthlyReportScreenController2 controller = new MonthlyReportScreenController2(wholeScreen, currController);
 				loader.setController(controller);
+				loader.load();
 				break;
 			}
 			case REGISTRATION_SCREEN: {
 				RegistrationScreenController controller = new RegistrationScreenController(wholeScreen, currController);
 				loader.setController(controller);
+				loader.load();
+				controller.setupRegistrationTable();
 				break;
 			}
 			default:
 				break;
 		}
 		
-		loader.load();
 		dashboard = loader.getRoot();
 		return dashboard;
 	}
