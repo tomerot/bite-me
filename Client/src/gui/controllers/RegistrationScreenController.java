@@ -1,13 +1,18 @@
 package gui.controllers;
-import java.sql.Date;
-import java.util.List;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 import client.ClientConsole;
 import client.ClientMainController;
 import containers.ServerResponseDataContainer;
+import entities.BranchManager;
 import entities.Customer;
+import enums.ServerResponse;
 import gui.loader.Screen;
 import gui.loader.ScreenLoader;
+import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -17,56 +22,116 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.CheckBoxTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 
+
 public class RegistrationScreenController {
+	@FXML
+	private Label RegistrationPage;
 	@FXML
 	private AnchorPane dashboard;
 	@FXML
+	private Button registerBtn;
+	@FXML
 	private Button backBtn;
 	@FXML
-    private TableView<Customer> CustomersTable;
+    private TableView<CustomerWithSelection> CustomersTable;
+	@FXML
+    private TableColumn<CustomerWithSelection, Boolean> selectRow;
     @FXML
-    private TableColumn<Customer, String> userName;
+    private TableColumn<CustomerWithSelection, String> userName;
     @FXML
-    private TableColumn<Customer, Integer> Id;
+    private TableColumn<CustomerWithSelection, Integer> Id;
     @FXML
-    private TableColumn<Customer, String> type;
+    private TableColumn<CustomerWithSelection, String> type;
     @FXML
-    private TableColumn<Customer, Integer> companyId;
+    private TableColumn<CustomerWithSelection, Integer> companyId;
     @FXML
-    private TableColumn<Customer, String> firstName;
+    private TableColumn<CustomerWithSelection, String> firstName;
     @FXML
-    private TableColumn<Customer, String> lastName;
+    private TableColumn<CustomerWithSelection, String> lastName;
     @FXML
-    private TableColumn<Customer, String> email;
+    private TableColumn<CustomerWithSelection, String> email;
     @FXML
-    private TableColumn<Customer, String> phone;
+    private TableColumn<CustomerWithSelection, String> phone;
     @FXML
-    private TableColumn<Customer, String> homeBranch;
+    private TableColumn<CustomerWithSelection, String> homeBranch;
     @FXML
-    private TableColumn<Customer, String> creditCardNumber;
+    private TableColumn<CustomerWithSelection, String> creditCardNumber;
     @FXML
-    private TableColumn<Customer, String> cvv;
+    private TableColumn<CustomerWithSelection, String> cvv;
     @FXML
-    private TableColumn<Customer, Date> validDate;
+    private TableColumn<CustomerWithSelection, Date> validDate;
     @FXML
-    private TableColumn<Customer, Float> walletBallance;
+    private TableColumn<CustomerWithSelection, Float> walletBallance;
     
 	private BranchManagerController prevManagerController;
 	private HBox wholeScreen;
 	public RegistrationScreenController(HBox wholeScreen , Object prevController) {
 		this.prevManagerController=(BranchManagerController)prevController;
 		this.wholeScreen = wholeScreen;
-		//setupRegistrationTable();
+		this.UpdateLabel(prevManagerController.getBranchManager());
 	}
+	
+    public void UpdateLabel(BranchManager manager) {
+	    Platform.runLater(() -> {
+	    	RegistrationPage.setText(manager.getbranchType()+" Customers Registration Screen");
+	    });
+    }
+	
+	private class CustomerWithSelection {
+		private final Customer customer;
+		private BooleanProperty selected;
+
+		public CustomerWithSelection(Customer customer) {
+			this.customer = customer;
+			this.selected = new SimpleBooleanProperty(false);
+		}
+
+		public Customer getCustomer() {
+			return customer;
+		}
+
+		public BooleanProperty selectedProperty() {
+			return selected;
+		}
+	}
+	
+	private class CheckBoxTableCell extends TableCell<CustomerWithSelection, Boolean> {
+	    private final CheckBox checkBox;
+
+	    public CheckBoxTableCell() {
+	        checkBox = new CheckBox();
+	        checkBox.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
+	            if (getTableRow() != null) {
+	                CustomerWithSelection customerWithSelection = getTableRow().getItem();
+	                if (customerWithSelection != null) {
+	                    customerWithSelection.selectedProperty().set(isNowSelected);
+	                }
+	            }
+	        });
+	    }
+
+	    @Override
+	    protected void updateItem(Boolean item, boolean empty) {
+	        super.updateItem(item, empty);
+
+	        if (empty || item == null) {
+	            setGraphic(null);
+	        } else {
+	            setGraphic(checkBox);
+	            checkBox.setSelected(item);
+	        }
+	    }
+	}
+	
 	public void goBack(ActionEvent event) throws Exception {
 		ScreenLoader screenLoader = new ScreenLoader();
 		String path= "/gui/view/BranchManagerScreen.fxml";
@@ -77,62 +142,49 @@ public class RegistrationScreenController {
 	}
 	
 	public void setupRegistrationTable() {
-		// Initialize the columns
-		userName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUserName()));
-		Id.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getId()).asObject());
-		type.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustomerType().toString()));
-		companyId.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getCompanyId()).asObject());
-		firstName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFirstName()));
-		lastName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLastName()));
-		email.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmail()));
-		phone.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPhoneNumber()));
-		homeBranch.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHomeBranch().toString()));
-		creditCardNumber.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCredit()));
-		cvv.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCvv()));
-		validDate.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getValidDate()));
-		walletBallance.setCellValueFactory(cellData -> new SimpleFloatProperty(cellData.getValue().getWalletBalance()).asObject());
-		    
-//        userName.setCellValueFactory(new PropertyValueFactory<>("customerData.getUserName()"));
-  //      Id.setCellValueFactory(new PropertyValueFactory<>("customerData.getId()"));
-    //    type.setCellValueFactory(new PropertyValueFactory<>("type"));
-     //   companyId.setCellValueFactory(new PropertyValueFactory<>("companyId"));
-//        firstName.setCellValueFactory(new PropertyValueFactory<>("customerData.getFirstName()"));
-  //      lastName.setCellValueFactory(new PropertyValueFactory<>("customerData.getLastName()"));
-    //    email.setCellValueFactory(new PropertyValueFactory<>("customerData.getEmail()"));
-      //  homeBranch.setCellValueFactory(new PropertyValueFactory<>("homeBranch"));
- //       creditCardNumber.setCellValueFactory(new PropertyValueFactory<>("credit"));
-   //     cvv.setCellValueFactory(new PropertyValueFactory<>("cvv"));
-     //   validDate.setCellValueFactory(new PropertyValueFactory<>("validDate"));
-       // walletBallance.setCellValueFactory(new PropertyValueFactory<>("walletBalance"));
-        
+		
+		selectRow.setCellValueFactory(cellData -> cellData.getValue().selectedProperty());
+		selectRow.setCellFactory(column -> new CheckBoxTableCell());
+		userName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustomer().getUserName()));
+		Id.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getCustomer().getId()).asObject());
+		type.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustomer().getCustomerType().toString()));
+		companyId.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getCustomer().getCompanyId()).asObject());
+		firstName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustomer().getFirstName()));
+		lastName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustomer().getLastName()));
+		email.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustomer().getEmail()));
+		phone.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustomer().getPhoneNumber()));
+		homeBranch.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustomer().getHomeBranch().toString()));
+		creditCardNumber.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustomer().getCredit()));
+		cvv.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustomer().getCvv()));
+		validDate.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getCustomer().getValidDate()));
+		walletBallance.setCellValueFactory(cellData -> new SimpleFloatProperty(cellData.getValue().getCustomer().getWalletBalance()).asObject());
+
         ClientMainController.requestUnregisteredCustomersData(prevManagerController.getBranchManager());
 		ServerResponseDataContainer entityResponse = ClientConsole.responseFromServer;
-		@SuppressWarnings("unchecked")
-		List<Customer> unRegisteredCustomers=(List<Customer>)entityResponse.getMessage();
-		ObservableList<Customer> customerData = FXCollections.observableArrayList(unRegisteredCustomers);
-		CustomersTable.setItems(customerData);
+		if(entityResponse.getResponse()==ServerResponse.UNREGISTERED_CUSTOMERS_FOUND) {
+			List<Customer> unRegisteredCustomers=(List<Customer>)entityResponse.getMessage();
+			ObservableList<CustomerWithSelection> customerData = FXCollections.observableArrayList();
+			for (Customer customer : unRegisteredCustomers) {
+				customerData.add(new CustomerWithSelection(customer));
+			}
+			CustomersTable.setItems(customerData);
+		}
     }
 	
-	/*private void loadCustomerData() {
-        // Load data from your database and add to customerData
-        // This is just a sample data for demonstration
-        customerData.add(new Customer("Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7", "Data8", "Data9", "Data10", "Data11", "Data12"));
-    }
-
-    @FXML
-    public void registerSelected(ActionEvent event) {
-        for (Customer customer : customerData) {
-            if (customer.isSelected()) {
-                // Update the relevant fields in the database for the selected customers
-                registerCustomerInDatabase(customer);
-            }
-        }
-    }
-
-    private void registerCustomerInDatabase(Customer customer) {
-        // Implement your database update logic here
-    }
-    public SimpleBooleanProperty selectedProperty() {
-        return selected;
-    }*/
+	public void registerSelectedCustomers(ActionEvent event) throws Exception{
+		List<String> userList= new ArrayList<String>();
+		ObservableList<CustomerWithSelection> customers = CustomersTable.getItems();
+	    for (CustomerWithSelection customerWithSelection : customers) {
+	        if (customerWithSelection.selectedProperty().get()) {
+	            userList.add(customerWithSelection.getCustomer().getUserName());
+	        }
+	    }
+	    if(customers.isEmpty() || userList.isEmpty()) {
+	    	return;
+	    }
+	    else {
+	    	ClientMainController.requestUpdateRegisterCustomers(userList);
+		    this.setupRegistrationTable();
+	    }
+	}
 }

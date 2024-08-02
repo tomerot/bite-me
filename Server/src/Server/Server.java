@@ -8,6 +8,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import containers.ClientRequestDataContainer;
 import containers.ServerResponseDataContainer;
@@ -93,6 +94,14 @@ public class Server extends AbstractServer {
 				e.printStackTrace();
 			}
 			break;
+		case UPDATE_CUSTOMERS_REGISTER:
+			List<String> userList = (List<String>) data.getMessage();
+			try {
+				handleUpdateCustomersRegister(userList, client);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;
 		default:
 		    return;
 
@@ -157,6 +166,15 @@ public class Server extends AbstractServer {
 		ServerResponseDataContainer response = QueryControl.userQueries.importUserInfo(dbConn, user);
 		try {
 			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void handleUpdateCustomersRegister(List<String> userList, ConnectionToClient client) throws Exception {
+		QueryControl.userQueries.updateUsersRegister(dbConn, userList);
+		try {
+			client.sendToClient(new ServerResponseDataContainer());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

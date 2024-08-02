@@ -1,5 +1,7 @@
 package client;
 
+import java.util.List;
+
 import containers.ClientRequestDataContainer;
 import entities.BranchManager;
 import entities.User;
@@ -44,4 +46,9 @@ public class ClientMainController {
         ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.FETCH_CUSTOMERS_DATA, manager);
         ClientMainController.accept(request);
     }
+    public static void requestUpdateRegisterCustomers(List<String> userList) {
+        ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.UPDATE_CUSTOMERS_REGISTER, userList);
+        ClientMainController.accept(request);
+    }
+    
 }
