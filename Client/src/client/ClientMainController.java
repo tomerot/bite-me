@@ -5,6 +5,7 @@ import java.util.List;
 import containers.ClientRequestDataContainer;
 import entities.BranchManager;
 import entities.Customer;
+import entities.Order;
 import entities.User;
 import enums.ClientRequest;
 
@@ -117,6 +118,23 @@ public class ClientMainController {
      */
 	public static void requestAllRestaurants(Customer customer) {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.FETCH_RESTAURANTS,customer);
+		ClientMainController.accept(request);
+	}
+	
+	public static void requestAllCustomerWaitingOrders(Customer customer) {
+		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.FETCH_CUSTOMER_WAITING_ORDERS,customer);
+		ClientMainController.accept(request);
+	}
+	
+	
+	public static void requestAllCustomerHistoryOrders(Customer customer) {
+		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.FETCH_CUSTOMER_HISTORY_ORDERS,customer);
+		ClientMainController.accept(request);
+	}
+	
+
+	public static void requestToUpdateOrder(Order order) {
+		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.UPDATE_ORDER_STATUS_AND_TIME,order);
 		ClientMainController.accept(request);
 	}
 }

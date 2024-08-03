@@ -25,7 +25,7 @@
 	 */
 	public class NewOrderScreenController {
 	
-		private CustomerHomeScreenController prevManagerController;
+		private CustomerHomeScreenController prevCustomerController;
 		private HBox wholeScreen;
 	
 		@FXML
@@ -39,7 +39,7 @@
 		
 	
 		public NewOrderScreenController(HBox wholeScreen, Object prevController) {
-			this.prevManagerController = (CustomerHomeScreenController) prevController;
+			this.prevCustomerController = (CustomerHomeScreenController) prevController;
 			this.wholeScreen = wholeScreen;
 		}
 	
@@ -48,15 +48,14 @@
 	     * Requests the list of suppliers from the server and populates the TilePane with supplier information.
 	     */
 		public void loadAllRestaurants() {
-			Customer t = new Customer(null, 0, null, 0, null, null, null, null, Branch.NORTH, null, null, null, 0, 0, 0,
-					null); // THIS IS FOR TEST!! HOW I BRING ENTETIE FROM OTHER CONTROLLER
-			ClientMainController.requestAllRestaurants(t);
+			Customer customer = prevCustomerController.getCustomer();
+			ClientMainController.requestAllRestaurants(customer);
 			ServerResponseDataContainer response = ClientConsole.responseFromServer;
-			List<Supplier> l = (List<Supplier>) response.getMessage();
+			List<Supplier> suppliersList = (List<Supplier>) response.getMessage();
 	        tilePane.setHgap(10); // Horizontal gap between items
 	        tilePane.setVgap(10); // Vertical gap between items
 	        tilePane.setPrefColumns(3); // Number of columns
-			for (Supplier supplier : l) {
+			for (Supplier supplier : suppliersList) {
 				VBox vbox = createSupplierVBox(supplier);
 				tilePane.getChildren().add(vbox);
 			}
@@ -86,6 +85,7 @@
 			return vbox;
 		}
 	
+		//when clicking - need to save what he clicked on, move on to next page (this is just to test for now)
 		private void moveToNextPage(Supplier supplier) {
 			// Implement your logic to move to the next page
 			System.out.println("Clicked on supplier: " + supplier.getName());

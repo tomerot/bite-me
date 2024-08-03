@@ -6,6 +6,7 @@ import gui.controllers.BranchManagerController;
 import gui.controllers.CeoHomeScreenController;
 import gui.controllers.MonthlyReportScreenController;
 import gui.controllers.MonthlyReportScreenController2;
+import gui.controllers.MyOrdersScreenController;
 import gui.controllers.NewOrderScreenController;
 import gui.controllers.RegistrationScreenController;
 import javafx.fxml.FXMLLoader;
@@ -60,6 +61,13 @@ public class ScreenLoader {
 				loader.setController(controller);
 				loader.load();
 				controller.loadAllRestaurants();
+				break;
+			}
+			case MY_ORDERS_SCREEN:{
+				MyOrdersScreenController controller = new MyOrdersScreenController(wholeScreen, currController);
+				loader.setController(controller);
+				loader.load();
+				controller.loadAllOrders();
 				break;
 			}
 			default:

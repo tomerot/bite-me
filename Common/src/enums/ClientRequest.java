@@ -14,6 +14,9 @@ public enum ClientRequest {
 	UPDATE_IS_LOGGED_IN, // Request to update the login status of a user
 	FETCH_CUSTOMERS_DATA,
 	UPDATE_CUSTOMERS_REGISTER, // Request to update customer registration
-	FETCH_RESTAURANTS // Request to fetch restaurant data by branch
+	FETCH_RESTAURANTS, // Request to fetch restaurant data by branch
+	FETCH_CUSTOMER_WAITING_ORDERS,
+	FETCH_CUSTOMER_HISTORY_ORDERS,
+	UPDATE_ORDER_STATUS_AND_TIME
 	;
 }

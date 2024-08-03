@@ -15,6 +15,8 @@ public enum ServerResponse {
 	SUPPLIER_FOUND, // Indicates that a supplier was found
 	EMPLOYEE_FOUND, // Indicates that an employee was found
 	UNREGISTERED_CUSTOMERS_FOUND, // Indicates that unregistered customers were found
-	SUPPLIER_DATA_BY_BRANCH // Provides supplier data by branch
+	SUPPLIER_DATA_BY_BRANCH, // Provides supplier data by branch
+	SUPPLIER_WAITING_ORDERS,
+	SUPPLIER_HISTORY_ORDERS;
 	;
 }

@@ -1,5 +1,6 @@
 package entities;
 
+import java.io.Serializable;
 import java.util.List;
 
 import enums.Branch;
@@ -8,74 +9,164 @@ import enums.Branch;
  * This class represents an order in the system.
  * It includes details about the items in the order, the supplier, the customer, and various order attributes.
  */
-public class Order {
+public class Order implements Serializable{
+	private static final long serialVersionUID = 1L;
+	
+	
 	private List<ItemInOrder> itemsList;
-    private int orderID;
-    private Supplier supplier;
-    private Customer customer;
+    private int orderID; //orderid
+    private String recipient; //recipient
+    private String recipientPhone; //recipientPhone
+    private SupplyMethod supplyOption; //supplyOption 
+    private Supplier supplier; // can get id,city,address
+    private Customer customer; 
     private Branch branchName;
-    private String desiredDate;
-    private String desiredHour;
+    private String requestedDate; //requested date?
+    private String requestedTime; //requested time?
     private OrderType type;
     private float totalPrice;
-    private String acceptanceHour;
-    private String confirmedHour;
+    private String approvalTimer; //approval time?
+    private String arrivalTime; //arrival time?
+    private String status;
     
-    public Order(List<ItemInOrder> itemsList, int orderID, Supplier supplier, Customer customer, Branch branchName, String desiredDate,
-            String desiredHour, OrderType type, float totalPrice, String acceptanceHour, String confirmedHour) {
+    public Order(List<ItemInOrder> itemsList, int orderID,String recipient,String recipientPhone,SupplyMethod supplyOption, Supplier supplier, Customer customer, Branch branchName, String requestedDate,
+            String requestedTime, OrderType type, float totalPrice, String approvalTimer, String arrivalTime, String status) {
     	this.itemsList=itemsList;
     	this.orderID = orderID;
+    	this.recipient = recipient;
+    	this.recipientPhone = recipientPhone;
+    	this.supplyOption = supplyOption;
     	this.supplier = supplier;
     	this.customer = customer;
     	this.branchName = branchName;
-    	this.desiredDate = desiredDate;
-    	this.desiredHour = desiredHour;
+    	this.requestedDate = requestedDate;
+    	this.requestedTime = requestedTime;
     	this.type = type;
     	this.totalPrice = totalPrice;
-    	this.acceptanceHour = acceptanceHour;
-    	this.confirmedHour = confirmedHour;
+    	this.approvalTimer = approvalTimer;
+    	this.arrivalTime = arrivalTime;
+    	this.status = status;
     }
-    // OrderID getter and setter
-    public List<ItemInOrder> getItemsList() { return itemsList; }
-    public void setItemsList(List<ItemInOrder> itemsList) { this.itemsList = itemsList; }
-    
-    // OrderID getter and setter
-    public int getOrderID() { return orderID; }
-    public void setOrderID(int orderID) { this.orderID = orderID; }
-    
-    //supplier getter and setter
-    public Supplier getSupplier() { return supplier; }
-    public void setSupplier(Supplier supplier) { this.supplier = supplier; }
-    
-    //RegisteredCustomer getter and setter
-    public Customer getCustomer() { return customer; }
-    public void setCustomer(Customer customer) { this.customer = customer; }
-    
-    //Branch getter and setter
-    public Branch getBranchName() { return branchName; }
-    public void setBranchName(Branch branchName) { this.branchName = branchName; }
 
-    //DesiredDate getter and setter
-    public String getDesiredDate() { return desiredDate; }
-    public void setDesiredDate(String desiredDate) { this.desiredDate = desiredDate; }
+	public List<ItemInOrder> getItemsList() {
+		return itemsList;
+	}
 
-    //DesiredHour getter and setter
-    public String getDesiredHour() { return desiredHour; }
-    public void setDesiredHour(String desiredHour) { this.desiredHour = desiredHour; }
+	public void setItemsList(List<ItemInOrder> itemsList) {
+		this.itemsList = itemsList;
+	}
+
+	public int getOrderID() {
+		return orderID;
+	}
+
+	public void setOrderID(int orderID) {
+		this.orderID = orderID;
+	}
+
+	public String getRecipient() {
+		return recipient;
+	}
+
+	public void setRecipient(String recipient) {
+		this.recipient = recipient;
+	}
+
+	public String getRecipientPhone() {
+		return recipientPhone;
+	}
+
+	public void setRecipientPhone(String recipientPhone) {
+		this.recipientPhone = recipientPhone;
+	}
+
+	public SupplyMethod getSupplyOption() {
+		return supplyOption;
+	}
+
+	public void setSupplyOption(SupplyMethod supplyOption) {
+		this.supplyOption = supplyOption;
+	}
+
+	public Supplier getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(Supplier supplier) {
+		this.supplier = supplier;
+	}
+
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
+	public Branch getBranchName() {
+		return branchName;
+	}
+
+	public void setBranchName(Branch branchName) {
+		this.branchName = branchName;
+	}
+
+	public String getRequestedDate() {
+		return requestedDate;
+	}
+
+	public void setRequestedDate(String requestedDate) {
+		this.requestedDate = requestedDate;
+	}
+
+	public String getRequestedTime() {
+		return requestedTime;
+	}
+
+	public void setRequestedTime(String requestedTime) {
+		this.requestedTime = requestedTime;
+	}
+
+	public OrderType getType() {
+		return type;
+	}
+
+	public void setType(OrderType type) {
+		this.type = type;
+	}
+
+	public float getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(float totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public String getApprovalTimer() {
+		return approvalTimer;
+	}
+
+	public void setApprovalTimer(String approvalTimer) {
+		this.approvalTimer = approvalTimer;
+	}
+
+	public String getArrivalTime() {
+		return arrivalTime;
+	}
+
+	public void setArrivalTime(String arrivalTime) {
+		this.arrivalTime = arrivalTime;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
     
-    //type getter and setter
-    public OrderType getType() { return type; }
-    public void setType(OrderType type) { this.type = type; }
-
-    //TotalPrice getter and setter
-    public float getTotalPrice() { return totalPrice; }
-    public void setTotalPrice(float totalPrice) { this.totalPrice = totalPrice; }
-
-    //AcceptenceHour getter and setter
-    public String getAcceptanceHour() { return acceptanceHour; }
-    public void setAcceptanceHour(String acceptanceHour) { this.acceptanceHour = acceptanceHour; }
-
-    //ConfirmedHour getter and setter
-    public String getConfirmedHour() { return confirmedHour; }
-    public void setConfirmedHour(String confirmedHour) { this.confirmedHour = confirmedHour; }
 }

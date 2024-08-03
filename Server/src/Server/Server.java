@@ -17,6 +17,7 @@ import db.DBController;
 import db.QueryControl;
 import entities.BranchManager;
 import entities.Customer;
+import entities.Order;
 import entities.User;
 import enums.ClientRequest;
 import enums.ServerResponse;
@@ -68,6 +69,7 @@ public class Server extends AbstractServer {
 		ClientRequestDataContainer data = (ClientRequestDataContainer) msg;
 		ClientRequest request = data.getRequest();
 		User user;
+		Customer customer;
 		// switch case on the request from server
 		switch (request) {
 		// all cases
@@ -122,12 +124,41 @@ public class Server extends AbstractServer {
 			break;
 			
 		case FETCH_RESTAURANTS:
-			Customer customer = (Customer) data.getMessage();
+			customer = (Customer) data.getMessage();
 			try {
 				handleRestaurantsData(customer,client);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+			break;
+			
+		case FETCH_CUSTOMER_WAITING_ORDERS:
+			customer = (Customer) data.getMessage();
+			try {
+				handleCustomersWaitingOrders(customer,client);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			break;
+			
+		case FETCH_CUSTOMER_HISTORY_ORDERS:
+			customer = (Customer) data.getMessage();
+			try {
+				handleCustomersHistoryOrders(customer,client);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			break;
+			
+		case UPDATE_ORDER_STATUS_AND_TIME:
+			Order order = (Order) data.getMessage();
+			try {
+				handleOrderStatusTimeUpdate(order,client);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			break;
+			
 		default:
 		    return;
 
@@ -255,7 +286,7 @@ public class Server extends AbstractServer {
      * @throws SQLException if an error occurs while fetching the restaurant data
      */
 	private void handleRestaurantsData(Customer custoemr, ConnectionToClient client) throws SQLException {
-		ServerResponseDataContainer response = QueryControl.orderQueries.getSuppliersByBranch(dbConn, custoemr);
+		ServerResponseDataContainer response = QueryControl.orderQueries.importSuppliersByBranch(dbConn, custoemr);
 	    try {
 	        client.sendToClient(response);
 	    } catch (IOException e) {
@@ -264,9 +295,55 @@ public class Server extends AbstractServer {
 	}
 	
 	
+	/**
+	 * Handles the retrieval of the customer's waiting orders and sends the response to the client.
+	 *
+	 * @param customer the customer whose waiting orders are to be retrieved
+	 * @param client the client connection to send the response to
+	 * @throws SQLException if a database access error occurs
+	 */
+	private void handleCustomersWaitingOrders(Customer custoemr, ConnectionToClient client) throws SQLException{
+		ServerResponseDataContainer response = QueryControl.orderQueries.importCustomerWaitingOrders(dbConn, custoemr);
+	    try {
+	        client.sendToClient(response);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
 	
 	
+	/**
+	 * Handles the retrieval of the customer's historical orders and sends the response to the client.
+	 *
+	 * @param customer the customer whose historical orders are to be retrieved
+	 * @param client   the client connection to send the response to
+	 * @throws SQLException if a database access error occurs
+	 */
+	private void handleCustomersHistoryOrders(Customer custoemr, ConnectionToClient client) throws SQLException{
+		ServerResponseDataContainer response = QueryControl.orderQueries.importCustomerHistoryOrders(dbConn, custoemr);
+	    try {
+	        client.sendToClient(response);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
 	
+	
+	/**
+	 * Handles the update of the order status and arrival time
+	 *
+	 * @param order  the order to be updated
+	 * @param client the client connection to send the response to
+	 * @throws SQLException if a database access error occurs
+	 */
+	private void handleOrderStatusTimeUpdate(Order order, ConnectionToClient client) throws SQLException{
+		QueryControl.orderQueries.updateOrderStatusTime(dbConn, order);
+	    try {
+	        client.sendToClient(new ServerResponseDataContainer());
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
 	
 	
 	
