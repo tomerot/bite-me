@@ -50,17 +50,20 @@ public class ScreenLoader {
 			case ADD_ITEM_SCREEN:{
 				AddItemScreenController controller=new AddItemScreenController(wholeScreen, currController);
 				loader.setController(controller);
+				loader.load();
 				break;
 			}
 				
 			case REMOVE_ITEM_SCREEN:{
 				RemoveItemScreenController controller=new RemoveItemScreenController(wholeScreen, currController);
 				loader.setController(controller);
+				loader.load();
 				break;
 			}
 			case EDIT_ITEM_SCREEN:{
 				EditItemScreenController controller=new EditItemScreenController(wholeScreen, currController);
 				loader.setController(controller);
+				loader.load();
 				break;
 			}
 				

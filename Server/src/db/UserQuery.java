@@ -188,12 +188,13 @@ public class UserQuery {
 
 	public ServerResponseDataContainer importEmployeeInfo(Connection dbConn, User user) {
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
-		String query = "SELECT * FROM employees WHERE username = ?";
+		String query = "SELECT * FROM employees WHERE Username = ?";
 		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
 			stmt.setString(1, user.getUserName());
 
 			try (ResultSet rs = stmt.executeQuery()) {
 				if (rs.next()) {
+					System.out.println("FOUND");
 					// Extract data from the result set
 					int id = rs.getInt("ID");
 					int supplierID = rs.getInt("SupplierID");
@@ -202,8 +203,8 @@ public class UserQuery {
 					String email = rs.getString("Email");
 					String phone = rs.getString("Phone");
 
-					AuthorizedEmployee employee = new AuthorizedEmployee(id, firstName, lastName, email, phone,
-							user.getUserName(), user.getPassword(), supplierID);
+					//AuthorizedEmployee employee = new AuthorizedEmployee(id, firstName, lastName, email, phone,user.getUserName(), user.getPassword(), supplierID);
+					AuthorizedEmployee employee = new AuthorizedEmployee(id, firstName, lastName, email, phone,user.getUserName(), user.getPassword(), supplierID, user.getisLoggedIn(), user.getRegistered() );
 					
 
 					response.setMessage(employee);
@@ -216,6 +217,7 @@ public class UserQuery {
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
+		System.out.println(response.getResponse());
 		return response;
 	}
 

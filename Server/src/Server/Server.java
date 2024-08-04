@@ -211,6 +211,7 @@ public class Server extends AbstractServer {
 			break;
 		case EMPLOYEE:
 			response = QueryControl.userQueries.importEmployeeInfo(dbConn, user);
+			System.out.println(response.getResponse());
 			break;
 		case CUSTOMER:
 			response = QueryControl.userQueries.importCustomerInfo(dbConn, user);
