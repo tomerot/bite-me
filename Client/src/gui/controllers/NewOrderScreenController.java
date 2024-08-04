@@ -27,6 +27,7 @@
 	
 		private CustomerHomeScreenController prevCustomerController;
 		private HBox wholeScreen;
+		
 	
 		@FXML
 		private AnchorPane dashboard;
@@ -43,13 +44,31 @@
 			this.wholeScreen = wholeScreen;
 		}
 	
+//	    /**
+//	     * Loads and displays all available restaurants (suppliers) in a TilePane.
+//	     * Requests the list of suppliers from the server and populates the TilePane with supplier information.
+//	     */
+//		public void loadAllRestaurants() {
+//			Customer customer = prevCustomerController.getCustomer();
+//			ClientMainController.requestRestaurantsByBranch(customer);
+//			ServerResponseDataContainer response = ClientConsole.responseFromServer;
+//			List<Supplier> suppliersList = (List<Supplier>) response.getMessage();
+//	        tilePane.setHgap(10); // Horizontal gap between items
+//	        tilePane.setVgap(10); // Vertical gap between items
+//	        tilePane.setPrefColumns(3); // Number of columns
+//			for (Supplier supplier : suppliersList) {
+//				VBox vbox = createSupplierVBox(supplier);
+//				tilePane.getChildren().add(vbox);
+//			}
+//		}
+		
 	    /**
 	     * Loads and displays all available restaurants (suppliers) in a TilePane.
 	     * Requests the list of suppliers from the server and populates the TilePane with supplier information.
 	     */
 		public void loadAllRestaurants() {
 			Customer customer = prevCustomerController.getCustomer();
-			ClientMainController.requestAllRestaurants(customer);
+			ClientMainController.requestRestaurantsByBranch(Branch.CENTER);
 			ServerResponseDataContainer response = ClientConsole.responseFromServer;
 			List<Supplier> suppliersList = (List<Supplier>) response.getMessage();
 	        tilePane.setHgap(10); // Horizontal gap between items
@@ -90,4 +109,5 @@
 			// Implement your logic to move to the next page
 			System.out.println("Clicked on supplier: " + supplier.getName());
 		}
+		
 	}

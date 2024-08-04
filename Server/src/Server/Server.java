@@ -19,6 +19,7 @@ import entities.BranchManager;
 import entities.Customer;
 import entities.Order;
 import entities.User;
+import enums.Branch;
 import enums.ClientRequest;
 import enums.ServerResponse;
 import enums.UserType;
@@ -123,14 +124,24 @@ public class Server extends AbstractServer {
 			}
 			break;
 			
-		case FETCH_RESTAURANTS:
-			customer = (Customer) data.getMessage();
+//		case FETCH_BRANCH_RESTAURANTS:
+//			customer = (Customer) data.getMessage();
+//			try {
+//				handleRestaurantsData(customer,client);
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			}
+//			break;
+			
+		case FETCH_BRANCH_RESTAURANTS:{
+			Branch branchName = (Branch) data.getMessage();
 			try {
-				handleRestaurantsData(customer,client);
-			} catch (SQLException e) {
+				handleRestaurantsData(branchName, client);
+			} catch(SQLException e) {
 				e.printStackTrace();
 			}
 			break;
+		}
 			
 		case FETCH_CUSTOMER_WAITING_ORDERS:
 			customer = (Customer) data.getMessage();
@@ -278,15 +289,31 @@ public class Server extends AbstractServer {
 		}
 	}
 
+//    /**
+//     * Handles the request to fetch restaurant data based on a customer's request - Same Branch as supplier.
+//     * 
+//     * @param customer the customer requesting the restaurant data, Same Branch as supplier
+//     * @param client the client that requested the data
+//     * @throws SQLException if an error occurs while fetching the restaurant data
+//     */
+//	private void handleRestaurantsData(Customer custoemr, ConnectionToClient client) throws SQLException {
+//		ServerResponseDataContainer response = QueryControl.orderQueries.importSuppliersByBranch(dbConn, custoemr);
+//	    try {
+//	        client.sendToClient(response);
+//	    } catch (IOException e) {
+//	        e.printStackTrace();
+//	    }
+//	}
+	
     /**
-     * Handles the request to fetch restaurant data based on a customer's request - Same Branch as supplier.
+     * Handles the request to fetch restaurant data based on a customer's request.
      * 
-     * @param customer the customer requesting the restaurant data, Same Branch as supplier
+     * @param branchName the branch it's restaurants are requested
      * @param client the client that requested the data
      * @throws SQLException if an error occurs while fetching the restaurant data
      */
-	private void handleRestaurantsData(Customer custoemr, ConnectionToClient client) throws SQLException {
-		ServerResponseDataContainer response = QueryControl.orderQueries.importSuppliersByBranch(dbConn, custoemr);
+	private void handleRestaurantsData(Branch branchName, ConnectionToClient client) throws SQLException {
+		ServerResponseDataContainer response = QueryControl.orderQueries.importSuppliersByBranch(dbConn, branchName);
 	    try {
 	        client.sendToClient(response);
 	    } catch (IOException e) {

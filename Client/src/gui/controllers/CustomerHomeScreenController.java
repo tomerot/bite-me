@@ -111,7 +111,8 @@ public class CustomerHomeScreenController {
      */
 	public void displayNewOrderScreen(ActionEvent event) throws Exception {
     	ScreenLoader screenLoader = new ScreenLoader();
-    	String path = "/gui/view/NewOrderScreen.fxml";
+    	//String path = "/gui/view/NewOrderScreen.fxml";
+    	String path = "/gui/view/ChooseRestaurantScreen.fxml";
     	AnchorPane nextDash = screenLoader.loadOnDashboard(screen, path, Screen.NEW_ORDER_SCREEN, this);
     	dashboard.getChildren().clear(); //Clear current dashboard
     	dashboard.getChildren().add(nextDash); //Assign the new dashboard

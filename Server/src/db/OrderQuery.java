@@ -25,35 +25,79 @@ public class OrderQuery {
 
 	}
 
+//	/**
+//	 * Retrieves a list of suppliers based on the customer's home branch.
+//	 *
+//	 * @param dbConn   the database connection
+//	 * @param customer the customer whose branch is used for querying
+//	 * @return a ServerResponseDataContainer containing the list of suppliers and
+//	 *         response status
+//	 * @throws SQLException if a database access error occurs
+//	 */
+//	public ServerResponseDataContainer importSuppliersByBranch(Connection dbConn, Customer customer)
+//			throws SQLException {
+//		ServerResponseDataContainer response = new ServerResponseDataContainer();
+//		List<Supplier> suppliers = new ArrayList<>();
+//		String query = "SELECT ID, Name, Email, Phone, Address, City FROM Suppliers WHERE Branch = ?";
+//		String br = null;
+//		switch (customer.getHomeBranch().toString()) {
+//		case "North Branch":
+//			br = "North";
+//			break;
+//		case "Center Branch":
+//			br = "Center";
+//			break;
+//		case "South Branch":
+//			br = "South";
+//			break;
+//		}
+//
+//		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+//			stmt.setString(1, br);
+//
+//			try (ResultSet rs = stmt.executeQuery()) {
+//				while (rs.next()) {
+//
+//					// Extract data from the result set
+//					int id = rs.getInt("ID");
+//					String name = rs.getString("Name");
+//					String email = rs.getString("Email");
+//					String phone = rs.getString("Phone");
+//					String address = rs.getString("Address");
+//					String city = rs.getString("City");
+//
+//					Supplier supplier = new Supplier(id, name, city, address, null, email, phone, null, null);
+//					suppliers.add(supplier);
+//				}
+//
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			}
+//		} catch (SQLException e1) {
+//			e1.printStackTrace();
+//		}
+//		response.setMessage(suppliers);
+//		response.setResponse(ServerResponse.SUPPLIER_DATA_BY_BRANCH);
+//		return response;
+//	}
+	
 	/**
-	 * Retrieves a list of suppliers based on the customer's home branch.
+	 * Retrieves a list of suppliers based on a branch
 	 *
 	 * @param dbConn   the database connection
-	 * @param customer the customer whose branch is used for querying
+	 * @param branchName the branch whom restaurants are needed
 	 * @return a ServerResponseDataContainer containing the list of suppliers and
 	 *         response status
 	 * @throws SQLException if a database access error occurs
 	 */
-	public ServerResponseDataContainer importSuppliersByBranch(Connection dbConn, Customer customer)
+	public ServerResponseDataContainer importSuppliersByBranch(Connection dbConn, Branch branchName)
 			throws SQLException {
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
 		List<Supplier> suppliers = new ArrayList<>();
 		String query = "SELECT ID, Name, Email, Phone, Address, City FROM Suppliers WHERE Branch = ?";
-		String br = null;
-		switch (customer.getHomeBranch().toString()) {
-		case "North Branch":
-			br = "North";
-			break;
-		case "Center Branch":
-			br = "Center";
-			break;
-		case "South Branch":
-			br = "South";
-			break;
-		}
 
 		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
-			stmt.setString(1, br);
+			stmt.setString(1, branchName.toShortString());
 
 			try (ResultSet rs = stmt.executeQuery()) {
 				while (rs.next()) {
@@ -66,7 +110,7 @@ public class OrderQuery {
 					String address = rs.getString("Address");
 					String city = rs.getString("City");
 
-					Supplier supplier = new Supplier(id, name, city, address, null, email, phone, null, null);
+					Supplier supplier = new Supplier(id, name, city, address, branchName, email, phone, null, null);
 					suppliers.add(supplier);
 				}
 

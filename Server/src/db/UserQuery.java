@@ -374,7 +374,7 @@ public class UserQuery {
 		Customer customer = null;
 		String queryTest = "SELECT c.*, u.IsLoggedIn, u.Registered, u.Password  FROM customers AS c INNER JOIN users AS u ON c.Username = u.Username WHERE c.HomeBranch = ? AND u.Registered=0 AND u.Type='Customer'";
 		try (PreparedStatement stmt = dbConn.prepareStatement(queryTest)) {
-			stmt.setString(1, manager.getbranchType().toString1());
+			stmt.setString(1, manager.getbranchType().toShortString());
 			try (ResultSet rs1 = stmt.executeQuery()){
 				while (rs1.next()) {
 					String username= rs1.getString("Username");

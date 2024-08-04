@@ -7,6 +7,7 @@ import entities.BranchManager;
 import entities.Customer;
 import entities.Order;
 import entities.User;
+import enums.Branch;
 import enums.ClientRequest;
 
 /**
@@ -111,13 +112,23 @@ public class ClientMainController {
 		ClientMainController.accept(request);
 	}
 
-    /**
-     * Requests all restaurants available for a given customer from the server.
+//    /**
+//     * Requests all restaurants available for a given customer from the server.
+//     *
+//     * @param customer the customer for whom restaurant data is requested
+//     */
+//	public static void requestAllRestaurants(Customer customer) {
+//		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.FETCH_RESTAURANTS,customer);
+//		ClientMainController.accept(request);
+//	}
+	
+	/**
+     * Requests all specific branch restaurants
      *
      * @param customer the customer for whom restaurant data is requested
      */
-	public static void requestAllRestaurants(Customer customer) {
-		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.FETCH_RESTAURANTS,customer);
+	public static void requestRestaurantsByBranch(Branch branchName) {
+		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.FETCH_BRANCH_RESTAURANTS,branchName);
 		ClientMainController.accept(request);
 	}
 	

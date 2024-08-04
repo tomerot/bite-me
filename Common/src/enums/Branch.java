@@ -17,7 +17,7 @@ public enum Branch {
         return name;
     }
     
-    public String toString1() {
+    public String toShortString() {
         String name=null;
         if(this.name.equals("North Branch"))
         	name="North";

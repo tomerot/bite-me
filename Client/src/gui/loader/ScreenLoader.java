@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import gui.controllers.BranchManagerController;
 import gui.controllers.CeoHomeScreenController;
+import gui.controllers.ChooseRestaurantScreenController;
 import gui.controllers.MonthlyReportScreenController;
 import gui.controllers.MonthlyReportScreenController2;
 import gui.controllers.MyOrdersScreenController;
@@ -57,7 +58,8 @@ public class ScreenLoader {
 				break;
 			}
 			case NEW_ORDER_SCREEN:{
-				NewOrderScreenController controller = new NewOrderScreenController(wholeScreen, currController);
+				//NewOrderScreenController controller = new NewOrderScreenController(wholeScreen, currController);
+				ChooseRestaurantScreenController controller = new ChooseRestaurantScreenController(wholeScreen, currController);
 				loader.setController(controller);
 				loader.load();
 				controller.loadAllRestaurants();
