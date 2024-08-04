@@ -9,6 +9,9 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+/**
+ * Controller for handling the report screen
+ */
 public class ReportController {
 	@FXML
 	private Button BackBtn;
@@ -23,7 +26,16 @@ public class ReportController {
 		this.BranchManagerController=null;
 		this.CeoController=CeoController;
 	}
-	// Method to display the Client Home Page (HomeClientPage GUI)
+	
+	
+    /**
+     * Returns to the appropriate home page based on the type of user.
+     * If the controller is for a branch manager, it navigates to the branch manager screen.
+     * If the controller is for a CEO, it navigates to the CEO screen.
+     * 
+     * @param event the action event that triggers the navigation
+     * @throws Exception if there is an error loading the FXML files or displaying the screens
+     */
 	public void returnToManagerPage(ActionEvent event) throws Exception {
 		FXMLLoader loader = new FXMLLoader();
 	    if(CeoController==null) {

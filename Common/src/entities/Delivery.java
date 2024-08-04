@@ -2,6 +2,10 @@ package entities;
 
 import enums.Branch;
 
+/**
+ * This class represents a delivery order in the system.
+ * It extends the {@link Order} class and adds attributes specific to delivery.
+ */
 public class Delivery extends Order {
 	private SupplyMethod supplyMethod;
 	private String address;

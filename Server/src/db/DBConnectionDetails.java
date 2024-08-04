@@ -1,17 +1,5 @@
 package db;
 
-
-/**
- * 
- * @Author NadavReubens
- * @Author Gal Bitton
- * @Author Tamer Amer
- * @Author Rabea Lahham
- * @Author Bahaldeen Swied
- * @Author Ron Sisso
- * @version 1.0.0 
- */
-
 /**
  * The DBConnectionDetails class is an entity of the required data in order to be able to connect the database.
  */
@@ -22,6 +10,13 @@ public class DBConnectionDetails {
 	private String username;
 	private String password;
 	
+    /**
+     * Constructs a DBConnectionDetails object with the specified name, username, and password.
+     *
+     * @param name the name of the database
+     * @param username the username for database access
+     * @param password the password for database access
+     */
 	public DBConnectionDetails(String name, String username, String password) {
 		this.name=name;
 		this.username=username;

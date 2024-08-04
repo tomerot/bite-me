@@ -14,6 +14,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+/**
+ * The controller for the client connection form user interface.
+ * It manages the connection to the server and transitions to the login screen.
+ */
 public class ClientConnectFormController {
 	//private HomeClientPageController sfc;
 	//private static int itemIndex = 3;
@@ -47,7 +51,12 @@ public class ClientConnectFormController {
 		return serverPortField.getText();
 	}
 
-	// Method to display the client connection form/Gui
+    /**
+     * Displays the client connection form GUI.
+     * 
+     * @param primaryStage the primary stage for this application
+     * @throws Exception if an error occurs while loading the FXML file
+     */
 	public void start(Stage primaryStage) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource("/gui/view/ClientConnectForm.fxml"));
 		Scene scene = new Scene(root);
@@ -57,12 +66,22 @@ public class ClientConnectFormController {
 		primaryStage.show();
 	}
 
-	// Method gets string and print into console - for future comfort
+    /**
+     * Prints a message to the console.
+     * This method is provided for future debugging and convenience.
+     * 
+     * @param msg the message to print
+     */
 	public void printToConsole(String msg) {
 		System.out.println(msg);
 	}
 
-	// Method to connect the client to the server
+    /**
+     * Attempts to connect the client to the server using the IP and port from the input fields.
+     * If successful, transitions to the login screen.
+     * 
+     * @param event the action event triggered by the connect button
+     */
 	public void connectToServer(ActionEvent event) {
 		boolean isConnected = ClientConsole.connectClientToServer(serverIpField.getText(), serverPortField.getText(),
 				this);
@@ -79,13 +98,23 @@ public class ClientConnectFormController {
 		}
 	}
 	
-	// show server status on the label
+    /**
+     * Updates the client status label with the given message.
+     * 
+     * @param message the status message to display
+     */
 	private void updateClientStatus(String message) {
 		Platform.runLater(() -> lblClientStatus.setText(message));
 	}
 
 	
-	// Method to display the Client Home Page (HomeClientPage GUI)
+    /**
+     * Displays the login screen.
+     * Hides the current window and shows a new stage with the login UI.
+     * 
+     * @param event the action event triggered by the connect button
+     * @throws Exception if an error occurs while loading the login screen
+     */
 	public void displayLoginScreen(ActionEvent event) throws Exception {
 		FXMLLoader loader = new FXMLLoader();
 		loader.setController(new LoginController());
@@ -99,6 +128,10 @@ public class ClientConnectFormController {
 		primaryStage.show();
 	}
 
+    /**
+     * Exits the application.
+     * Prints a message to the console and then exiting the application.
+     */
 	public void getExitBtn() {
 		System.out.println("Exiting...");
 		Platform.exit();

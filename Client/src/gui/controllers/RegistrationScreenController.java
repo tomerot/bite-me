@@ -31,7 +31,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 
-
+/**
+ * Controller for the registration screen used by branch managers to register customers.
+ * Displays a table of unregistered customers with the option to select and register them.
+ */
 public class RegistrationScreenController {
 	@FXML
 	private Label RegistrationPage;
@@ -74,18 +77,33 @@ public class RegistrationScreenController {
     
 	private BranchManagerController prevManagerController;
 	private HBox wholeScreen;
+	
+    /**
+     * Constructs a new RegistrationScreenController.
+     * 
+     * @param wholeScreen the HBox container for the current screen
+     * @param prevController the previous controller, expected to be an instance of BranchManagerController
+     */
 	public RegistrationScreenController(HBox wholeScreen , Object prevController) {
 		this.prevManagerController=(BranchManagerController)prevController;
 		this.wholeScreen = wholeScreen;
 		this.UpdateLabel(prevManagerController.getBranchManager());
 	}
 	
+    /**
+     * Updates the registration page label with the branch manager's branch type.
+     * 
+     * @param manager the branch manager whose branch type is used for the label
+     */
     public void UpdateLabel(BranchManager manager) {
 	    Platform.runLater(() -> {
 	    	RegistrationPage.setText(manager.getbranchType()+" Customers Registration Screen");
 	    });
     }
 	
+    /**
+     * Represents a customer with a selection checkbox.
+     */
 	private class CustomerWithSelection {
 		private final Customer customer;
 		private BooleanProperty selected;
@@ -104,6 +122,9 @@ public class RegistrationScreenController {
 		}
 	}
 	
+    /**
+     * Custom table cell with a checkbox for selection.
+     */
 	private class CheckBoxTableCell extends TableCell<CustomerWithSelection, Boolean> {
 	    private final CheckBox checkBox;
 
@@ -132,6 +153,12 @@ public class RegistrationScreenController {
 	    }
 	}
 	
+    /**
+     * Navigates back to the previous screen.
+     * 
+     * @param event the action event that triggered the navigation
+     * @throws Exception if there is an error loading the previous screen
+     */
 	public void goBack(ActionEvent event) throws Exception {
 		ScreenLoader screenLoader = new ScreenLoader();
 		String path= "/gui/view/BranchManagerScreen.fxml";
@@ -141,6 +168,10 @@ public class RegistrationScreenController {
 		wholeScreen.getChildren().add(prevWholeScreen);
 	}
 	
+    /**
+     * Sets up the registration table with customer data.
+     * Configures the table columns and populates the table with unregistered customers.
+     */
 	public void setupRegistrationTable() {
 		
 		selectRow.setCellValueFactory(cellData -> cellData.getValue().selectedProperty());
@@ -171,6 +202,13 @@ public class RegistrationScreenController {
 		}
     }
 	
+    /**
+     * Registers the selected customers.
+     * Collects selected customers from the table and sends a registration request to the server.
+     * 
+     * @param event the action event that triggered the registration
+     * @throws Exception if there is an error during the registration process
+     */
 	public void registerSelectedCustomers(ActionEvent event) throws Exception{
 		List<String> userList= new ArrayList<String>();
 		ObservableList<CustomerWithSelection> customers = CustomersTable.getItems();

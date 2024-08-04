@@ -1,4 +1,8 @@
 package entities;
+/**
+ * This class represents an item in the system.
+ * It includes details such as the item's ID, name, type, price, and customization options.
+ */
 
 import java.io.Serializable;
 

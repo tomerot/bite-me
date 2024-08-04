@@ -6,6 +6,10 @@ import enums.Branch;
 import enums.CustomerType;
 import enums.UserType;
 
+/**
+ * This class represents a customer in the system.
+ * It extends the {@link Person} class and adds attributes specific to a customer.
+ */
 public class Customer extends Person {
 	private Branch homeBranch;
 	private float walletBalance;

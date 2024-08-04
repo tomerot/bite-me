@@ -17,7 +17,10 @@ import db.DBController;
 import db.QueryControl;
 import entities.Item;
 import entities.BranchManager;
+import entities.Customer;
+import entities.Order;
 import entities.User;
+import enums.Branch;
 import enums.ClientRequest;
 import enums.ServerResponse;
 import enums.UserType;
@@ -42,17 +45,33 @@ public class Server extends AbstractServer {
 	private ServerPortController serverController;
 	private Connection dbConn;
 
+	
+    /**
+     * Constructs a new Server instance with the specified port, server controller, and database connection.
+     * 
+     * @param port the port number on which the server listens for connections
+     * @param serverController the controller used to update the server status and connected clients in the GUI
+     * @param dbConn the database connection to use for processing client requests
+     */
 	private Server(int port, ServerPortController serverController, Connection dbConn) {
 		super(port);
 		this.serverController = serverController;
 		this.dbConn = dbConn;
 	}
 
-	// Method to handle messages received from the client
+	
+    /**
+     * Handles messages received from clients. The method processes different types of requests
+     * based on the {@link ClientRequest} enum and performs corresponding actions.
+     * 
+     * @param msg the message received from the client (ClientRequestDataContainer)
+     * @param client the client that sent the message
+     */
 	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
 		ClientRequestDataContainer data = (ClientRequestDataContainer) msg;
 		ClientRequest request = data.getRequest();
 		User user;
+		Customer customer;
 		// switch case on the request from server
 		switch (request) {
 		// all cases
@@ -119,7 +138,7 @@ public class Server extends AbstractServer {
 			Item updatedItem = (Item)data.getMessage();
 			handleUpdateItemRequest(updatedItem, client);
 			break;
-			
+
 		case FETCH_CUSTOMERS_DATA:
 			BranchManager manager = (BranchManager) data.getMessage();
 			try {
@@ -128,6 +147,7 @@ public class Server extends AbstractServer {
 				e.printStackTrace();
 			}
 			break;
+			
 		case UPDATE_CUSTOMERS_REGISTER:
 			List<String> userList = (List<String>) data.getMessage();
 			try {
@@ -136,7 +156,52 @@ public class Server extends AbstractServer {
 				e.printStackTrace();
 			}
 			break;
-
+			
+//		case FETCH_BRANCH_RESTAURANTS:
+//			customer = (Customer) data.getMessage();
+//			try {
+//				handleRestaurantsData(customer,client);
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			}
+//			break;
+			
+		case FETCH_BRANCH_RESTAURANTS:{
+			Branch branchName = (Branch) data.getMessage();
+			try {
+				handleRestaurantsData(branchName, client);
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+			break;
+		}
+			
+		case FETCH_CUSTOMER_WAITING_ORDERS:
+			customer = (Customer) data.getMessage();
+			try {
+				handleCustomersWaitingOrders(customer,client);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			break;
+			
+		case FETCH_CUSTOMER_HISTORY_ORDERS:
+			customer = (Customer) data.getMessage();
+			try {
+				handleCustomersHistoryOrders(customer,client);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			break;
+			
+		case UPDATE_ORDER_STATUS_AND_TIME:
+			Order order = (Order) data.getMessage();
+			try {
+				handleOrderStatusTimeUpdate(order,client);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			break;
 		default:
 		    return;
 
@@ -199,6 +264,12 @@ public class Server extends AbstractServer {
 	}
 
 
+    /**
+     * Handles the request to fetch specific user data based on user type.
+     * 
+     * @param user the user for whom data is to be fetched
+     * @param client the client that requested the data
+     */
 	private void handleSpecificUserData(User user, ConnectionToClient client) {
 		UserType type = user.getUserType();
 		ServerResponseDataContainer response = null;
@@ -226,6 +297,13 @@ public class Server extends AbstractServer {
 		}
 	}
 	
+    /**
+     * Handles the request to update user data in the database.
+     * 
+     * @param user the user whose data is to be updated
+     * @param client the client that requested the update
+     * @throws Exception if an error occurs while updating the user data
+     */
 	private void handleUpdateUser(User user, ConnectionToClient client) throws Exception {
 	    QueryControl.userQueries.updateUserData(dbConn, user);
 	    try {
@@ -235,6 +313,14 @@ public class Server extends AbstractServer {
 	    }
 	}
 	
+	
+    /**
+     * Handles the request to update the login status of a user.
+     * 
+     * @param user the user whose login status is to be updated
+     * @param client the client that requested the update
+     * @throws Exception if an error occurs while updating the login status
+     */
 	private void handleUpdateIsLoggedIn(User user, ConnectionToClient client) throws Exception {
 	    QueryControl.userQueries.updateIsLoggedIn(dbConn, user);
 	    try {
@@ -244,6 +330,13 @@ public class Server extends AbstractServer {
 	    }
 	}
 	
+    /**
+     * Handles the request to fetch customer data.
+     * 
+     * @param manager the branch manager requesting the customer data
+     * @param client the client that requested the data
+     * @throws SQLException if an error occurs while fetching the customer data
+     */
 	private void handleCustomersData(BranchManager manager, ConnectionToClient client) throws SQLException {
 		ServerResponseDataContainer response = QueryControl.userQueries.importCustomerList(dbConn, manager);
 		try {
@@ -253,6 +346,12 @@ public class Server extends AbstractServer {
 		}
 	}
 	
+    /**
+     * Handles the request to fetch user data.
+     * 
+     * @param user the user for whom data is to be fetched
+     * @param client the client that requested the data
+     */
 	private void handleUserData(User user, ConnectionToClient client) {
 		ServerResponseDataContainer response = QueryControl.userQueries.importUserInfo(dbConn, user);
 		try {
@@ -262,6 +361,13 @@ public class Server extends AbstractServer {
 		}
 	}
 	
+    /**
+     * Handles the request to update the customer registration data.
+     * 
+     * @param userList a list of users
+     * @param client the client that requested the update
+     * @throws Exception if an error occurs while updating the customer registration data
+     */
 	private void handleUpdateCustomersRegister(List<String> userList, ConnectionToClient client) throws Exception {
 		QueryControl.userQueries.updateUsersRegister(dbConn, userList);
 		try {
@@ -271,7 +377,125 @@ public class Server extends AbstractServer {
 		}
 	}
 
-	// method to start the server
+//    /**
+//     * Handles the request to fetch restaurant data based on a customer's request - Same Branch as supplier.
+//     * 
+//     * @param customer the customer requesting the restaurant data, Same Branch as supplier
+//     * @param client the client that requested the data
+//     * @throws SQLException if an error occurs while fetching the restaurant data
+//     */
+//	private void handleRestaurantsData(Customer custoemr, ConnectionToClient client) throws SQLException {
+//		ServerResponseDataContainer response = QueryControl.orderQueries.importSuppliersByBranch(dbConn, custoemr);
+//	    try {
+//	        client.sendToClient(response);
+//	    } catch (IOException e) {
+//	        e.printStackTrace();
+//	    }
+//	}
+	
+    /**
+     * Handles the request to fetch restaurant data based on a customer's request.
+     * 
+     * @param branchName the branch it's restaurants are requested
+     * @param client the client that requested the data
+     * @throws SQLException if an error occurs while fetching the restaurant data
+     */
+	private void handleRestaurantsData(Branch branchName, ConnectionToClient client) throws SQLException {
+		ServerResponseDataContainer response = QueryControl.orderQueries.importSuppliersByBranch(dbConn, branchName);
+	    try {
+	        client.sendToClient(response);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	
+	/**
+	 * Handles the retrieval of the customer's waiting orders and sends the response to the client.
+	 *
+	 * @param customer the customer whose waiting orders are to be retrieved
+	 * @param client the client connection to send the response to
+	 * @throws SQLException if a database access error occurs
+	 */
+	private void handleCustomersWaitingOrders(Customer custoemr, ConnectionToClient client) throws SQLException{
+		ServerResponseDataContainer response = QueryControl.orderQueries.importCustomerWaitingOrders(dbConn, custoemr);
+	    try {
+	        client.sendToClient(response);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	
+	/**
+	 * Handles the retrieval of the customer's historical orders and sends the response to the client.
+	 *
+	 * @param customer the customer whose historical orders are to be retrieved
+	 * @param client   the client connection to send the response to
+	 * @throws SQLException if a database access error occurs
+	 */
+	private void handleCustomersHistoryOrders(Customer custoemr, ConnectionToClient client) throws SQLException{
+		ServerResponseDataContainer response = QueryControl.orderQueries.importCustomerHistoryOrders(dbConn, custoemr);
+	    try {
+	        client.sendToClient(response);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	
+	/**
+	 * Handles the update of the order status and arrival time
+	 *
+	 * @param order  the order to be updated
+	 * @param client the client connection to send the response to
+	 * @throws SQLException if a database access error occurs
+	 */
+	private void handleOrderStatusTimeUpdate(Order order, ConnectionToClient client) throws SQLException{
+		QueryControl.orderQueries.updateOrderStatusTime(dbConn, order);
+	    try {
+	        client.sendToClient(new ServerResponseDataContainer());
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*
+	 * 
+	 * 
+	 * 
+	 * 
+			FROM HERE WE DONT TOUCH!
+	 * 
+	 * 
+	 * 
+	 * 
+	*/
+	
+	
+	
+	
+    /**
+     * Starts the server with the specified database connection details, port, and server controller.
+     * 
+     * @param db the database connection details
+     * @param port the port number on which the server listens for connections
+     * @param serverController the controller used to update the server status and connected clients in the GUI
+     * @return true if the server starts successfully, false otherwise
+     */
 	public static boolean startServer(DBConnectionDetails db, Integer port, ServerPortController serverController) {
 		// try to connect the database
 		Connection dbConn = DBController.connectToMySqlDB(db);
@@ -323,8 +547,12 @@ public class Server extends AbstractServer {
 		}
 	}
 
-	// when client connect call handleClientConnection -> send message to the client
-	// with his IP,host,status
+    /**
+     * Called when a client connects to the server. Updates the server controller with the client's information
+     * and sends a message to the client with their connection details.
+     * 
+     * @param client the client that has connected
+     */
 	@Override
 	protected void clientConnected(ConnectionToClient client) {
 		super.clientConnected(client);
@@ -344,6 +572,11 @@ public class Server extends AbstractServer {
 		handleClientConnection(client);
 	}
 
+    /**
+     * Called when a client disconnects from the server. Updates the server controller to remove the client's information.
+     * 
+     * @param client the client that has disconnected
+     */
 	@Override
 	protected void clientDisconnected(ConnectionToClient client) {
 		super.clientDisconnected(client);

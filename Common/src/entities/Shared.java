@@ -2,6 +2,10 @@ package entities;
 
 import enums.Branch;
 
+/**
+ * Represents a shared delivery for an order. Extends the {@link Delivery} class to include
+ * additional attributes and behaviors specific to shared deliveries.
+ */
 public class Shared extends Delivery{
 	private float initialSharedFee=25;
 	private float minSharedFee=15;

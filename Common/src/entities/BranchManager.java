@@ -3,6 +3,10 @@ package entities;
 import enums.Branch;
 import enums.UserType;
 
+/**
+ * This class represents a branch manager in the system.
+ * It extends the {@link Person} class and adds the branch type attribute.
+ */
 public class BranchManager extends Person{
 	
 	private Branch branchType;

@@ -1,5 +1,8 @@
 package enums;
 
+/**
+ * Enum representing the different branches available in the system.
+ */
 public enum Branch {
 	NORTH("North Branch"),
     CENTER("Center Branch"),
@@ -14,7 +17,7 @@ public enum Branch {
         return name;
     }
     
-    public String toString1() {
+    public String toShortString() {
         String name=null;
         if(this.name.equals("North Branch"))
         	name="North";

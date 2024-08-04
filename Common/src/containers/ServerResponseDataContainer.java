@@ -4,8 +4,10 @@ import java.io.Serializable;
 
 import enums.ServerResponse;
 
-//used for communication between a server and a client
-//include the action the server did, and the relevant object the server sent to client.
+/**
+ * This class is used for communication between a server and a client.
+ * It includes the action the server performed and the relevant object the server sent to the client.
+ */
 public class ServerResponseDataContainer implements Serializable {
 	private static final long serialVersionUID = 9164656011709934534L;
 	private ServerResponse response;
@@ -16,7 +18,12 @@ public class ServerResponseDataContainer implements Serializable {
 		
 	}
 	
-	// Constructor to initialize the serverAction and message fields
+    /**
+     * Constructs a new ServerResponseDataContainer with the specified response and message.
+     *
+     * @param response the action the server performed
+     * @param message the relevant object the server sent to the client
+     */
 	public ServerResponseDataContainer(ServerResponse response,Object message) 
 	{
 		this.response=response;

@@ -1,5 +1,9 @@
 package entities;
 
+/**
+ * This class represents an item in an order with additional customization options.
+ * It extends the {@link Item} class and includes attributes for size, doneness degree, and restrictions.
+ */
 public class ItemInOrder extends Item {
 	private String size=null;
 	private String donenessDegree=null;
