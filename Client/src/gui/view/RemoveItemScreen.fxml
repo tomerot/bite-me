@@ -10,7 +10,7 @@
    <children>
       <Button fx:id="btnRemove" layoutX="256.0" layoutY="636.0" mnemonicParsing="false" text="Remove" />
       <ListView fx:id="listOfItems" layoutX="86.0" layoutY="165.0" prefHeight="407.0" prefWidth="398.0" />
-      <ComboBox fx:id="CategoryField" layoutX="643.0" layoutY="286.0" prefWidth="150.0" promptText="Category" />
+      <ComboBox fx:id="categoryField" layoutX="643.0" layoutY="286.0" prefWidth="150.0" promptText="Category" />
       <Label fx:id="resultMessage" layoutX="502.0" layoutY="623.0" prefHeight="46.0" prefWidth="303.0" />
    </children>
 </AnchorPane>
