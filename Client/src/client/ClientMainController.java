@@ -4,6 +4,8 @@ import java.util.Map;
 
 import containers.ClientRequestDataContainer;
 import entities.Item;
+import java.util.List;
+import entities.BranchManager;
 import entities.User;
 import enums.ClientRequest;
 
@@ -42,6 +44,7 @@ public class ClientMainController {
         ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.UPDATE_IS_LOGGED_IN, user);
         ClientMainController.accept(request);
     }
+
     
     public static void requestOrderData(int supplierID) {
     	ClientRequestDataContainer request=new ClientRequestDataContainer(ClientRequest.GET_ORDER_DATA, supplierID);
@@ -78,4 +81,15 @@ public class ClientMainController {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.UPDATE_ITEM, item);
 		ClientMainController.accept(request);
 	}
+
+    public static void requestUnregisteredCustomersData(BranchManager manager) {
+        ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.FETCH_CUSTOMERS_DATA, manager);
+        ClientMainController.accept(request);
+    }
+    public static void requestUpdateRegisterCustomers(List<String> userList) {
+        ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.UPDATE_CUSTOMERS_REGISTER, userList);
+        ClientMainController.accept(request);
+    }
+    
+
 }

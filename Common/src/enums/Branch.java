@@ -13,4 +13,16 @@ public enum Branch {
     public String toString() {
         return name;
     }
+    
+    public String toString1() {
+        String name=null;
+        if(this.name.equals("North Branch"))
+        	name="North";
+        else if(this.name.equals("Center Branch"))
+        	name="Center";
+        else
+        	name="South";
+        return name;
+
+    }
 }

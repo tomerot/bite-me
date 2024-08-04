@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<HBox fx:id="screen" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<HBox fx:id="screen" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox prefHeight="800.0" prefWidth="250.0">
          <children>
@@ -23,7 +23,7 @@
             </AnchorPane>
             <AnchorPane prefHeight="150.0" prefWidth="250.0">
                <children>
-                  <Label fx:id="welcomeLbl" alignment="CENTER" layoutX="85.0" layoutY="50.0" textAlignment="CENTER" />
+                  <Label fx:id="welcomeLbl" alignment="CENTER" layoutX="85.0" layoutY="50.0" text="Welcome Label" textAlignment="CENTER" />
                </children></AnchorPane>
             <AnchorPane prefHeight="600.0" prefWidth="250.0" style="-fx-background-color: gray;">
                <children>
@@ -42,9 +42,10 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#displayQuarterlyReportScreen" prefHeight="42.0" prefWidth="178.0" text="Quarterly Reports" />
-                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#displayMonthlyReportScreen" prefHeight="42.0" prefWidth="178.0" text="Monthly Reports" GridPane.rowIndex="1" />
-                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#logOut" prefHeight="42.0" prefWidth="117.0" text="Logout" GridPane.rowIndex="7" />
+                        <Button fx:id="btnLogOut" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#logOut" prefHeight="42.0" prefWidth="117.0" text="Logout" GridPane.rowIndex="7" />
+                        <Button fx:id="btnAddItem" mnemonicParsing="false" onAction="#onAddClicked" prefHeight="52.0" prefWidth="154.0" text="Add Item" />
+                        <Button fx:id="btnRemoveItem" mnemonicParsing="false" onAction="#onRemoveClicked" prefHeight="53.0" prefWidth="154.0" text="Remove Items" GridPane.rowIndex="1" />
+                        <Button fx:id="btnEditItem" mnemonicParsing="false" onAction="#onEditClicked" prefHeight="52.0" prefWidth="153.0" text="Edit Items" GridPane.rowIndex="2" />
                      </children>
                   </GridPane>
                </children>
@@ -53,7 +54,7 @@
       </VBox>
       <AnchorPane id="dashboard" fx:id="dashboard" prefHeight="800.0" prefWidth="950.0">
          <children>
-            <Text layoutX="396.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CEO Screen">
+            <Text layoutX="279.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Authorized Employee Screen">
                <font>
                   <Font size="31.0" />
                </font>

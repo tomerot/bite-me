@@ -7,7 +7,7 @@ public class Shared extends Delivery{
 	private float minSharedFee=15;
 	private int numOfParticipants;
 
-	public Shared(int orderID, Supplier supplier, RegisteredCustomer customer, Branch branchName, String desiredDate,
+	public Shared(int orderID, Supplier supplier, Customer customer, Branch branchName, String desiredDate,
             String desiredHour, OrderType type, float totalPrice, String acceptanceHour, String confirmedHour, SupplyMethod SHARED, String address, int numOfParticipants) {
 		super(orderID, supplier, customer, branchName, desiredDate,desiredHour, type, totalPrice, acceptanceHour, confirmedHour, SHARED, address);
 		this.numOfParticipants=numOfParticipants;

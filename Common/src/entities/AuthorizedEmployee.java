@@ -5,8 +5,8 @@ import enums.UserType;
 
 public class AuthorizedEmployee extends Person {
 	private int supplierId;
-	public AuthorizedEmployee(int id, String firstName, String lastName, String email, String phoneNumber, String userName, String password, int supplierId) {
-		super(id, firstName, lastName, email, phoneNumber, userName, password, UserType.EMPLOYEE);
+	public AuthorizedEmployee(int id, String firstName, String lastName, String email, String phoneNumber, String userName, String password, int supplierId, int isLoggedIn, int registered) {
+		super(id, firstName, lastName, email, phoneNumber, userName, password, UserType.EMPLOYEE, isLoggedIn, registered);
 		this.supplierId=supplierId;
 	}
     

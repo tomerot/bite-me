@@ -6,7 +6,7 @@ import containers.ServerResponseDataContainer;
 import entities.AuthorizedEmployee;
 import entities.BranchManager;
 import entities.Ceo;
-import entities.RegisteredCustomer;
+import entities.Customer;
 import entities.Supplier;
 import entities.User;
 import javafx.application.Platform;
@@ -75,20 +75,18 @@ public class LoginController {
 						return;
 					}
 					else {
-						/*UPDATE ISLOGGEDIN, REMOVE THIS COMMENT IN THE END*/
-						//userData.setisLoggedIn(1);
+						userData.setisLoggedIn(1);
 						ClientMainController.requestUpdateIsLoggedIn(userData);
 						ClientMainController.requestUserSpecificData(userData);
 						ServerResponseDataContainer entityResponse = ClientConsole.responseFromServer;
 						switch(entityResponse.getResponse()) {
 							case CEO_FOUND:
 								Ceo ceo = (Ceo) entityResponse.getMessage();
-								System.out.println(ceo.getRegistered());
 								displayWindow(event, "CEO Home Page", "CeoScreen", ceo);
 								break;
 							case MANAGER_FOUND:
 								BranchManager manager = (BranchManager) entityResponse.getMessage();
-								displayWindow(event, "North Manager Home Page", "BranchManagerScreen", manager);
+								displayWindow(event, "Branch Manager Home Page", "BranchManagerScreen", manager);
 								break;
 							case SUPPLIER_FOUND:
 								Supplier supplier = (Supplier) entityResponse.getMessage();
@@ -99,7 +97,7 @@ public class LoginController {
 								displayWindow(event, "Employee Home Page", "EmployeeHomeScreen", employee);
 								break;
 							case CUSTOMER_FOUND:
-								RegisteredCustomer customer = (RegisteredCustomer) entityResponse.getMessage();
+								Customer customer = (Customer) entityResponse.getMessage();
 								displayWindow(event, "Customer Home Page", "CustomerHomeScreen", customer);
 								break;
 						}
@@ -121,38 +119,35 @@ public class LoginController {
 	    FXMLLoader loader = new FXMLLoader(getClass().getResource(view));
 	    switch(user.getUserType()) {
 	    case CEO:{
-	    	CeoHomeScreenController controller = new CeoHomeScreenController();
+	    	CeoHomeScreenController controller = new CeoHomeScreenController(user);
 	    	loader.setController(controller);
-	    	controller.setUser(user);
     	    break;
 	    }
-    	case MANAGER:
-    	    //((BranchManagerController) controller).setUser(user);
-//    		CeoHomeScreenController controller = new CeoHomeScreenController();
-//	    	loader.setController(controller);
-//	    	controller.setUser(user);
-    	    break;
-    	    
+    	case MANAGER:{
+    		BranchManagerController bController = new BranchManagerController(user);
+    		loader.setController(bController);
+    		break;
+    	}
     	case SUPPLIER:{
     		SupplierScreenController supController=new SupplierScreenController();
     		loader.setController(supController);
     		supController.setUser(user);
     		break;
     	}
-	    
 	    case EMPLOYEE:{
 	    	EmployeeHomeScreenController controller = new EmployeeHomeScreenController();
 	    	loader.setController(controller);
 	    	controller.setUser(user);
     		break;
 	    }
-	    case CUSTOMER:
+	    case CUSTOMER:{
 	    	//((SupplierController) controller).setUser(user);
 //	    	CeoHomeScreenController controller = new CeoHomeScreenController();
 //	    	loader.setController(controller);
 //	    	controller.setUser(user);
     		break;
 	    }
+	   }
 	    
 	    Pane root = loader.load();
 	    
