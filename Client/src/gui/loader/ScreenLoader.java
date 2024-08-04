@@ -20,7 +20,6 @@ public class ScreenLoader {
 	//path - the path to the FXML
 	//view - what screen do we need to load
 	//currController - in case it's needed to pass the current controller (for example for "Back")
-	//data - contains entities we need to pass to the next screen, MAYBE WE CAN USE LIST INSTEAD?
 	
 	public AnchorPane loadOnDashboard(HBox wholeScreen, String path, Screen toLoad, Object currController) throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(path)); //The FXML is actually an AnchorPane
