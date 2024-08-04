@@ -2,22 +2,36 @@ package entities;
 
 public class Item {
 	private int itemID;
+	private int supplierID;
     private String name;
     private Category type;
+    private String description;
     private float price;
     private boolean customSize;
     private boolean customDonenessDegree;
     private boolean customRestrictions;
-    public Item(int itemID, String name, Category type, float price, boolean customSize, boolean customDonenessDegree, boolean customRestrictions) {
+    public Item(int itemID,int supplierID ,String name, Category type,String description, boolean customSize, boolean customDonenessDegree, boolean customRestrictions, float price) {
     	this.itemID=itemID;
+    	this.supplierID=supplierID;
     	this.name=name;
     	this.type=type;
+    	this.description=description;
     	this.price=price;
     	this.customSize=customSize;
     	this.customDonenessDegree=customDonenessDegree;
     	this.customRestrictions=customRestrictions;
     }
-    // itemID getter and setter
+    
+    
+ // description getter and setter
+    public String getDescription() {return description;}
+    public void setDescription(String description) {this.description = description;}
+
+	// supplierID getter and setter
+    public int getSupplierID() {return supplierID;}
+	public void setSupplierID(int supplierID) {this.supplierID = supplierID;}
+	
+	// itemID getter and setter
     public int getItemID() { return itemID; }
     public void setItemID(int itemID) { this.itemID = itemID; }
     

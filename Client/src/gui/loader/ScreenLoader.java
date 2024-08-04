@@ -2,9 +2,14 @@ package gui.loader;
 
 import java.io.IOException;
 
+import gui.controllers.AddItemScreenController;
 import gui.controllers.CeoHomeScreenController;
+import gui.controllers.EditItemScreenController;
+import gui.controllers.EmployeeHomeScreenController;
 import gui.controllers.MonthlyReportScreenController;
 import gui.controllers.MonthlyReportScreenController2;
+import gui.controllers.RemoveItemScreenController;
+import gui.controllers.SupplierScreenController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -20,7 +25,7 @@ public class ScreenLoader {
 	//currController - in case it's needed to pass the current controller (for example for "Back")
 	//data - contains entities we need to pass to the next screen, MAYBE WE CAN USE LIST INSTEAD?
 	
-	public AnchorPane loadOnDashboard(HBox wholeScreen, String path, Screen toLoad, Object currController, EntitiesContainer data) throws IOException {
+	public AnchorPane loadOnDashboard(HBox wholeScreen, String path, Screen toLoad, Object currController) throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(path)); //The FXML is actually an AnchorPane
 		switch(toLoad) {
 			case MONTHLY_REPORT_SCREEN: {
@@ -33,6 +38,23 @@ public class ScreenLoader {
 				loader.setController(controller);
 				break;
 			}
+			case ADD_ITEM_SCREEN:{
+				AddItemScreenController controller=new AddItemScreenController(wholeScreen, currController);
+				loader.setController(controller);
+				break;
+			}
+				
+			case REMOVE_ITEM_SCREEN:{
+				RemoveItemScreenController controller=new RemoveItemScreenController(wholeScreen, currController);
+				loader.setController(controller);
+				break;
+			}
+			case EDIT_ITEM_SCREEN:{
+				EditItemScreenController controller=new EditItemScreenController(wholeScreen, currController);
+				loader.setController(controller);
+				break;
+			}
+				
 			default:
 				break;
 		}
@@ -48,6 +70,13 @@ public class ScreenLoader {
 			case CEO_SCREEN:
 				loader.setController((CeoHomeScreenController) prevController);
 				break;
+				
+			case SUPPLIER_SCREEN:
+				loader.setController((SupplierScreenController) prevController);
+				break;
+			case EMPLOYEE_SCREEN:
+				loader.setController((EmployeeHomeScreenController)prevController);
+				
 			default:
 				break;
 		}

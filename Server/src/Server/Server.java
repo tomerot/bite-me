@@ -7,12 +7,14 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Connection;
+import java.util.Map;
 
 import containers.ClientRequestDataContainer;
 import containers.ServerResponseDataContainer;
 import db.DBConnectionDetails;
 import db.DBController;
 import db.QueryControl;
+import entities.Item;
 import entities.User;
 import enums.ClientRequest;
 import enums.ServerResponse;
@@ -52,7 +54,7 @@ public class Server extends AbstractServer {
 		// switch case on the request from server
 		switch (request) {
 		// all cases
-		case DISCONNECT:
+		case DISCONNECT: 
 			clientDisconnected(client);
 			break;
 
@@ -83,13 +85,99 @@ public class Server extends AbstractServer {
 				e.printStackTrace();
 			}
 			break;
-		
+		case GET_ORDER_DATA:{
+			Integer supplierID=(Integer)data.getMessage();
+			handleGetOrdersData(supplierID,client);
+			break;
+		}
+			
+		case ADD_ITEM_DATA:
+			Item item = (Item) data.getMessage();
+			handleAddItemData(item, client);
+			break;
+			
+		case REMOVE_ITEM:
+			Map<String,Integer> itemData = (Map<String,Integer>)data.getMessage();
+			handleRemoveItemData(itemData, client);
+			break;
+			
+		case GET_ITEMS_LIST:
+			Integer supplierID = (Integer)data.getMessage();
+			handleGetItemsListRequest(supplierID, client);
+			break;
+			
+			
+		case GET_FULL_ITEMS_LIST:
+			Integer suppID = (Integer)data.getMessage();
+			handleGetFullItemsListRequest(suppID, client);
+			break;
+			
+		case UPDATE_ITEM:
+			System.out.println("Server got message  from client to get update item");
+			Item updatedItem = (Item)data.getMessage();
+			handleUpdateItemRequest(updatedItem, client);
+			break;
 
 		default:
 		    return;
 
 	}
 }
+	
+	private void handleUpdateItemRequest(Item item, ConnectionToClient client) {
+		ServerResponseDataContainer response = QueryControl.userQueries.UpdateItemInfo(dbConn, item);
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void handleGetFullItemsListRequest(Integer supplierID, ConnectionToClient client) {
+		ServerResponseDataContainer response = QueryControl.userQueries.FetchFullItemsListInfo(dbConn, supplierID);
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void handleGetItemsListRequest(Integer supplierID, ConnectionToClient client) {
+		ServerResponseDataContainer response = QueryControl.userQueries.FetchItemsListInfo(dbConn, supplierID);
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void handleAddItemData(Item item, ConnectionToClient client) {
+		ServerResponseDataContainer response = QueryControl.userQueries.AddItemInfo(dbConn, item);
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void handleRemoveItemData(Map<String,Integer> itemData, ConnectionToClient client) {
+		ServerResponseDataContainer response = QueryControl.userQueries.RemoveItemInfo(dbConn, itemData);
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void handleGetOrdersData(Integer supplierID, ConnectionToClient client){
+		ServerResponseDataContainer response=QueryControl.userQueries.getOrdersData(dbConn, supplierID);
+		try {
+			client.sendToClient(response);
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
 
 
 	private void handleSpecificUserData(User user, ConnectionToClient client) {

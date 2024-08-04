@@ -96,7 +96,7 @@ public class LoginController {
 								break;
 							case EMPLOYEE_FOUND:
 								AuthorizedEmployee employee = (AuthorizedEmployee) entityResponse.getMessage();
-								displayWindow(event, "Employee Home Page", "EmployeeScreen", employee);
+								displayWindow(event, "Employee Home Page", "EmployeeHomeScreen", employee);
 								break;
 							case CUSTOMER_FOUND:
 								RegisteredCustomer customer = (RegisteredCustomer) entityResponse.getMessage();
@@ -120,12 +120,12 @@ public class LoginController {
 		String view = "/gui/view/" + page + ".fxml";
 	    FXMLLoader loader = new FXMLLoader(getClass().getResource(view));
 	    switch(user.getUserType()) {
-	    case CEO:
+	    case CEO:{
 	    	CeoHomeScreenController controller = new CeoHomeScreenController();
 	    	loader.setController(controller);
 	    	controller.setUser(user);
     	    break;
-
+	    }
     	case MANAGER:
     	    //((BranchManagerController) controller).setUser(user);
 //    		CeoHomeScreenController controller = new CeoHomeScreenController();
@@ -133,20 +133,19 @@ public class LoginController {
 //	    	controller.setUser(user);
     	    break;
     	    
-    	case SUPPLIER:
-    		//((SupplierController) controller).setUser(user);
-//    		CeoHomeScreenController controller = new CeoHomeScreenController();
-//	    	loader.setController(controller);
-//	    	controller.setUser(user);
+    	case SUPPLIER:{
+    		SupplierScreenController supController=new SupplierScreenController();
+    		loader.setController(supController);
+    		supController.setUser(user);
     		break;
+    	}
 	    
-	    case EMPLOYEE:
-	    	//((SupplierController) controller).setUser(user);
-//	    	CeoHomeScreenController controller = new CeoHomeScreenController();
-//	    	loader.setController(controller);
-//	    	controller.setUser(user);
+	    case EMPLOYEE:{
+	    	EmployeeHomeScreenController controller = new EmployeeHomeScreenController();
+	    	loader.setController(controller);
+	    	controller.setUser(user);
     		break;
-    		
+	    }
 	    case CUSTOMER:
 	    	//((SupplierController) controller).setUser(user);
 //	    	CeoHomeScreenController controller = new CeoHomeScreenController();

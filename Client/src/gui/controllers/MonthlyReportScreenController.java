@@ -27,7 +27,7 @@ public class MonthlyReportScreenController {
 	
 	public void displayNextPage(ActionEvent event) throws Exception {
 		ScreenLoader screenLoader = new ScreenLoader();
-		AnchorPane nextDash = screenLoader.loadOnDashboard(wholeScreen, "/gui/view/MonthlyReportScreen2.fxml", Screen.MONTHLY_REPORT_SCREEN_TWO, this, null);
+		AnchorPane nextDash = screenLoader.loadOnDashboard(wholeScreen, "/gui/view/MonthlyReportScreen2.fxml", Screen.MONTHLY_REPORT_SCREEN_TWO, this);
 		dashboard.getChildren().clear();
 		dashboard.getChildren().add(nextDash);
 	}
