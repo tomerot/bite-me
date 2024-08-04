@@ -4,7 +4,7 @@ import enums.Branch;
 
 public class Basic extends Delivery {
 	private float basicFee=0;
-	public Basic(int orderID, Supplier supplier, RegisteredCustomer customer, Branch branchName, String desiredDate,
+	public Basic(int orderID, Supplier supplier, Customer customer, Branch branchName, String desiredDate,
             String desiredHour, OrderType type, float totalPrice, String acceptanceHour, String confirmedHour, SupplyMethod BASIC, String address) {
 		super(orderID, supplier, customer, branchName, desiredDate,desiredHour, type, totalPrice, acceptanceHour, confirmedHour, BASIC, address);
 	}

@@ -2,9 +2,11 @@ package gui.loader;
 
 import java.io.IOException;
 
+import gui.controllers.BranchManagerController;
 import gui.controllers.CeoHomeScreenController;
 import gui.controllers.MonthlyReportScreenController;
 import gui.controllers.MonthlyReportScreenController2;
+import gui.controllers.RegistrationScreenController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -25,18 +27,26 @@ public class ScreenLoader {
 			case MONTHLY_REPORT_SCREEN: {
 				MonthlyReportScreenController controller = new MonthlyReportScreenController(wholeScreen, currController);
 				loader.setController(controller);
+				loader.load();
 				break;
 			}
 			case MONTHLY_REPORT_SCREEN_TWO: {
 				MonthlyReportScreenController2 controller = new MonthlyReportScreenController2(wholeScreen, currController);
 				loader.setController(controller);
+				loader.load();
+				break;
+			}
+			case REGISTRATION_SCREEN: {
+				RegistrationScreenController controller = new RegistrationScreenController(wholeScreen, currController);
+				loader.setController(controller);
+				loader.load();
+				controller.setupRegistrationTable();
 				break;
 			}
 			default:
 				break;
 		}
 		
-		loader.load();
 		dashboard = loader.getRoot();
 		return dashboard;
 	}
@@ -47,10 +57,12 @@ public class ScreenLoader {
 			case CEO_SCREEN:
 				loader.setController((CeoHomeScreenController) prevController);
 				break;
+			case MANAGER_SCREEN:
+				loader.setController((BranchManagerController) prevController);
+				break;
 			default:
 				break;
 		}
-		//loader.setController(prevController);
 		loader.load();
 		wholeScreen = loader.getRoot();
 		return wholeScreen;

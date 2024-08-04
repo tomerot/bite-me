@@ -10,8 +10,8 @@ public class Person extends User {
 	private String phoneNumber;
 
     // Constructor
-    public Person(int id, String firstName, String lastName, String email, String phoneNumber, String userName, String password, UserType type) {
-        super(userName, password, type);
+    public Person(int id, String firstName, String lastName, String email, String phoneNumber, String userName, String password, UserType type, int isLoggedIn, int registered) {
+        super(userName, password, isLoggedIn, type, registered);
     	this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

@@ -15,13 +15,24 @@ public class MonthlyReportScreenController {
 	private Button nextPageBtn;
 	
 	@FXML
+	private Button backBtn;
+	
+	@FXML
 	private AnchorPane dashboard;
 	
-	private CeoHomeScreenController prevController;
+	private CeoHomeScreenController prevCeoController;
+	private BranchManagerController prevManagerController;
 	private HBox wholeScreen;
 	
 	public MonthlyReportScreenController(HBox wholeScreen , Object prevController) {
-		this.prevController = (CeoHomeScreenController) prevController;
+		if(prevController instanceof CeoHomeScreenController) {
+			this.prevCeoController = (CeoHomeScreenController) prevController;
+			this.prevManagerController=null;
+		}
+		if(prevController instanceof BranchManagerController) {
+			this.prevCeoController = null;
+			this.prevManagerController=(BranchManagerController) prevController;
+		}
 		this.wholeScreen = wholeScreen;
 	}
 	
@@ -34,8 +45,19 @@ public class MonthlyReportScreenController {
 	
 	public void goBack(ActionEvent event) throws Exception {
 		ScreenLoader screenLoader = new ScreenLoader();
-		String path = "/gui/view/CeoScreen.fxml";
-		HBox prevWholeScreen = screenLoader.loadPreviousScreen(path, Screen.CEO_SCREEN, prevController);
+		HBox prevWholeScreen=null;
+		String path="";
+		if(prevCeoController!=null && prevManagerController==null) {
+			path = "/gui/view/CeoScreen.fxml";
+			prevWholeScreen = screenLoader.loadPreviousScreen(path, Screen.CEO_SCREEN, prevCeoController);
+			prevCeoController.UpdateLabel(prevCeoController.getCeo());
+		}
+		if(prevCeoController==null && prevManagerController!=null) {
+			path = "/gui/view/BranchManagerScreen.fxml";
+			prevWholeScreen = screenLoader.loadPreviousScreen(path, Screen.MANAGER_SCREEN, prevManagerController);
+			prevManagerController.UpdateLabel(prevManagerController.getBranchManager());
+		}
+
 		wholeScreen.getChildren().clear();
 		wholeScreen.getChildren().add(prevWholeScreen);
 	}

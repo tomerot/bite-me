@@ -1,6 +1,7 @@
 package db;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,13 +10,15 @@ import containers.ServerResponseDataContainer;
 import entities.AuthorizedEmployee;
 import entities.BranchManager;
 import entities.Ceo;
-import entities.RegisteredCustomer;
+import entities.Customer;
 import entities.Supplier;
 import entities.User;
 import enums.Branch;
 import enums.CustomerType;
 import enums.ServerResponse;
 import enums.UserType;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserQuery {
 
@@ -93,25 +96,25 @@ public class UserQuery {
 					switch (type) {
 					case "CEO":
 						Ceo ceo = new Ceo(id, firstName, lastName, email, phone, user.getUserName(),
-								user.getPassword());
+								user.getPassword(),user.getisLoggedIn(),user.getRegistered());
 						response.setMessage(ceo);
 						response.setResponse(ServerResponse.CEO_FOUND);
 						break;
 					case "North Manager":
 						BranchManager nManager = new BranchManager(id, firstName, lastName, email, phone,
-								user.getUserName(), user.getPassword(), Branch.NORTH);
+								user.getUserName(), user.getPassword(), Branch.NORTH, user.getisLoggedIn(),user.getRegistered());
 						response.setMessage(nManager);
 						response.setResponse(ServerResponse.MANAGER_FOUND);
 						break;
 					case "Center Manager":
 						BranchManager cManager = new BranchManager(id, firstName, lastName, email, phone,
-								user.getUserName(), user.getPassword(), Branch.CENTER);
+								user.getUserName(), user.getPassword(), Branch.CENTER, user.getisLoggedIn(),user.getRegistered());
 						response.setMessage(cManager);
 						response.setResponse(ServerResponse.MANAGER_FOUND);
 						break;
 					case "South Manager":
 						BranchManager sManager = new BranchManager(id, firstName, lastName, email, phone,
-								user.getUserName(), user.getPassword(), Branch.SOUTH);
+								user.getUserName(), user.getPassword(), Branch.SOUTH, user.getisLoggedIn(),user.getRegistered());
 						response.setMessage(sManager);
 						response.setResponse(ServerResponse.MANAGER_FOUND);
 						break;
@@ -206,40 +209,50 @@ public class UserQuery {
 					// Extract data from the result set
 					int id = rs.getInt("ID");
 					String type = rs.getString("Type");
+					int companyId = rs.getInt("CompanyID");
 					String firstName = rs.getString("FirstName");
 					String lastName = rs.getString("LastName");
 					String email = rs.getString("Email");
 					String phone = rs.getString("Phone");
 					String homeBranch = rs.getString("HomeBranch");
+					String credit = rs.getString("Credit");
+					String cvv = rs.getString("CVV");
+					Date validDate = rs.getDate("validDate");
 					float walletBalance = rs.getFloat("WalletBalance");
 					// Can get also companyID and Credit Card
 
-					RegisteredCustomer customer = null;
+					Customer customer = null;
 
 					switch (homeBranch) {
 					case "North":
 						if (type.equals("Private"))
-							customer = new RegisteredCustomer(id, firstName, lastName, email, phone, user.getUserName(),
-									user.getPassword(), Branch.NORTH, walletBalance, CustomerType.PRIVATE);
+							customer = new Customer(user.getUserName(), id, CustomerType.PRIVATE, companyId, firstName, 
+									lastName, email, phone, Branch.NORTH, credit, cvv, validDate, walletBalance, 
+									user.getisLoggedIn(), user.getRegistered(), user.getPassword());
 						else
-							customer = new RegisteredCustomer(id, firstName, lastName, email, phone, user.getUserName(),
-									user.getPassword(), Branch.NORTH, walletBalance, CustomerType.BUSINESS);
+							customer = new Customer(user.getUserName(), id, CustomerType.BUSINESS, companyId, firstName, 
+									lastName, email, phone, Branch.NORTH, credit, cvv, validDate, walletBalance, 
+									user.getisLoggedIn(), user.getRegistered(), user.getPassword());
 						break;
 					case "Center":
 						if (type.equals("Private"))
-							customer = new RegisteredCustomer(id, firstName, lastName, email, phone, user.getUserName(),
-									user.getPassword(), Branch.CENTER, walletBalance, CustomerType.PRIVATE);
+							customer = new Customer(user.getUserName(), id, CustomerType.PRIVATE, companyId, firstName, 
+									lastName, email, phone, Branch.CENTER, credit, cvv, validDate, walletBalance, 
+									user.getisLoggedIn(), user.getRegistered(), user.getPassword());
 						else
-							customer = new RegisteredCustomer(id, firstName, lastName, email, phone, user.getUserName(),
-									user.getPassword(), Branch.CENTER, walletBalance, CustomerType.BUSINESS);
+							customer = new Customer(user.getUserName(), id, CustomerType.BUSINESS, companyId, firstName, 
+									lastName, email, phone, Branch.CENTER, credit, cvv, validDate, walletBalance, 
+									user.getisLoggedIn(), user.getRegistered(), user.getPassword());
 						break;
 					case "South":
 						if (type.equals("Private"))
-							customer = new RegisteredCustomer(id, firstName, lastName, email, phone, user.getUserName(),
-									user.getPassword(), Branch.SOUTH, walletBalance, CustomerType.PRIVATE);
+							customer = new Customer(user.getUserName(), id, CustomerType.PRIVATE, companyId, firstName, 
+									lastName, email, phone, Branch.SOUTH, credit, cvv, validDate, walletBalance, 
+									user.getisLoggedIn(), user.getRegistered(), user.getPassword());
 						else
-							customer = new RegisteredCustomer(id, firstName, lastName, email, phone, user.getUserName(),
-									user.getPassword(), Branch.SOUTH, walletBalance, CustomerType.BUSINESS);
+							customer = new Customer(user.getUserName(), id, CustomerType.BUSINESS, companyId, firstName, 
+									lastName, email, phone, Branch.SOUTH, credit, cvv, validDate, walletBalance, 
+									user.getisLoggedIn(), user.getRegistered(), user.getPassword());
 						break;
 					default:
 						break;
@@ -288,6 +301,88 @@ public class UserQuery {
 			int affectedRow = stmt.executeUpdate();
 			if (affectedRow == 0)
 				throw new Exception("IsLoggedIn update failed\n");
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+	}
+	public ServerResponseDataContainer importCustomerList(Connection dbConn, BranchManager manager) throws SQLException {
+		ServerResponseDataContainer response = new ServerResponseDataContainer();
+		List<Customer> unRegisteredCustomers= new ArrayList<Customer>();
+		Customer customer = null;
+		String queryTest = "SELECT c.*, u.IsLoggedIn, u.Registered, u.Password  FROM customers AS c INNER JOIN users AS u ON c.Username = u.Username WHERE c.HomeBranch = ? AND u.Registered=0 AND u.Type='Customer'";
+		try (PreparedStatement stmt = dbConn.prepareStatement(queryTest)) {
+			stmt.setString(1, manager.getbranchType().toString1());
+			try (ResultSet rs1 = stmt.executeQuery()){
+				while (rs1.next()) {
+					String username= rs1.getString("Username");
+					int id = rs1.getInt("ID");
+					String type = rs1.getString("Type");
+					int companyId = rs1.getInt("CompanyID");
+					String firstName = rs1.getString("FirstName");
+					String lastName = rs1.getString("LastName");
+					String email = rs1.getString("Email");
+					String phone = rs1.getString("Phone");
+					String homeBranch = rs1.getString("HomeBranch");
+					String credit = rs1.getString("Credit");
+					String cvv = rs1.getString("CVV");
+					Date validDate = rs1.getDate("validDate");
+					float walletBalance = rs1.getFloat("WalletBalance");
+					int isLoggedIn= rs1.getInt("IsLoggedIn");
+					int registered= rs1.getInt("Registered");
+					String password= rs1.getString("Password");
+					switch (homeBranch) {
+					case "North":
+						if (type.equals("Private"))
+							customer = new Customer(username, id, CustomerType.PRIVATE, companyId, firstName, 
+									lastName, email, phone, Branch.NORTH, credit, cvv, validDate, walletBalance, 
+									isLoggedIn, registered, password);
+						else
+							customer = new Customer(username, id, CustomerType.BUSINESS, companyId, firstName, 
+									lastName, email, phone, Branch.NORTH, credit, cvv, validDate, walletBalance, 
+									isLoggedIn, registered, password);
+						break;
+					case "Center":
+						if (type.equals("Private"))
+							customer = new Customer(username, id, CustomerType.PRIVATE, companyId, firstName, 
+									lastName, email, phone, Branch.CENTER, credit, cvv, validDate, walletBalance, 
+									isLoggedIn, registered, password);
+						else
+							customer = new Customer(username, id, CustomerType.BUSINESS, companyId, firstName, 
+									lastName, email, phone, Branch.CENTER, credit, cvv, validDate, walletBalance, 
+									isLoggedIn, registered, password);
+						break;
+					case "South":
+						if (type.equals("Private"))
+							customer = new Customer(username, id, CustomerType.PRIVATE, companyId, firstName, 
+									lastName, email, phone, Branch.SOUTH, credit, cvv, validDate, walletBalance, 
+									isLoggedIn, registered, password);
+						else
+							customer = new Customer(username, id, CustomerType.BUSINESS, companyId, firstName, 
+									lastName, email, phone, Branch.SOUTH, credit, cvv, validDate, walletBalance, 
+									isLoggedIn, registered, password);
+						break;
+					default:
+						break;
+					}
+					unRegisteredCustomers.add(customer);
+				}
+			}
+		}
+		response.setMessage(unRegisteredCustomers);
+		response.setResponse(ServerResponse.UNREGISTERED_CUSTOMERS_FOUND);
+		return response;
+	}
+	
+	public void updateUsersRegister(Connection dbConn, List<String> userList) throws Exception {
+		int affectedRows=0;
+		String query = "UPDATE users SET Registered=1 WHERE username = ?";
+		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+			for(String username : userList) {
+				stmt.setString(1, username);
+				affectedRows += stmt.executeUpdate();
+			}
+			if (affectedRows == 0)
+				throw new Exception("User update failed\n");
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}

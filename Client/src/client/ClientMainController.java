@@ -1,6 +1,9 @@
 package client;
 
+import java.util.List;
+
 import containers.ClientRequestDataContainer;
+import entities.BranchManager;
 import entities.User;
 import enums.ClientRequest;
 
@@ -39,4 +42,13 @@ public class ClientMainController {
         ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.UPDATE_IS_LOGGED_IN, user);
         ClientMainController.accept(request);
     }
+    public static void requestUnregisteredCustomersData(BranchManager manager) {
+        ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.FETCH_CUSTOMERS_DATA, manager);
+        ClientMainController.accept(request);
+    }
+    public static void requestUpdateRegisterCustomers(List<String> userList) {
+        ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.UPDATE_CUSTOMERS_REGISTER, userList);
+        ClientMainController.accept(request);
+    }
+    
 }

@@ -7,8 +7,8 @@ public class BranchManager extends Person{
 	
 	private Branch branchType;
 	
-	public BranchManager(int id, String firstName, String lastName, String email, String phoneNumber, String userName, String password, Branch branchType) {
-		super(id, firstName, lastName, email, phoneNumber, userName, password, UserType.MANAGER);
+	public BranchManager(int id, String firstName, String lastName, String email, String phoneNumber, String userName, String password, Branch branchType,int isLoggedIn, int registered) {
+		super(id, firstName, lastName, email, phoneNumber, userName, password, UserType.MANAGER ,isLoggedIn, registered);
 		this.branchType = branchType;
 	}
 	
