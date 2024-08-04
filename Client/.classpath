@@ -7,13 +7,13 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/BiteMe_Common"/>
-	<classpathentry kind="lib" path="JavaFXLib/javafx.base.jar"/>
-	<classpathentry kind="lib" path="JavaFXLib/javafx.controls.jar"/>
-	<classpathentry kind="lib" path="JavaFXLib/javafx.fxml.jar"/>
-	<classpathentry kind="lib" path="JavaFXLib/javafx.graphics.jar"/>
-	<classpathentry kind="lib" path="JavaFXLib/javafx.media.jar"/>
-	<classpathentry kind="lib" path="JavaFXLib/javafx.swing.jar"/>
-	<classpathentry kind="lib" path="JavaFXLib/javafx.web.jar"/>
-	<classpathentry kind="lib" path="JavaFXLib/javafx-swt.jar"/>
+	<classpathentry kind="lib" path="C:/Users/avivr/Desktop/openjfx-22.0.2_windows-x64_bin-sdk/javafx-sdk-22.0.2/lib/javafx.base.jar"/>
+	<classpathentry kind="lib" path="C:/Users/avivr/Desktop/openjfx-22.0.2_windows-x64_bin-sdk/javafx-sdk-22.0.2/lib/javafx.controls.jar"/>
+	<classpathentry kind="lib" path="C:/Users/avivr/Desktop/openjfx-22.0.2_windows-x64_bin-sdk/javafx-sdk-22.0.2/lib/javafx.fxml.jar"/>
+	<classpathentry kind="lib" path="C:/Users/avivr/Desktop/openjfx-22.0.2_windows-x64_bin-sdk/javafx-sdk-22.0.2/lib/javafx.graphics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/avivr/Desktop/openjfx-22.0.2_windows-x64_bin-sdk/javafx-sdk-22.0.2/lib/javafx.media.jar"/>
+	<classpathentry kind="lib" path="C:/Users/avivr/Desktop/openjfx-22.0.2_windows-x64_bin-sdk/javafx-sdk-22.0.2/lib/javafx.swing.jar"/>
+	<classpathentry kind="lib" path="C:/Users/avivr/Desktop/openjfx-22.0.2_windows-x64_bin-sdk/javafx-sdk-22.0.2/lib/javafx.web.jar"/>
+	<classpathentry kind="lib" path="C:/Users/avivr/Desktop/openjfx-22.0.2_windows-x64_bin-sdk/javafx-sdk-22.0.2/lib/javafx-swt.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

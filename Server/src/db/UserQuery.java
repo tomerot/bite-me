@@ -456,7 +456,7 @@ public class UserQuery {
 		
 		
 		public ServerResponseDataContainer FetchItemsListInfo(Connection dbConn, int supplierID) {
-			System.out.println("Thanks God.....");
+			System.out.println("stam");
 			String query = "SELECT Name, Category FROM items WHERE SupplierID = ?";
 			ServerResponseDataContainer response = new ServerResponseDataContainer();
 			Map<String,String> map = new HashMap<>();
@@ -465,9 +465,11 @@ public class UserQuery {
 				stmt.setInt(1, supplierID);
 
 				try (ResultSet rs = stmt.executeQuery()) {
-					
-					while(rs.next()) 
+					System.out.println("before while");
+					while(rs.next()) {
 						map.put(rs.getString("Name"), rs.getString("Category"));
+						System.out.println("in while");
+					}
 
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -475,6 +477,7 @@ public class UserQuery {
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
+			System.out.println(map);
 			response.setMessage(map);
 			response.setResponse(null);
 			return response;

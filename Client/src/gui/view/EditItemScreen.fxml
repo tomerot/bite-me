@@ -18,8 +18,8 @@
       <RadioButton fx:id="donenessField" layoutX="129.0" layoutY="508.0" mnemonicParsing="false" text="doneness" />
       <RadioButton fx:id="sizeField" layoutX="129.0" layoutY="563.0" mnemonicParsing="false" text="size" />
       <RadioButton fx:id="restrictionsField" layoutX="129.0" layoutY="609.0" mnemonicParsing="false" text="restrictions" />
-      <Button layoutX="449.0" layoutY="707.0" mnemonicParsing="false" text="Edit" />
-      <ComboBox fx:id="categoryField" layoutX="686.0" layoutY="126.0" prefWidth="150.0" promptText="Category" />
+      <Button fx:id="btnEdit" layoutX="449.0" layoutY="707.0" mnemonicParsing="false" onAction="#onEditClicked" text="Edit" />
+      <ComboBox fx:id="categoryField" layoutX="686.0" layoutY="126.0" onAction="#onCategoryClicked" prefWidth="150.0" promptText="Category" />
       <ListView fx:id="listOfItems" layoutX="581.0" layoutY="210.0" prefHeight="380.0" prefWidth="336.0" />
       <Label fx:id="resultMessage" layoutX="336.0" layoutY="634.0" prefHeight="51.0" prefWidth="300.0" />
    </children>
