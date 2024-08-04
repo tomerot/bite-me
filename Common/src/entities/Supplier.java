@@ -1,6 +1,7 @@
 package entities;
 
 import enums.Branch;
+import enums.UserType;
 
 /**
  * Represents a supplier in the system. This class extends {@link User} and includes additional
@@ -16,8 +17,9 @@ public class Supplier extends User {
 	private String phone;
 
     // Constructor
-    public Supplier(int supplierID, String name, String city, String address, Branch homeBranch, String email,String phone, String userName, String password) {
-        super(userName, password);
+        
+    public Supplier(int supplierID, String name, String city, String address, Branch homeBranch, String userName, String password) {
+        super(userName, password,1, UserType.SUPPLIER,1);
     	this.supplierID = supplierID;
         this.name = name;
         this.city = city;

@@ -1,4 +1,4 @@
-package entities;
+  package entities;
 
 import java.io.Serializable;
 import java.util.List;
@@ -11,8 +11,6 @@ import enums.Branch;
  */
 public class Order implements Serializable{
 	private static final long serialVersionUID = 1L;
-	
-	
 	private List<ItemInOrder> itemsList;
     private int orderID; //orderid
     private String recipient; //recipient
@@ -47,7 +45,8 @@ public class Order implements Serializable{
     	this.arrivalTime = arrivalTime;
     	this.status = status;
     }
-
+    
+   
 	public List<ItemInOrder> getItemsList() {
 		return itemsList;
 	}

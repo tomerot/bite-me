@@ -110,7 +110,7 @@ public class OrderQuery {
 					String address = rs.getString("Address");
 					String city = rs.getString("City");
 
-					Supplier supplier = new Supplier(id, name, city, address, branchName, email, phone, null, null);
+					Supplier supplier = new Supplier(id, name, city, address, branchName, email, phone);
 					suppliers.add(supplier);
 				}
 
@@ -305,9 +305,7 @@ public class OrderQuery {
 					String address = rs.getString("Address");
 					String city = rs.getString("City");
 					String branch = rs.getString("Branch");
-
-					Supplier supplier = new Supplier(supplierID, name, city, address, getBranch(branch), email, phone,
-							null, null);
+					Supplier supplier = new Supplier(supplierID, name, city, address, getBranch(branch), email, phone);
 					return supplier;
 				}
 			}

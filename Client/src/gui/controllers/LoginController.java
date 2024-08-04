@@ -105,7 +105,7 @@ public class LoginController {
 								break;
 							case EMPLOYEE_FOUND:
 								AuthorizedEmployee employee = (AuthorizedEmployee) entityResponse.getMessage();
-								displayWindow(event, "Employee Home Page", "EmployeeScreen", employee);
+								displayWindow(event, "Employee Home Page", "EmployeeHomeScreen", employee);
 								break;
 							case CUSTOMER_FOUND:
 								Customer customer = (Customer) entityResponse.getMessage();
@@ -138,37 +138,36 @@ public class LoginController {
 		String view = "/gui/view/" + page + ".fxml";
 	    FXMLLoader loader = new FXMLLoader(getClass().getResource(view));
 	    switch(user.getUserType()) {
-	    case CEO:
+	    case CEO:{
 	    	CeoHomeScreenController controller = new CeoHomeScreenController(user);
 	    	loader.setController(controller);
     	    break;
-
-    	case MANAGER:
+	    }
+    	case MANAGER:{
     		BranchManagerController bController = new BranchManagerController(user);
     		loader.setController(bController);
     		break;
-    	    
-    	case SUPPLIER:
-    		//((SupplierController) controller).setUser(user);
-//    		CeoHomeScreenController controller = new CeoHomeScreenController();
-//	    	loader.setController(controller);
-//	    	controller.setUser(user);
+    	}
+    	case SUPPLIER:{
+    		SupplierScreenController supController=new SupplierScreenController();
+    		loader.setController(supController);
+    		supController.setUser(user);
     		break;
-	    
-	    case EMPLOYEE:
-	    	//((SupplierController) controller).setUser(user);
-//	    	CeoHomeScreenController controller = new CeoHomeScreenController();
-//	    	loader.setController(controller);
-//	    	controller.setUser(user);
+    	}
+	    case EMPLOYEE:{
+	    	EmployeeHomeScreenController controller = new EmployeeHomeScreenController();
+	    	loader.setController(controller);
+	    	controller.setUser(user);
     		break;
-    		
-	    case CUSTOMER:
+	    }
+	    case CUSTOMER:{
 	    	//((SupplierController) controller).setUser(user);
 	    	CustomerHomeScreenController customerContoller = new CustomerHomeScreenController(user);
 	    	loader.setController(customerContoller);
 //	    	controller.setUser(user);
     		break;
 	    }
+	   }
 	    
 	    Pane root = loader.load();   
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window

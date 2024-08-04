@@ -1,7 +1,7 @@
 package gui.loader;
 
 import java.io.IOException;
-
+import gui.controllers.AddItemScreenController;
 import gui.controllers.BranchManagerController;
 import gui.controllers.CeoHomeScreenController;
 import gui.controllers.ChooseRestaurantScreenController;
@@ -9,6 +9,10 @@ import gui.controllers.MonthlyReportScreenController;
 import gui.controllers.MonthlyReportScreenController2;
 import gui.controllers.MyOrdersScreenController;
 import gui.controllers.NewOrderScreenController;
+import gui.controllers.EditItemScreenController;
+import gui.controllers.EmployeeHomeScreenController;
+import gui.controllers.RemoveItemScreenController;
+import gui.controllers.SupplierScreenController;
 import gui.controllers.RegistrationScreenController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
@@ -21,9 +25,6 @@ public class ScreenLoader {
 	
 	private AnchorPane dashboard; //Requested dashboard
 	private HBox wholeScreen;
-	
-	//view - what screen do we need to load
-	//data - contains entities we need to pass to the next screen, MAYBE WE CAN USE LIST INSTEAD?
 	
     /**
      * Loads the specified screen into an AnchorPane.
@@ -72,6 +73,26 @@ public class ScreenLoader {
 				controller.loadAllOrders();
 				break;
 			}
+			case ADD_ITEM_SCREEN:{
+				AddItemScreenController controller=new AddItemScreenController(wholeScreen, currController);
+				loader.setController(controller);
+				loader.load();
+				break;
+			}
+				
+			case REMOVE_ITEM_SCREEN:{
+				RemoveItemScreenController controller=new RemoveItemScreenController(wholeScreen, currController);
+				loader.setController(controller);
+				loader.load();
+				break;
+			}
+			case EDIT_ITEM_SCREEN:{
+				EditItemScreenController controller=new EditItemScreenController(wholeScreen, currController);
+				loader.setController(controller);
+				loader.load();
+				break;
+			}
+				
 			default:
 				break;
 		}
@@ -94,7 +115,13 @@ public class ScreenLoader {
 		switch(toLoad) {
 			case CEO_SCREEN:
 				loader.setController((CeoHomeScreenController) prevController);
+				break;	
+			case SUPPLIER_SCREEN:
+				loader.setController((SupplierScreenController) prevController);
 				break;
+			case EMPLOYEE_SCREEN:
+				loader.setController((EmployeeHomeScreenController)prevController);
+
 			case MANAGER_SCREEN:
 				loader.setController((BranchManagerController) prevController);
 				break;

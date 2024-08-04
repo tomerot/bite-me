@@ -12,6 +12,12 @@ public enum ClientRequest {
 	GET_USER_DATA, // Request to get general user data
 	GET_SPECIFIC_USER_DATA, // Request to get data for a specific user
 	UPDATE_IS_LOGGED_IN, // Request to update the login status of a user
+	GET_ORDER_DATA,
+	ADD_ITEM_DATA,
+	GET_ITEMS_LIST,
+	GET_FULL_ITEMS_LIST,
+	REMOVE_ITEM,
+	UPDATE_ITEM,
 	FETCH_CUSTOMERS_DATA,
 	UPDATE_CUSTOMERS_REGISTER, // Request to update customer registration
 	FETCH_BRANCH_RESTAURANTS, // Request to fetch restaurant data by branch

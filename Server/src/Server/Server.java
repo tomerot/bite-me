@@ -7,14 +7,15 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Connection;
+import java.util.Map;
 import java.sql.SQLException;
 import java.util.List;
-
 import containers.ClientRequestDataContainer;
 import containers.ServerResponseDataContainer;
 import db.DBConnectionDetails;
 import db.DBController;
 import db.QueryControl;
+import entities.Item;
 import entities.BranchManager;
 import entities.Customer;
 import entities.Order;
@@ -74,7 +75,7 @@ public class Server extends AbstractServer {
 		// switch case on the request from server
 		switch (request) {
 		// all cases
-		case DISCONNECT:
+		case DISCONNECT: 
 			clientDisconnected(client);
 			break;
 
@@ -105,7 +106,39 @@ public class Server extends AbstractServer {
 				e.printStackTrace();
 			}
 			break;
+		case GET_ORDER_DATA:{
+			Integer supplierID=(Integer)data.getMessage();
+			handleGetOrdersData(supplierID,client);
+			break;
+		}
 			
+		case ADD_ITEM_DATA:
+			Item item = (Item) data.getMessage();
+			handleAddItemData(item, client);
+			break;
+			
+		case REMOVE_ITEM:
+			Map<String,Integer> itemData = (Map<String,Integer>)data.getMessage();
+			handleRemoveItemData(itemData, client);
+			break;
+			
+		case GET_ITEMS_LIST:
+			Integer supplierID = (Integer)data.getMessage();
+			handleGetItemsListRequest(supplierID, client);
+			break;
+			
+			
+		case GET_FULL_ITEMS_LIST:
+			Integer suppID = (Integer)data.getMessage();
+			handleGetFullItemsListRequest(suppID, client);
+			break;
+			
+		case UPDATE_ITEM:
+			System.out.println("Server got message  from client to get update item");
+			Item updatedItem = (Item)data.getMessage();
+			handleUpdateItemRequest(updatedItem, client);
+			break;
+
 		case FETCH_CUSTOMERS_DATA:
 			BranchManager manager = (BranchManager) data.getMessage();
 			try {
@@ -169,12 +202,66 @@ public class Server extends AbstractServer {
 				e.printStackTrace();
 			}
 			break;
-			
 		default:
 		    return;
 
 	}
 }
+	
+	private void handleUpdateItemRequest(Item item, ConnectionToClient client) {
+		ServerResponseDataContainer response = QueryControl.userQueries.UpdateItemInfo(dbConn, item);
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void handleGetFullItemsListRequest(Integer supplierID, ConnectionToClient client) {
+		ServerResponseDataContainer response = QueryControl.userQueries.FetchFullItemsListInfo(dbConn, supplierID);
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void handleGetItemsListRequest(Integer supplierID, ConnectionToClient client) {
+		ServerResponseDataContainer response = QueryControl.userQueries.FetchItemsListInfo(dbConn, supplierID);
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void handleAddItemData(Item item, ConnectionToClient client) {
+		ServerResponseDataContainer response = QueryControl.userQueries.AddItemInfo(dbConn, item);
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void handleRemoveItemData(Map<String,Integer> itemData, ConnectionToClient client) {
+		ServerResponseDataContainer response = QueryControl.userQueries.RemoveItemInfo(dbConn, itemData);
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void handleGetOrdersData(Integer supplierID, ConnectionToClient client){
+		ServerResponseDataContainer response=QueryControl.userQueries.getOrdersData(dbConn, supplierID);
+		try {
+			client.sendToClient(response);
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
 
 
     /**
@@ -195,6 +282,7 @@ public class Server extends AbstractServer {
 			break;
 		case EMPLOYEE:
 			response = QueryControl.userQueries.importEmployeeInfo(dbConn, user);
+			System.out.println(response.getResponse());
 			break;
 		case CUSTOMER:
 			response = QueryControl.userQueries.importCustomerInfo(dbConn, user);
