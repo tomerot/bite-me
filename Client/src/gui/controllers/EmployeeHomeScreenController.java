@@ -55,11 +55,8 @@ public class EmployeeHomeScreenController {
     
 	public void setUser(User user) {
         this.user = user;
-        ClientMainController.requestBranchManagerData(user);
-        ServerResponseDataContainer response = ClientConsole.responseFromServer;
-        AuthorizedEmployee employee =(AuthorizedEmployee) response.getMessage();
-        this.employee=employee;
-        UpdateLabel(employee);
+        this.employee=(AuthorizedEmployee)user;
+        UpdateLabel((AuthorizedEmployee)user);
     }
 	public User getUser() {
 		return user;
