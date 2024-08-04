@@ -2,12 +2,16 @@ package entities;
 
 import enums.Branch;
 
+/**
+ * Represents a shared delivery for an order. Extends the {@link Delivery} class to include
+ * additional attributes and behaviors specific to shared deliveries.
+ */
 public class Shared extends Delivery{
 	private float initialSharedFee=25;
 	private float minSharedFee=15;
 	private int numOfParticipants;
 
-	public Shared(int orderID, Supplier supplier, RegisteredCustomer customer, Branch branchName, String desiredDate,
+	public Shared(int orderID, Supplier supplier, Customer customer, Branch branchName, String desiredDate,
             String desiredHour, OrderType type, float totalPrice, String acceptanceHour, String confirmedHour, SupplyMethod SHARED, String address, int numOfParticipants) {
 		super(orderID, supplier, customer, branchName, desiredDate,desiredHour, type, totalPrice, acceptanceHour, confirmedHour, SHARED, address);
 		this.numOfParticipants=numOfParticipants;

@@ -19,6 +19,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+/**
+ * Controller for managing server port configurations and server status in the GUI.
+ * Handles user interactions for starting, stopping, and managing server connections.
+ */
 public class ServerPortController {
 
 	@FXML
@@ -54,9 +58,14 @@ public class ServerPortController {
         lvConnectedClients.setItems(connectedClientsList); 
     }
     
+    
+    /**
+     * Handles the action event when the connect button is clicked.
+     * Starts the server using the provided configuration details.
+     * 
+     * @param event the action event
+     */
 	@FXML
-	// Method that calls startServer(EchoServer) with the given data entered in the
-	// fields
 	private void onConnectServerClicked(ActionEvent event) {
 		DBConnectionDetails database = new DBConnectionDetails();
 		Integer portNumber;
@@ -121,14 +130,27 @@ public class ServerPortController {
 		Platform.runLater(() -> lblServerStatus.setText(message));
 	}
 
+	
+    /**
+     * Handles the action event when the exit button is clicked.
+     * Stops the server and exits the application.
+     * 
+     * @param event the action event
+     * @throws Exception if an error occurs while stopping the server or exiting
+     */
 	@FXML
-	// Method to exit the program
 	private void getExitBtn(ActionEvent event) throws Exception {
 		Server.stopServer();
 		Platform.exit();
 		System.exit(0);
 	}
 	
+    /**
+     * Handles the action event when the disconnect button is clicked.
+     * Stops the server and clears the list of connected clients.
+     * 
+     * @param event the action event
+     */
 	@FXML
 	private void onDisconnectClicked(ActionEvent event) {
 		System.out.println("Server Disconnected from Db");
@@ -140,7 +162,12 @@ public class ServerPortController {
 	}
 
 	
-	// Method to start/show the Server Porn GUI
+    /**
+     * Initializes and displays the Server Port GUI.
+     * 
+     * @param primaryStage the primary stage for the GUI
+     * @throws Exception if an error occurs while loading the FXML or CSS files
+     */
 	public void start(Stage primaryStage) throws Exception {
 		Pane root = FXMLLoader.load(getClass().getResource("/gui/view/ServerPort.fxml"));
 		Scene scene = new Scene(root);

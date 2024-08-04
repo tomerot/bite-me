@@ -1,5 +1,8 @@
 package entities;
 
+/**
+ * Enum representing the various supply methods available for deliveries.
+ */
 public enum SupplyMethod {
 	TAKEAWAY("TakeAway"),
     ROBOT("Robot"),

@@ -8,7 +8,7 @@
 
 <AnchorPane prefHeight="539.0" prefWidth="551.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.ClientConnectFormController">
    <children>
-      <TextField fx:id="serverIpField" layoutX="195.0" layoutY="181.0" prefHeight="32.0" prefWidth="163.0" />
+      <TextField fx:id="serverIpField" layoutX="195.0" layoutY="181.0" prefHeight="32.0" prefWidth="163.0" text="localhost"/>
       <TextField fx:id="serverPortField" layoutX="194.0" layoutY="322.0" prefHeight="32.0" prefWidth="163.0" text="5555" />
       <Button fx:id="btnConnect" layoutX="246.0" layoutY="398.0" mnemonicParsing="false" onAction="#connectToServer" text="Connect" />
       <Label layoutX="221.0" layoutY="113.0" prefHeight="59.0" prefWidth="110.0" text="Server IP:">

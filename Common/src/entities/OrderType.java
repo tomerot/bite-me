@@ -1,5 +1,8 @@
 package entities;
 
+/**
+ * This enum represents the types of orders.
+ */
 public enum OrderType {
     PRE_ORDER("PreOrder"),
     REGULAR("Regular");

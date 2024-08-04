@@ -4,14 +4,21 @@ import java.io.Serializable;
 
 import enums.ClientRequest;
 
-//used for communication between a server and a client
-// include the action the client did, and the relevant object the client send to server.
+/**
+ * This class is used for communication between a server and a client.
+ * It includes the action the client performed and the relevant object the client sent to the server.
+ */
 public class ClientRequestDataContainer implements Serializable {
 	private static final long serialVersionUID = -2549221640908833373L;
 	private ClientRequest request;
 	private Object message;
 
-	// Constructor to initialize the clientAction and message fields.
+    /**
+     * Constructs a new ClientRequestDataContainer with the specified action and message.
+     *
+     * @param action the action the client performed
+     * @param message the relevant object the client sent to the server
+     */
 	public ClientRequestDataContainer(ClientRequest action, Object message) {
 		request = action;
 		this.message = message;
