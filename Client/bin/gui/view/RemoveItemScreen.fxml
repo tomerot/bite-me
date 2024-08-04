@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="dashboard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button fx:id="btnRemove" layoutX="256.0" layoutY="636.0" mnemonicParsing="false" onAction="#onRemoveClicked" text="Remove" />
+      <ListView fx:id="listOfItems" layoutX="86.0" layoutY="165.0" prefHeight="407.0" prefWidth="398.0" />
+      <ComboBox fx:id="categoryField" layoutX="643.0" layoutY="286.0" onAction="#onCategoryClicked" prefWidth="150.0" promptText="Category" />
+      <Label fx:id="resultMessage" layoutX="502.0" layoutY="623.0" prefHeight="46.0" prefWidth="303.0" />
+   </children>
+</AnchorPane>

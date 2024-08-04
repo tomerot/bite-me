@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<HBox fx:id="screen" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox prefHeight="800.0" prefWidth="250.0">
+         <children>
+            <AnchorPane prefHeight="150.0" prefWidth="250.0" style="-fx-background-color: gray;">
+               <children>
+                  <ImageView fitHeight="85.0" fitWidth="219.0" layoutX="16.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="150.0" prefWidth="250.0">
+               <children>
+                  <Label fx:id="welcomeLbl" alignment="CENTER" layoutX="85.0" layoutY="50.0" text="Welcome Label" textAlignment="CENTER" />
+               </children></AnchorPane>
+            <AnchorPane prefHeight="600.0" prefWidth="250.0" style="-fx-background-color: gray;">
+               <children>
+                  <GridPane alignment="CENTER" layoutX="-1.0" layoutY="1.0" prefHeight="567.0" prefWidth="250.0">
+                    <columnConstraints>
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#logOut" prefHeight="42.0" prefWidth="117.0" text="Logout" GridPane.rowIndex="7" />
+                        <Button fx:id="btnRefresh" mnemonicParsing="false" prefHeight="54.0" prefWidth="160.0" text="Refresh">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </GridPane>
+               </children>
+            </AnchorPane>
+         </children>
+      </VBox>
+      <AnchorPane id="dashboard" fx:id="dashboard" prefHeight="800.0" prefWidth="950.0">
+         <children>
+            <Text layoutX="369.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Supplier Screen">
+               <font>
+                  <Font size="31.0" />
+               </font>
+            </Text>
+            <ListView fx:id="listOfShippedOrders" layoutX="51.0" layoutY="507.0" prefHeight="200.0" prefWidth="836.0" />
+            <Label layoutX="51.0" layoutY="124.0" prefHeight="52.0" prefWidth="396.0" text="Orders ready to accept:">
+               <font>
+                  <Font size="36.0" />
+               </font>
+            </Label>
+            <Label layoutX="51.0" layoutY="446.0" prefHeight="53.0" prefWidth="374.0" text="Orders that accepted:">
+               <font>
+                  <Font size="36.0" />
+               </font>
+            </Label>
+            <Button fx:id="btnAccept" layoutX="789.0" layoutY="408.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="98.0" text="Accept">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
+            <TableView fx:id="tableOrdersToAccept" layoutX="51.0" layoutY="177.0" prefHeight="217.0" prefWidth="836.0">
+              <columns>
+                <TableColumn fx:id="colID" prefWidth="75.0" text="Order ID" />
+                <TableColumn fx:id="colName" prefWidth="75.0" text="Customer Name" />
+                  <TableColumn fx:id="colDateToShip" prefWidth="75.0" text="Ship Date" />
+                  <TableColumn fx:id="colTimeToShip" prefWidth="75.0" text="Ship Time" />
+                  <TableColumn fx:id="colType" prefWidth="75.0" text="Order Type" />
+                  <TableColumn fx:id="colPrice" prefWidth="75.0" text="Total Price" />
+              </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+         </children></AnchorPane>
+   </children>
+</HBox>

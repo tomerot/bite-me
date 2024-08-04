@@ -1,10 +1,11 @@
-package entities;
+  package entities;
 
+import java.io.Serializable;
 import java.util.List;
 
 import enums.Branch;
 
-public class Order {
+public class Order implements Serializable{
 	private List<ItemInOrder> itemsList;
     private int orderID;
     private Supplier supplier;
@@ -31,6 +32,18 @@ public class Order {
     	this.acceptanceHour = acceptanceHour;
     	this.confirmedHour = confirmedHour;
     }
+    
+    //Constructor for Supplier View
+    public Order(int orderID,Customer customer,String desiredDate,
+            String desiredHour, OrderType type, float totalPrice) {
+    	this.orderID = orderID;
+    	this.customer = customer;
+    	this.desiredDate = desiredDate;
+    	this.desiredHour = desiredHour;
+    	this.type = type;
+    	this.totalPrice = totalPrice;
+    }
+    
     // OrderID getter and setter
     public List<ItemInOrder> getItemsList() { return itemsList; }
     public void setItemsList(List<ItemInOrder> itemsList) { this.itemsList = itemsList; }
@@ -74,4 +87,17 @@ public class Order {
     //ConfirmedHour getter and setter
     public String getConfirmedHour() { return confirmedHour; }
     public void setConfirmedHour(String confirmedHour) { this.confirmedHour = confirmedHour; }
+    
+    @Override
+    public String toString() {
+        return "Order{" +
+               "orderID=" + orderID +
+               ", customerFirstName='" + (customer != null ? customer.getFirstName() : "N/A") + '\'' +
+               ", desiredDate='" + desiredDate + '\'' +
+               ", desiredHour='" + desiredHour + '\'' +
+               ", type=" + (type != null ? type.toString() : "N/A") +
+               ", totalPrice=" + totalPrice +
+               '}';
+    }
+   
 }

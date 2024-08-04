@@ -1,11 +1,15 @@
 package gui.loader;
 
 import java.io.IOException;
-
+import gui.controllers.AddItemScreenController;
 import gui.controllers.BranchManagerController;
 import gui.controllers.CeoHomeScreenController;
+import gui.controllers.EditItemScreenController;
+import gui.controllers.EmployeeHomeScreenController;
 import gui.controllers.MonthlyReportScreenController;
 import gui.controllers.MonthlyReportScreenController2;
+import gui.controllers.RemoveItemScreenController;
+import gui.controllers.SupplierScreenController;
 import gui.controllers.RegistrationScreenController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
@@ -43,6 +47,23 @@ public class ScreenLoader {
 				controller.setupRegistrationTable();
 				break;
 			}
+			case ADD_ITEM_SCREEN:{
+				AddItemScreenController controller=new AddItemScreenController(wholeScreen, currController);
+				loader.setController(controller);
+				break;
+			}
+				
+			case REMOVE_ITEM_SCREEN:{
+				RemoveItemScreenController controller=new RemoveItemScreenController(wholeScreen, currController);
+				loader.setController(controller);
+				break;
+			}
+			case EDIT_ITEM_SCREEN:{
+				EditItemScreenController controller=new EditItemScreenController(wholeScreen, currController);
+				loader.setController(controller);
+				break;
+			}
+				
 			default:
 				break;
 		}
@@ -56,7 +77,13 @@ public class ScreenLoader {
 		switch(toLoad) {
 			case CEO_SCREEN:
 				loader.setController((CeoHomeScreenController) prevController);
+				break;	
+			case SUPPLIER_SCREEN:
+				loader.setController((SupplierScreenController) prevController);
 				break;
+			case EMPLOYEE_SCREEN:
+				loader.setController((EmployeeHomeScreenController)prevController);
+
 			case MANAGER_SCREEN:
 				loader.setController((BranchManagerController) prevController);
 				break;

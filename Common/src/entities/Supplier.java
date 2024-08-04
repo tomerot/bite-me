@@ -1,6 +1,7 @@
 package entities;
 
 import enums.Branch;
+import enums.UserType;
 
 public class Supplier extends User {
 	private int supplierID;
@@ -11,7 +12,7 @@ public class Supplier extends User {
 
     // Constructor
     public Supplier(int supplierID, String name, String city, String address, Branch homeBranch, String userName, String password) {
-        super(userName, password);
+        super(userName, password,1, UserType.SUPPLIER,1);
     	this.supplierID = supplierID;
         this.name = name;
         this.city = city;
