@@ -154,7 +154,6 @@ public class LoginController {
     	case SUPPLIER:{
     		SupplierScreenController supController=new SupplierScreenController();
     		loader.setController(supController);
-    		System.out.println("Im here2");
     		supController.setUser(user);
     		break;
     	}

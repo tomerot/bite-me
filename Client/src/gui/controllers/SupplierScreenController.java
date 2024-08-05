@@ -65,7 +65,8 @@ public class SupplierScreenController implements Initializable{
 	
 	
 	////Mine
-	private Map<Order, ArrayList<ItemInOrder>> ordersMap = new HashMap<>(); // key is the order object , value is the items list of the order.
+	private Map<Order, ArrayList<ItemInOrder>> awaitingOrdersMap = new HashMap<>(); // key is the order object , value is the items list of the order.	
+	private Map<Order, ArrayList<ItemInOrder>> ApprovedordersMap = new HashMap<>(); // key is the order object , value is the items list of the order.
  
 	
 	
@@ -99,10 +100,18 @@ public class SupplierScreenController implements Initializable{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {	
 		//get all the orders of the restaurant.
-		//ClientMainController.requestOrdersData(sup.getSupplierID());
-		//ServerResponseDataContainer response = ClientConsole.responseFromServer;
-
-		
+		ClientMainController.requestOrdersData(sup.getSupplierID()); //we retrieve just orders with "Awaiting" or "Approved" status.
+		ServerResponseDataContainer response = ClientConsole.responseFromServer;
+		Map<Order, ArrayList<ItemInOrder>> ordersMap = (Map<Order, ArrayList<ItemInOrder>>) response.getMessage();
+		System.out.println("in controller: " + ordersMap);
+		//let's divide the orders to awaiting and approved
+		for (Order order : ordersMap.keySet()) { //iterate on the keys of the map
+		    // Process each key (order) here
+		   	if(order.getStatus().equals("Awaiting"))
+		   		awaitingOrdersMap.put(order, ordersMap.get(order));
+		   	else
+		   		ApprovedordersMap.put(order, ordersMap.get(order)); 
+		}
 		//ShowTheOrdersToAccept();
 	}
 	
