@@ -12,7 +12,7 @@ public enum ClientRequest {
 	GET_USER_DATA, // Request to get general user data
 	GET_SPECIFIC_USER_DATA, // Request to get data for a specific user
 	UPDATE_IS_LOGGED_IN, // Request to update the login status of a user
-	GET_ORDER_DATA,
+	GET_ORDERS_DATA,
 	ADD_ITEM_DATA,
 	GET_ITEMS_LIST,
 	GET_FULL_ITEMS_LIST,

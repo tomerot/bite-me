@@ -15,6 +15,7 @@ import containers.ServerResponseDataContainer;
 import db.DBConnectionDetails;
 import db.DBController;
 import db.QueryControl;
+import db.SupplierQuery;
 import entities.Item;
 import entities.BranchManager;
 import entities.Customer;
@@ -106,7 +107,7 @@ public class Server extends AbstractServer {
 				e.printStackTrace();
 			}
 			break;
-		case GET_ORDER_DATA:{
+		case GET_ORDERS_DATA:{
 			Integer supplierID=(Integer)data.getMessage();
 			handleGetOrdersData(supplierID,client);
 			break;
@@ -254,7 +255,7 @@ public class Server extends AbstractServer {
 	}
 	
 	public void handleGetOrdersData(Integer supplierID, ConnectionToClient client){
-		ServerResponseDataContainer response=QueryControl.userQueries.getOrdersData(dbConn, supplierID);
+		ServerResponseDataContainer response = SupplierQuery.getOrdersData(dbConn, supplierID);
 		try {
 			client.sendToClient(response);
 		}catch(IOException e) {

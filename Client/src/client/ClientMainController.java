@@ -152,8 +152,8 @@ public class ClientMainController {
 	}
 
     
-    public static void requestOrderData(int supplierID) {
-    	ClientRequestDataContainer request=new ClientRequestDataContainer(ClientRequest.GET_ORDER_DATA, supplierID);
+    public static void requestOrdersData(int supplierID) {
+    	ClientRequestDataContainer request=new ClientRequestDataContainer(ClientRequest.GET_ORDERS_DATA, supplierID);
     	ClientMainController.accept(request);
     }
 	

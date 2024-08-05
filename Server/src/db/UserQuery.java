@@ -166,12 +166,15 @@ public class UserQuery {
      */
 	public ServerResponseDataContainer importSupplierInfo(Connection dbConn, User user) {
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
-		String query = "SELECT * FROM suppliers WHERE username = ?";
+		String query = "SELECT * FROM suppliers WHERE Username = ?";
+		System.out.println("Query");
 		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
 			stmt.setString(1, user.getUserName());
-
+			
 			try (ResultSet rs = stmt.executeQuery()) {
+				
 				if (rs.next()) {
+					System.out.println("In While");
 					// Extract data from the result set
 					int supplierID = rs.getInt("ID");
 					String name = rs.getString("Name");
@@ -382,81 +385,6 @@ public class UserQuery {
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-	}
-
-	// Get orders data from server
-	public ServerResponseDataContainer getOrdersData(Connection dbConn, int supplierID) {
-		String query = "SELECT o.OrderID, o.Recipient, o.RecipientPhone, o.City, o.Address, o.SupplyOption, o.Type, " +
-	               "o.RequestDate, o.RequestTime, o.TotalPrice, o.Status " +
-	               "FROM orders o " +
-	               "WHERE o.SupplierID = ?";
-		ServerResponseDataContainer response = new ServerResponseDataContainer();
-		List<Order> list = new ArrayList<>();
-		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
-			stmt.setInt(1, supplierID);
-			try (ResultSet rs = stmt.executeQuery()) {
-				while (rs.next()) {
-					int OrderID = rs.getInt("OrderID");
-					System.out.println("ID "+OrderID);
-					String name = rs.getString("Recipient");
-					System.out.println("rec\n");
-					String phone = rs.getString("RecipientPhone");
-					System.out.println("recPhome\n");
-					String city = rs.getString("City");
-					System.out.println("city");
-					String address = rs.getString("Address");
-					System.out.println("add");
-					String supplyOption = rs.getString("SupplyOption");
-					System.out.println("supOption");
-					String type = rs.getString("Type");  
-					System.out.println("type");
-					OrderType orderType;
-					switch (type) {
-					case "Pre-order":
-						orderType = OrderType.PRE_ORDER;
-						break;
-					case "Regular":
-						orderType = OrderType.REGULAR;
-						break;
-					default:
-						orderType = null;
-					}
-					String reqDate = rs.getString("RequestDate");
-					System.out.println("reqDate");
-					String reqTime = rs.getString("RequestTime");
-					System.out.println("time");
-					float totalPrice = rs.getFloat("TotalPrice");
-					System.out.println("price");
-					String status = rs.getString("Status");
-					System.out.println("ststus");
-//					int customerID = rs.getInt("ID");
-//					System.out.println("cusID");
-//					String firstName = rs.getString("FirstName");
-//					System.out.println("FN");
-//					String lastName = rs.getString("LastName");
-//					System.out.println("LN");
-//					String email = rs.getString("Email");
-//					System.out.println("email");
-//					String phoneNumber = rs.getString("Phone");
-//					System.out.println("cusPhone");
-//					RegisteredCustomer customer = new RegisteredCustomer(customerID, firstName, lastName, email,
-//							phoneNumber, null, null, null, 0.0f, CustomerType.PRIVATE);
-
-					//Order order = new Order(OrderID, null, reqDate, reqTime, orderType, totalPrice);
-					//list.add(order);
-					
-					// Log each order for debugging
-				    //System.out.println("Order added: " + order);
-				}
-
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
-		response.setMessage(list);
-		return response;
 	}
 	
 	//add item to database

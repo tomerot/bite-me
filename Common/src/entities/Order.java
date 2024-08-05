@@ -17,7 +17,9 @@ public class Order implements Serializable{
     private String recipientPhone; //recipientPhone
     private SupplyMethod supplyOption; //supplyOption 
     private Supplier supplier; // can get id,city,address
-    private Customer customer; 
+    private Customer customer;
+    private String city;
+    private String address;
     private Branch branchName;
     private String requestedDate; //requested date?
     private String requestedTime; //requested time?
@@ -40,6 +42,24 @@ public class Order implements Serializable{
     	this.requestedDate = requestedDate;
     	this.requestedTime = requestedTime;
     	this.type = type;
+    	this.totalPrice = totalPrice;
+    	this.approvalTimer = approvalTimer;
+    	this.arrivalTime = arrivalTime;
+    	this.status = status;
+    }
+    
+    //Sagi Constructor
+    public Order(int orderID, String recipient,String recipientPhone, String city,String address,SupplyMethod supplyOption, OrderType type,
+    		String requestedDate, String requestedTime, String approvalTimer, String arrivalTime, float totalPrice, String status) {
+    	this.orderID = orderID;
+    	this.recipient = recipient;
+    	this.recipientPhone = recipientPhone;
+    	this.city = city;
+    	this.address = address;
+    	this.supplyOption = supplyOption;
+    	this.type = type;
+    	this.requestedDate = requestedDate;
+    	this.requestedTime = requestedTime;
     	this.totalPrice = totalPrice;
     	this.approvalTimer = approvalTimer;
     	this.arrivalTime = arrivalTime;

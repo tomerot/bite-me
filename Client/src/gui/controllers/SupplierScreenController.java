@@ -5,12 +5,15 @@ import java.net.URL;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import client.ClientConsole;
 import client.ClientMainController;
 import containers.ServerResponseDataContainer;
+import entities.ItemInOrder;
 import entities.Order;
 import entities.Supplier;
 import entities.User;
@@ -52,33 +55,21 @@ public class SupplierScreenController implements Initializable{
 	@FXML
 	private Button btnAccept;
 	
-	@FXML
-    private TableView<Order> tableOrdersToAccept;
-	
-
-    @FXML
-    private TableColumn<Order, String> colDateToShip;
-
-    @FXML
-    private TableColumn<Order, Integer> colID;
-
-    @FXML
-    private TableColumn<Order, String> colName; 
-
-    @FXML
-    private TableColumn<Order, Double> colPrice;
-
-    @FXML
-    private TableColumn<Order, Time> colTimeToShip;
-
-    @FXML
-    private TableColumn<Order, String> colType;
 	
 	@FXML 
 	private ListView<String> listOfShippedOrders;
 	
 	@FXML
 	private Label welcomeLbl;
+	
+	
+	
+	////Mine
+	private Map<Order, ArrayList<ItemInOrder>> ordersMap = new HashMap<>(); // key is the order object , value is the items list of the order.
+ 
+	
+	
+	
 	
 	
 	
@@ -107,16 +98,17 @@ public class SupplierScreenController implements Initializable{
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {	
-		
 		//get all the orders of the restaurant.
-		ClientMainController.requestOrderData(sup.getSupplierID());
-		ServerResponseDataContainer response = ClientConsole.responseFromServer;
-		list = (List<Order >)response.getMessage();
+		//ClientMainController.requestOrdersData(sup.getSupplierID());
+		//ServerResponseDataContainer response = ClientConsole.responseFromServer;
+
 		
-		ShowTheOrdersToAccept(); //init the table view for orders to accept
+		//ShowTheOrdersToAccept();
 	}
 	
+	
 	public void ShowTheOrdersToAccept() {
+		/*
 		ObservableList<Order> ordersToAccept = FXCollections.observableArrayList(list);
         colID.setCellValueFactory(new PropertyValueFactory<Order, Integer>("colId"));
         colName.setCellValueFactory(new PropertyValueFactory<Order, String>("colName"));
@@ -126,6 +118,7 @@ public class SupplierScreenController implements Initializable{
         colPrice.setCellValueFactory(new PropertyValueFactory<Order, Double>("colPrice"));
 
         tableOrdersToAccept.setItems(ordersToAccept);
+        */
 	}
 	
 	
