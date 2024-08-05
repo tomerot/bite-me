@@ -10,7 +10,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
 <HBox fx:id="screen" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
@@ -43,7 +42,7 @@
                     </rowConstraints>
                      <children>
                         <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#logOut" prefHeight="42.0" prefWidth="117.0" text="Logout" GridPane.rowIndex="7" />
-                        <Button fx:id="btnRefresh" mnemonicParsing="false" prefHeight="54.0" prefWidth="160.0" text="Refresh">
+                        <Button fx:id="btnViewOrders" mnemonicParsing="false" onAction="#onviewOrdersClicked" prefHeight="54.0" prefWidth="160.0" text="view orders">
                            <font>
                               <Font size="18.0" />
                            </font>
@@ -54,28 +53,6 @@
             </AnchorPane>
          </children>
       </VBox>
-      <AnchorPane id="dashboard" fx:id="dashboard" prefHeight="800.0" prefWidth="950.0">
-         <children>
-            <Text layoutX="369.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Supplier Screen">
-               <font>
-                  <Font size="31.0" />
-               </font>
-            </Text>
-            <Label layoutX="51.0" layoutY="124.0" prefHeight="52.0" prefWidth="396.0" text="Orders ready to accept:">
-               <font>
-                  <Font size="36.0" />
-               </font>
-            </Label>
-            <Label layoutX="51.0" layoutY="446.0" prefHeight="53.0" prefWidth="374.0" text="Orders that accepted:">
-               <font>
-                  <Font size="36.0" />
-               </font>
-            </Label>
-            <Button fx:id="btnAccept" layoutX="789.0" layoutY="408.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="98.0" text="Accept">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Button>
-         </children></AnchorPane>
+      <AnchorPane id="dashboard" fx:id="dashboard" prefHeight="800.0" prefWidth="950.0" />
    </children>
 </HBox>

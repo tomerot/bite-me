@@ -41,4 +41,12 @@ public class ItemInOrder extends Item {
     //restrictions getter and setter
     public String getRestrictions() { return restrictions; }
     public void setRestrictions(String restrictions) { this.restrictions = restrictions; }
+
+	public int getQuantity() {
+		return quantity;
+	}
+	
+	public void setQuantity(int quantity) {
+		 this.quantity = quantity;
+	}
 }

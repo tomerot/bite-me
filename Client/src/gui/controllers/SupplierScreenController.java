@@ -1,6 +1,7 @@
 package gui.controllers;
 
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ import entities.ItemInOrder;
 import entities.Order;
 import entities.Supplier;
 import entities.User;
+import gui.loader.Screen;
+import gui.loader.ScreenLoader;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,55 +27,39 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-public class SupplierScreenController implements Initializable{
+public class SupplierScreenController{
 	
-	private List<Order> list=new ArrayList<>(); //key is the id order, value is the order instance itself.
 	private User user;
-	private Supplier sup;
-	
+	private static Supplier sup;
+
+	@FXML
+	private HBox screen;
+
 	@FXML
 	private AnchorPane dashboard;
 	
 	@FXML
-	private HBox screen;
-	
-	@FXML
-	private Button btnRefresh;
-	
-	@FXML
-	private Button btnAccept;
-	
-	
-	@FXML 
-	private ListView<String> listOfShippedOrders;
-	
+	private Button btnviewOrders;
+
 	@FXML
 	private Label welcomeLbl;
-	
-	
-	
-	////Mine
-	private Map<Order, ArrayList<ItemInOrder>> awaitingOrdersMap = new HashMap<>(); // key is the order object , value is the items list of the order.	
-	private Map<Order, ArrayList<ItemInOrder>> ApprovedordersMap = new HashMap<>(); // key is the order object , value is the items list of the order.
- 
-	
-	
-	
-	
-	
 	
 	public void setUser(User user) {
         this.user = user;
@@ -82,7 +69,7 @@ public class SupplierScreenController implements Initializable{
         }
     }
 	
-	public Supplier getSupplier() {
+	public static Supplier getSupplier() {
 		return sup;
 	}
 	
@@ -95,44 +82,7 @@ public class SupplierScreenController implements Initializable{
 	        welcomeLbl.setText("Welcome, " + supplier.getName());
 	    });
 	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {	
-		//get all the orders of the restaurant.
-		ClientMainController.requestOrdersData(sup.getSupplierID()); //we retrieve just orders with "Awaiting" or "Approved" status.
-		ServerResponseDataContainer response = ClientConsole.responseFromServer;
-		Map<Order, ArrayList<ItemInOrder>> ordersMap = (Map<Order, ArrayList<ItemInOrder>>) response.getMessage();
-		System.out.println("in controller: " + ordersMap);
-		//let's divide the orders to awaiting and approved
-		for (Order order : ordersMap.keySet()) { //iterate on the keys of the map
-		    // Process each key (order) here
-		   	if(order.getStatus().equals("Awaiting"))
-		   		awaitingOrdersMap.put(order, ordersMap.get(order));
-		   	else
-		   		ApprovedordersMap.put(order, ordersMap.get(order)); 
-		}
-		//ShowTheOrdersToAccept();
-	}
-	
-	
-	public void ShowTheOrdersToAccept() {
-		/*
-		ObservableList<Order> ordersToAccept = FXCollections.observableArrayList(list);
-        colID.setCellValueFactory(new PropertyValueFactory<Order, Integer>("colId"));
-        colName.setCellValueFactory(new PropertyValueFactory<Order, String>("colName"));
-        colDateToShip.setCellValueFactory(new PropertyValueFactory<Order, String>("colDate"));
-        colTimeToShip.setCellValueFactory(new PropertyValueFactory<Order, Time>("colTime"));
-        colType.setCellValueFactory(new PropertyValueFactory<Order, String>("colType"));
-        colPrice.setCellValueFactory(new PropertyValueFactory<Order, Double>("colPrice"));
 
-        tableOrdersToAccept.setItems(ordersToAccept);
-        */
-	}
-	
-	
-	
-	
 	 public void logOut(ActionEvent event) throws Exception{
 			user.setisLoggedIn(0);
 			ClientMainController.requestUpdateIsLoggedIn(user);
@@ -153,4 +103,12 @@ public class SupplierScreenController implements Initializable{
 			primaryStage.show();
 		}
 		
+		@FXML
+		private void onviewOrdersClicked(ActionEvent event) throws IOException {
+			ScreenLoader screenLoader = new ScreenLoader();
+	    	String path = "/gui/view/ViewSupplierOrdersScreen.fxml";
+	    	AnchorPane nextDash = screenLoader.loadOnDashboard(screen, path, Screen.VIEW_SUPPLIER_ORDERS_SCREEN, this);
+	    	dashboard.getChildren().clear(); //Clear current dashboard
+	    	dashboard.getChildren().add(nextDash); //Assign the new dashboard
+		}
 }

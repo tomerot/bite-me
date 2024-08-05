@@ -186,6 +186,21 @@ public class Order implements Serializable{
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
+	
+	public String getCity() {
+		return city;
+	}
+	
+	public void setCity(String city) {
+		this.city = city;
+	}
+	
+	public String getAddress() {
+		return address;
+	}
+	
+	public void setAddress(String address) {
+		this.address = address;
+	}
     
 }
