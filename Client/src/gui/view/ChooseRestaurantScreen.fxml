@@ -11,15 +11,15 @@
 
 <AnchorPane fx:id="dashboard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label alignment="CENTER" layoutY="23.0" prefHeight="53.0" prefWidth="950.0" text="Choose Restaurant">
+      <Label alignment="CENTER" layoutY="23.0" prefHeight="53.0" prefWidth="950.0" text="Explore our Restaurant Partners">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
-      <Button fx:id="backBtn" layoutX="14.0" layoutY="748.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="91.0" text="Back" />
-      <ScrollPane fitToHeight="true" fitToWidth="true" layoutX="50.0" layoutY="135.0" prefHeight="600.0" prefWidth="850.0" style="-fx-border-color: transparent; -fx-border-width: 0; -fx-background-color: transparent;">
+      <Button fx:id="backBtn" onAction="#pressBack" layoutX="430.0" layoutY="746.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="91.0" text="Back" />
+      <ScrollPane fitToHeight="true" fitToWidth="true" layoutX="50.0" layoutY="134.0" prefHeight="585.0" prefWidth="850.0" style="-fx-border-color: transparent; -fx-border-width: 0; -fx-background-color: transparent;">
          <content>
-            <GridPane fx:id="gridPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" scaleShape="false">
+            <GridPane fx:id="gridPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="598.0" prefWidth="852.0" scaleShape="false">
     <columnConstraints>
         <ColumnConstraints fillWidth="true" halignment="CENTER" hgrow="ALWAYS" />
         <ColumnConstraints fillWidth="true" halignment="CENTER" hgrow="ALWAYS" />
@@ -31,8 +31,9 @@
 </GridPane>
          </content>
       </ScrollPane>
-      <Button layoutX="329.0" layoutY="94.0" mnemonicParsing="false" text="North Branch" />
-      <Button layoutX="430.0" layoutY="94.0" mnemonicParsing="false" text="Center Branch" />
-      <Button layoutX="535.0" layoutY="94.0" mnemonicParsing="false" text="South Branch" />
+      <Button fx:id="northBtn" layoutX="329.0" layoutY="83.0" mnemonicParsing="false" onAction="#pressNorth" text="North Branch" />
+      <Button fx:id="centerBtn" layoutX="430.0" layoutY="83.0" mnemonicParsing="false" onAction="#pressCenter" text="Center Branch" />
+      <Button fx:id="southBtn" layoutX="535.0" layoutY="83.0" mnemonicParsing="false" onAction="#pressSouth" text="South Branch" />
+      <Label layoutX="239.0" layoutY="88.0" text="Switch Branch:" />
    </children>
 </AnchorPane>

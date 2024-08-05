@@ -46,7 +46,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#displayNewOrderScreen" prefHeight="42.0" prefWidth="178.0" text="New Order" />
+                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#displayChooseRestaurantScreen" prefHeight="42.0" prefWidth="178.0" text="New Order" />
                         <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#displayMyOrderScreen" prefHeight="42.0" prefWidth="178.0" text="My Orders" GridPane.rowIndex="1" />
                         <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#logOut" prefHeight="42.0" prefWidth="117.0" text="Logout" GridPane.rowIndex="7" />
                      </children>
