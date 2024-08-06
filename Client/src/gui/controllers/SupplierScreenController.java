@@ -56,7 +56,7 @@ public class SupplierScreenController{
 	private AnchorPane dashboard;
 	
 	@FXML
-	private Button btnviewOrders;
+	private Button btnViewOrders;
 
 	@FXML
 	private Label welcomeLbl;
@@ -104,7 +104,7 @@ public class SupplierScreenController{
 		}
 		
 		@FXML
-		private void onviewOrdersClicked(ActionEvent event) throws IOException {
+		private void onViewOrdersClicked(ActionEvent event) throws IOException {
 			ScreenLoader screenLoader = new ScreenLoader();
 	    	String path = "/gui/view/ViewSupplierOrdersScreen.fxml";
 	    	AnchorPane nextDash = screenLoader.loadOnDashboard(screen, path, Screen.VIEW_SUPPLIER_ORDERS_SCREEN, this);

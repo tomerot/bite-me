@@ -15,6 +15,7 @@ public class Order implements Serializable{
     private int orderID; //orderid
     private String recipient; //recipient
     private String recipientPhone; //recipientPhone
+    private String recipientEmail;
     private SupplyMethod supplyOption; //supplyOption 
     private Supplier supplier; // can get id,city,address
     private Customer customer;
@@ -25,7 +26,7 @@ public class Order implements Serializable{
     private String requestedTime; //requested time?
     private OrderType type;
     private float totalPrice;
-    private String approvalTimer; //approval time?
+    private String approvalTime; //approval time?
     private String arrivalTime; //arrival time?
     private String status;
     
@@ -43,17 +44,18 @@ public class Order implements Serializable{
     	this.requestedTime = requestedTime;
     	this.type = type;
     	this.totalPrice = totalPrice;
-    	this.approvalTimer = approvalTimer;
+    	this.approvalTime = approvalTimer;
     	this.arrivalTime = arrivalTime;
     	this.status = status;
     }
     
     //Sagi Constructor
-    public Order(int orderID, String recipient,String recipientPhone, String city,String address,SupplyMethod supplyOption, OrderType type,
+    public Order(int orderID, String recipient,String recipientPhone,String recipientEmail, String city,String address,SupplyMethod supplyOption, OrderType type,
     		String requestedDate, String requestedTime, String approvalTimer, String arrivalTime, float totalPrice, String status) {
     	this.orderID = orderID;
     	this.recipient = recipient;
     	this.recipientPhone = recipientPhone;
+    	this.recipientEmail = recipientEmail;
     	this.city = city;
     	this.address = address;
     	this.supplyOption = supplyOption;
@@ -61,11 +63,19 @@ public class Order implements Serializable{
     	this.requestedDate = requestedDate;
     	this.requestedTime = requestedTime;
     	this.totalPrice = totalPrice;
-    	this.approvalTimer = approvalTimer;
+    	this.approvalTime = approvalTimer;
     	this.arrivalTime = arrivalTime;
     	this.status = status;
     }
     
+    
+    public String getRecipientEmail() {
+    	return recipientEmail;
+    }
+    
+    public void setRecipientEmail(String recipientEmail) {
+    	this.recipientEmail = recipientEmail;
+    }
    
 	public List<ItemInOrder> getItemsList() {
 		return itemsList;
@@ -163,12 +173,12 @@ public class Order implements Serializable{
 		this.totalPrice = totalPrice;
 	}
 
-	public String getApprovalTimer() {
-		return approvalTimer;
+	public String getApprovalTime() {
+		return approvalTime;
 	}
 
-	public void setApprovalTimer(String approvalTimer) {
-		this.approvalTimer = approvalTimer;
+	public void setApprovalTime(String approvalTime) {
+		this.approvalTime = approvalTime;
 	}
 
 	public String getArrivalTime() {

@@ -20,11 +20,11 @@ import enums.ServerResponse;
 public class SupplierQuery {
 
 	// Get orders data from server (including all the items per order)
-		public static ServerResponseDataContainer getOrdersData(Connection dbConn, int supplierID) {
-			//first get all the orders per the supplier.			
+		public static ServerResponseDataContainer getOrdersData(Connection dbConn, int supplierID) {			
 			ServerResponseDataContainer response = new ServerResponseDataContainer();
 			Map<Order, ArrayList<ItemInOrder>> ordersMap = new HashMap<>();
-			String ordersQuery = "SELECT * FROM orders WHERE SupplierID = ? AND Status IN ('Awaiting', 'Approved');";
+			//first get all the orders with status awaiting/approved and the  email of the recipient per supplier 
+			String ordersQuery = "SELECT o.*, c.Email FROM orders o JOIN orders_participants op ON o.OrderID = op.OrderID JOIN customers c ON op.CustomerID = c.ID WHERE o.SupplierID = ? AND o.Status IN ('Awaiting', 'Approved');";
 			try (PreparedStatement stmt = dbConn.prepareStatement(ordersQuery)) {
 				stmt.setInt(1, supplierID);
 				
@@ -85,8 +85,10 @@ public class SupplierQuery {
 						System.out.println("price");
 						String status = rs.getString("Status");
 						System.out.println("status = "+  status);
+						String recipientEmail = rs.getString("Email");
+						System.out.println(recipientEmail);
 
-						Order order = new Order(OrderID, recipientName,recipientPhone,city,address,supplyMethod, orderType, reqDate, reqTime, approvalTime,arrivalTime, totalPrice,status);
+						Order order = new Order(OrderID, recipientName,recipientPhone, recipientEmail,city,address,supplyMethod, orderType, reqDate, reqTime, approvalTime,arrivalTime, totalPrice,status);
 						System.out.println(order);
 						
 						//now we will create an arrayList of all the items in certain order.

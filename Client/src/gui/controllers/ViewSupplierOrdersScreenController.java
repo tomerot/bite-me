@@ -17,6 +17,8 @@ import entities.Order;
 import entities.Supplier;
 import entities.User;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
@@ -24,6 +26,7 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
@@ -56,9 +59,19 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 	private Button btnApprove;
 	
 	@FXML
-	private ListView<String> awaitingOrdersList;
+	private Button btnUpdateReady;
+	
 	@FXML
-	private ListView<String> approvedOrdersList;
+	private ListView<Integer> awaitingOrdersList;
+	
+	@FXML
+	private ListView<Integer> approvedOrdersList;
+	
+	@FXML
+	private TextArea awaitingOrderTextArea;
+	
+	@FXML
+	private TextArea approvedOrderTextArea;
 	
 	private Map<Order, ArrayList<ItemInOrder>> awaitingOrdersMap = new HashMap<>(); // key is the order object , value is the items list of the order.	
 	private Map<Order, ArrayList<ItemInOrder>> ApprovedordersMap = new HashMap<>(); // key is the order object , value is the items list of the order.
@@ -70,6 +83,10 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {	
 		this.supplier = SupplierScreenController.getSupplier();
+		// Set the TextArea to be read-only
+		awaitingOrderTextArea.setEditable(false);
+		approvedOrderTextArea.setEditable(false);
+		
 		//get all the orders of the restaurant.
 		ClientMainController.requestOrdersData(supplier.getSupplierID()); //we retrieve just orders with "Awaiting" or "Approved" status.
 		ServerResponseDataContainer response = ClientConsole.responseFromServer;
@@ -77,6 +94,74 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 		System.out.println("in controller: " + ordersMap);
 		
 		//let's divide the orders to awaiting and approved
+		initMapsAndLists(ordersMap);
+		//initializeListsView
+		initListView( awaitingOrdersList, awaitingOrdersMap);
+		initListView( approvedOrdersList, ApprovedordersMap);
+		
+		// Set up selection listeners
+        setupSelectionListener(awaitingOrdersList, awaitingOrdersMap, awaitingOrderTextArea);
+        setupSelectionListener(approvedOrdersList, ApprovedordersMap, approvedOrderTextArea);
+	}
+
+	//when user select row from the list we want to show the list details.
+	private void setupSelectionListener(ListView<Integer> listView, Map<Order, ArrayList<ItemInOrder>> ordersMap, TextArea textArea) {
+		System.out.println("In setup selection listener");
+			listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {  // When the user selects an OrderID in the ListView, the listener is triggered.
+				if (newValue != null) {
+					for (Order order : ordersMap.keySet()) {
+						if (order.getOrderID() == newValue) {
+							displayOrderDetails(order, ordersMap.get(order), textArea);
+							break;
+						}
+					}
+				}
+			});
+	}
+	
+	private void displayOrderDetails(Order order, ArrayList<ItemInOrder> items, TextArea textArea) {
+		System.out.println("inside Display Order details");
+        StringBuilder details = new StringBuilder();
+        details.append("Order ID: ").append(order.getOrderID()).append("\n")
+               .append("Recipient Name: ").append(order.getRecipient()).append("\n")
+               .append("Recipient Phone: ").append(order.getRecipientPhone()).append("\n")
+               .append("Recipient Email: ").append(order.getRecipientEmail()).append("\n")
+               .append("City: ").append(order.getCity()).append("\n")
+               .append("Address: ").append(order.getAddress()).append("\n")
+               .append("Supply Option: ").append(order.getSupplyOption()).append("\n")
+               .append("Order Type: ").append(order.getType()).append("\n")
+               .append("Requested Date: ").append(order.getRequestedDate()).append("\n")
+               .append("Requested Time: ").append(order.getRequestedTime()).append("\n");
+               if("Approved".equals(order.getStatus()))
+       			details.append("Approval Time: ").append(order.getApprovalTime()).append("\n");
+               details.append("Status: ").append(order.getStatus()).append("\n")
+               .append("Total Price: ").append(order.getTotalPrice()).append("\n\n");
+
+        details.append("Items:\n");
+        for (ItemInOrder item : items) {
+            details.append("\tItem Name: ").append(item.getName()).append("\n")
+                   .append("\tSize: ").append(item.getSize()).append("\n")
+                   .append("\tDoneness Degree: ").append(item.getDonenessDegree()).append("\n")
+                   .append("\tRestrictions: ").append(item.getRestrictions()).append("\n")
+                   .append("\tPrice Per Unit: ").append(item.getPrice()).append("\n")
+                   .append("\tQuantity: ").append(item.getQuantity()).append("\n\n");
+        }
+        System.out.println("before set text area");
+        System.out.println(details.toString());
+        textArea.setText(details.toString());
+    }
+	
+	void initListView(ListView<Integer> ordersList, Map<Order, ArrayList<ItemInOrder>> ordersMap) {
+		ObservableList<Integer> oList = FXCollections.observableArrayList();
+		
+		for (Order order : ordersMap.keySet())
+			oList.add(order.getOrderID());
+		
+		// update the listView and set its items
+		ordersList.setItems(oList); 
+	}
+
+	public void initMapsAndLists(Map<Order, ArrayList<ItemInOrder>> ordersMap) {
 		for (Order order : ordersMap.keySet()) { //iterate on the keys of the map
             
             if("Awaiting".equals(order.getStatus())) 
@@ -85,7 +170,8 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 		   	else 
 		   		ApprovedordersMap.put(order, ordersMap.get(order)); 
 		}
+		
+		System.out.println("awaiting map: " + awaitingOrdersMap);
+		System.out.println("approved map: " + ApprovedordersMap);
 	}
-	
-	
 }

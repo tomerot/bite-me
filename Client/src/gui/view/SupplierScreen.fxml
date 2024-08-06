@@ -45,7 +45,7 @@
                     </rowConstraints>
                      <children>
                         <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#logOut" prefHeight="42.0" prefWidth="117.0" text="Logout" GridPane.rowIndex="7" />
-                        <Button fx:id="btnViewOrders" mnemonicParsing="false" onAction="#onviewOrdersClicked" prefHeight="54.0" prefWidth="160.0" text="view orders">
+                        <Button fx:id="btnViewOrders" mnemonicParsing="false" onAction="#onViewOrdersClicked" prefHeight="54.0" prefWidth="160.0" text="view orders">
                            <font>
                               <Font size="18.0" />
                            </font>
