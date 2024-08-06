@@ -23,6 +23,7 @@ import javafx.geometry.Orientation;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
@@ -55,16 +56,9 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 	private Button btnApprove;
 	
 	@FXML
-	private Accordion awaitingAccordion = new Accordion();
+	private ListView<String> awaitingOrdersList;
 	@FXML
-	private Accordion approvedAccordion = new Accordion();
-	
-	@FXML
-	ScrollPane awaitingScrollPane = new ScrollPane();
-	
-	@FXML
-	ScrollPane approvedScrollPane = new ScrollPane();
-	
+	private ListView<String> approvedOrdersList;
 	
 	private Map<Order, ArrayList<ItemInOrder>> awaitingOrdersMap = new HashMap<>(); // key is the order object , value is the items list of the order.	
 	private Map<Order, ArrayList<ItemInOrder>> ApprovedordersMap = new HashMap<>(); // key is the order object , value is the items list of the order.
@@ -84,62 +78,14 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 		
 		//let's divide the orders to awaiting and approved
 		for (Order order : ordersMap.keySet()) { //iterate on the keys of the map
-		 // Create a pane for the order details
-            FlowPane orderDetailsPane = createOrderDetailsPane(order, ordersMap.get(order)); //send the order and it's items list.
             
-            // Create a TitledPane for each order
-            TitledPane orderPane = new TitledPane(
-                "Order " + order.getOrderID() + " - " + order.getRecipient() + " - " + order.getRequestedDate(), orderDetailsPane);
-            
-            if("Awaiting".equals(order.getStatus())) {
+            if("Awaiting".equals(order.getStatus())) 
             	awaitingOrdersMap.put(order, ordersMap.get(order));
-            	awaitingAccordion.getPanes().add(orderPane);      // Add the TitledPane to the Accordion
-            	System.out.println("wait Order");
-            }
-		   		
-		   	else {
-		   		ApprovedordersMap.put(order, ordersMap.get(order));
-		   		approvedAccordion.getPanes().add(orderPane);      // Add the TitledPane to the Accordion
-		   		System.out.println("approved Order");
-		   	}    
-		}
-		 // Wrap Accordion in a ScrollPane
 
+		   	else 
+		   		ApprovedordersMap.put(order, ordersMap.get(order)); 
+		}
 	}
 	
-	private FlowPane createOrderDetailsPane(Order order, ArrayList<ItemInOrder> itemsInOrder) {
-		System.out.println("createOrderDetailsPane");
-        FlowPane pane = new FlowPane();
-        pane.setOrientation(Orientation.VERTICAL);
-        pane.setVgap(10);
-        pane.setHgap(10);
-
-        // Add order details
-        pane.getChildren().addAll(
-            new Label("Order ID: " + order.getOrderID() + "\n"),
-            new Label("Recipient: " + order.getRecipient()),
-            new Label("Phone: " + order.getRecipientPhone()),
-            new Label("City: " + order.getCity()),
-            new Label("Address: " + order.getAddress()),
-            new Label("Supply Option: " + order.getSupplyOption()),
-            new Label("Type: " + order.getType()),
-            new Label("Request Date: " + order.getRequestedDate()),
-            new Label("Request Time: " + order.getRequestedTime()),
-            new Label("Total Price: " + order.getTotalPrice())
-        );
-
-        // Add the items_in_order details
-        for (ItemInOrder item : itemsInOrder) {
-            pane.getChildren().addAll(
-                new Label("Item ID: " + item.getItemID()),
-                new Label("Item Name: " + item.getName()),
-                new Label("Size: " + item.getSize()),
-                new Label("Doneness: " + item.getDonenessDegree()),
-                new Label("Restrictions: " + item.getRestrictions()),
-                new Label("Quantity: " + item.getQuantity()),
-                new Label("Price per unit: " + item.getPrice())
-            );
-        }
-        return pane;
-	}
+	
 }
