@@ -184,68 +184,80 @@ public class MonthlyReportScreenController {
 			switch (entityResponse.getResponse()) {
 			case ORDER_REPORT:{
 				List<String> orderReportData=(ArrayList<String>)entityResponse.getMessage();
-				if (!orderReportData.isEmpty()) {
-                    for (PieChart.Data data : orderChart.getData()) {
-                        data.nameProperty().unbind();
-                    }
-					updateLabel("Order report for the "+this.branch+" branch, "+ this.month+"/"+this.year+", divided by food category");
-					ObservableList<PieChart.Data> pieChartData =FXCollections.observableArrayList(
-					new PieChart.Data("Salad", Double.valueOf(orderReportData.get(0))),
-					new PieChart.Data("First Course", Double.valueOf(orderReportData.get(1))),
-					new PieChart.Data("Main Course", Double.valueOf(orderReportData.get(2))),
-					new PieChart.Data("Dessert", Double.valueOf(orderReportData.get(3))),
-					new PieChart.Data("Beverage", Double.valueOf(orderReportData.get(4))));
-					orderChart.getData().addAll(pieChartData);
-					pieChartData.forEach(data -> data.nameProperty().bind(Bindings.concat(
-	                                data.getName(), ": ", data.pieValueProperty())
-	                ));
-					orderChart.setVisible(true);
-				}
-				else {
-					updateLabel(this.branch+" branch "+ this.month+"/"+this.year+" order report does not exist");
-				}
+				processOrderReport(orderReportData);
 				break;
 			}
 			case PERFORMANCE_REPORT:{
 				List<String> performanceReportData=(ArrayList<String>)entityResponse.getMessage();
-				if (!performanceReportData.isEmpty()) {
-					updateLabel("Performance report for the "+this.branch+" branch, "+ this.month+"/"+this.year+", divided by Late/On-Time orders");
-					ObservableList<PieChart.Data> pieChartData =FXCollections.observableArrayList(
-								new PieChart.Data("On Time", Double.valueOf(performanceReportData.get(0))),
-								new PieChart.Data("Late", Double.valueOf(performanceReportData.get(1))));
-                    for (PieChart.Data data : performanceChart.getData()) {
-                        data.nameProperty().unbind();
-                    }
-					performanceChart.getData().addAll(pieChartData);
-					pieChartData.forEach(data -> data.nameProperty().bind(Bindings.concat(
-                            "Total ",data.getName()," orders: ", data.pieValueProperty())));
-					performanceChart.setVisible(true);
-				}
-				else {
-					updateLabel(this.branch+" branch "+ this.month+"/"+this.year+" performance report does not exist");
-				}
+				processPerformanceReport(performanceReportData);
 				break;
 			}
 			case INCOME_REPORT:{
 				List<SupplierIncome> SupplierIncomeList=(List<SupplierIncome>)entityResponse.getMessage();
-				if (!SupplierIncomeList.isEmpty()) {
-					updateLabel(this.branch+" branch "+ this.month+"/"+this.year+" income report");
-					supplierID.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getSupplierID()).asObject());
-					supplierName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getSupplierName()));
-					totalMonthIncome.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getIncome()).asObject());
-					ObservableList<SupplierIncome> SupplierIncomeData = FXCollections.observableArrayList();
-					for (SupplierIncome supplierIncome : SupplierIncomeList) {
-						SupplierIncomeData.add(supplierIncome);
-					}
-					incomeChart.setItems(SupplierIncomeData);
-					incomeChart.setVisible(true);
-				}
-				else {
-					updateLabel(this.branch+" branch "+ this.month+"/"+this.year+" income report does not exist");
-				}
+				processIncomeReport(SupplierIncomeList);
 				break;
 			}}
 
+		}
+	}
+	public void processOrderReport(List<String> orderReportData) {
+		if (!orderReportData.isEmpty()) {
+			updateLabel("Order report for the "+this.branch+" branch, "+ this.month+"/"+this.year+", divided by food category");
+			Platform.runLater(() -> {
+				orderChart.getData().clear();
+				ObservableList<PieChart.Data> pieChartData =FXCollections.observableArrayList(
+						new PieChart.Data("Salad", Double.valueOf(orderReportData.get(0))),
+						new PieChart.Data("First Course", Double.valueOf(orderReportData.get(1))),
+						new PieChart.Data("Main Course", Double.valueOf(orderReportData.get(2))),
+						new PieChart.Data("Dessert", Double.valueOf(orderReportData.get(3))),
+						new PieChart.Data("Beverage", Double.valueOf(orderReportData.get(4))));
+				orderChart.getData().addAll(pieChartData);
+	            for (PieChart.Data data : pieChartData) {
+	                data.nameProperty().set(String.format("%s: %.1f", data.getName(), data.getPieValue()));
+	            }
+				
+				orderChart.setVisible(true);
+
+			});
+		}
+		else {
+			updateLabel(this.branch+" branch "+ this.month+"/"+this.year+" order report does not exist");
+		}
+	}
+	public void processIncomeReport(List<SupplierIncome> SupplierIncomeList) {
+		if (!SupplierIncomeList.isEmpty()) {
+			updateLabel(this.branch+" branch "+ this.month+"/"+this.year+" income report");
+			supplierID.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getSupplierID()).asObject());
+			supplierName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getSupplierName()));
+			totalMonthIncome.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getIncome()).asObject());
+			ObservableList<SupplierIncome> SupplierIncomeData = FXCollections.observableArrayList();
+			for (SupplierIncome supplierIncome : SupplierIncomeList) {
+				SupplierIncomeData.add(supplierIncome);
+			}
+			incomeChart.setItems(SupplierIncomeData);
+			incomeChart.setVisible(true);
+		}
+		else {
+			updateLabel(this.branch+" branch "+ this.month+"/"+this.year+" income report does not exist");
+		}
+	}
+	public void processPerformanceReport(List<String> performanceReportData) {
+		if (!performanceReportData.isEmpty()) {
+			updateLabel("Performance report for the "+this.branch+" branch, "+ this.month+"/"+this.year+", divided by Late/On-Time orders");
+			Platform.runLater(() -> {
+				performanceChart.getData().clear();
+				ObservableList<PieChart.Data> pieChartData =FXCollections.observableArrayList(
+						new PieChart.Data("On Time", Double.valueOf(performanceReportData.get(0))),
+						new PieChart.Data("Late", Double.valueOf(performanceReportData.get(1))));
+				performanceChart.getData().addAll(pieChartData);
+				for (PieChart.Data data : pieChartData) {
+	                data.nameProperty().set(String.format("%s: %.1f", data.getName(), data.getPieValue()));
+				}
+				performanceChart.setVisible(true);
+			});
+		}
+		else {
+			updateLabel(this.branch+" branch "+ this.month+"/"+this.year+" performance report does not exist");
 		}
 	}
 }

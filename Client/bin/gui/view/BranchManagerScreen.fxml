@@ -22,7 +22,7 @@
             </AnchorPane>
             <AnchorPane prefHeight="150.0" prefWidth="300.0">
                <children>
-                  <Label id="WelcomeMessageLabel" fx:id="welcomeLbl" alignment="CENTER" layoutX="72.0" layoutY="36.0" prefHeight="27.0" prefWidth="157.0" textAlignment="CENTER">
+                  <Label id="WelcomeMessageLabel" fx:id="welcomeLbl" alignment="CENTER" layoutX="41.0" layoutY="35.0" prefHeight="27.0" prefWidth="219.0">
                      <font>
                         <Font size="18.0" />
                      </font></Label>
