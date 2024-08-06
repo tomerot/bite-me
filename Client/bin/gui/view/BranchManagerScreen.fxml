@@ -11,22 +11,25 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="screen" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<HBox fx:id="screen" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="950.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox prefHeight="800.0" prefWidth="250.0">
+      <VBox fillWidth="false" prefHeight="950.0" prefWidth="300.0" HBox.hgrow="ALWAYS">
          <children>
-            <AnchorPane prefHeight="150.0" prefWidth="250.0" style="-fx-background-color: gray;">
+            <AnchorPane prefHeight="150.0" prefWidth="300.0" style="-fx-background-color: gray;">
                <children>
-                  <ImageView fitHeight="85.0" fitWidth="219.0" layoutX="16.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fitHeight="85.0" fitWidth="219.0" layoutX="41.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </AnchorPane>
-            <AnchorPane prefHeight="150.0" prefWidth="250.0">
+            <AnchorPane prefHeight="150.0" prefWidth="300.0">
                <children>
-                  <Label id="WelcomeMessageLabel" fx:id="welcomeLbl" alignment="CENTER" layoutX="54.0" layoutY="50.0" prefHeight="17.0" prefWidth="148.0" textAlignment="CENTER" />
+                  <Label id="WelcomeMessageLabel" fx:id="welcomeLbl" alignment="CENTER" layoutX="72.0" layoutY="36.0" prefHeight="27.0" prefWidth="157.0" textAlignment="CENTER">
+                     <font>
+                        <Font size="18.0" />
+                     </font></Label>
                </children></AnchorPane>
-            <AnchorPane prefHeight="600.0" prefWidth="250.0" style="-fx-background-color: gray;">
+            <AnchorPane prefHeight="650.0" prefWidth="300.0" style="-fx-background-color: gray;">
                <children>
-                  <GridPane alignment="CENTER" layoutX="-1.0" layoutY="1.0" prefHeight="567.0" prefWidth="250.0">
+                  <GridPane alignment="CENTER" layoutX="-1.0" layoutY="1.0" prefHeight="650.0" prefWidth="300.0">
                     <columnConstraints>
                       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
@@ -50,11 +53,11 @@
             </AnchorPane>
          </children>
       </VBox>
-      <AnchorPane id="dashboard" fx:id="dashboard" prefHeight="800.0" prefWidth="950.0">
+      <AnchorPane id="dashboard" fx:id="dashboard" prefHeight="950.0" prefWidth="1200.0">
          <children>
-            <Label id="homeBranchLabel" fx:id="homeBranchLbl" alignment="CENTER" layoutX="258.0" layoutY="34.0" prefHeight="46.0" prefWidth="435.0" textAlignment="CENTER">
+            <Label id="homeBranchLabel" fx:id="homeBranchLbl" alignment="CENTER" layoutX="269.0" layoutY="56.0" prefHeight="58.0" prefWidth="662.0" textAlignment="CENTER">
                <font>
-                  <Font size="31.0" />
+                  <Font size="40.0" />
                </font></Label>
          </children></AnchorPane>
    </children>

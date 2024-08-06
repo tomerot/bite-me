@@ -156,6 +156,15 @@ public class Server extends AbstractServer {
 				e.printStackTrace();
 			}
 			break;
+		case FETCH_REPORT_DATA:
+			List<String> reportInfo = (List<String>) data.getMessage();
+			try {
+				handleReportInfo(reportInfo, client);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;
+			
 			
 //		case FETCH_BRANCH_RESTAURANTS:
 //			customer = (Customer) data.getMessage();
@@ -376,7 +385,14 @@ public class Server extends AbstractServer {
 			e.printStackTrace();
 		}
 	}
-
+	private void handleReportInfo(List<String> reportInfo, ConnectionToClient client) throws Exception {
+		ServerResponseDataContainer response = QueryControl.userQueries.importReportData(dbConn, reportInfo);
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 //    /**
 //     * Handles the request to fetch restaurant data based on a customer's request - Same Branch as supplier.
 //     * 

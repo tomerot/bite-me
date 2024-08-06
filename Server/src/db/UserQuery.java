@@ -20,6 +20,7 @@ import entities.Order;
 import entities.OrderType;
 import entities.Customer;
 import entities.Supplier;
+import entities.SupplierIncome;
 import entities.User;
 import enums.Branch;
 import enums.CustomerType;
@@ -334,7 +335,111 @@ public class UserQuery {
 		}
 		return response;
 	}
-
+	public ServerResponseDataContainer importReportData(Connection dbConn, List<String> reportInfo) throws SQLException {
+		ServerResponseDataContainer response = new ServerResponseDataContainer();
+		List<String> returnData=new ArrayList<String>();
+		List<SupplierIncome> SupplierIncomeList=new ArrayList<SupplierIncome>();
+		switch (reportInfo.get(0)) {
+		case "Orders Reports":{
+			int salad=0;
+			int firstCourse=0;
+			int mainCourse=0;
+			int dessert=0;
+			int beverage=0;
+			int tupelsCtr=0;
+			String query = "SELECT * FROM orders_reports WHERE Branch = ? AND Month = ? AND Year = ?";
+			try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+				stmt.setString(1, reportInfo.get(1));
+				stmt.setInt(2, Integer.valueOf(reportInfo.get(2)));
+				stmt.setInt(3, Integer.valueOf(reportInfo.get(3)));
+				try (ResultSet rs = stmt.executeQuery()){
+					while (rs.next()) {
+						tupelsCtr++;
+						switch (rs.getString("Category")) {
+						case "Salad":
+							salad+=rs.getInt("Orders");
+							break;
+						case "First Course":
+							firstCourse+=rs.getInt("Orders");
+							break;
+						case "Main Course":
+							mainCourse+=rs.getInt("Orders");
+							break;
+						case "Dessert":
+							dessert+=rs.getInt("Orders");
+							break;
+						case "Beverage":
+							beverage+=rs.getInt("Orders");
+							break;	
+						}
+					}
+					if(tupelsCtr!=0) {
+						returnData.add(Integer.toString(salad));
+						returnData.add(Integer.toString(firstCourse));
+						returnData.add(Integer.toString(mainCourse));
+						returnData.add(Integer.toString(dessert));
+						returnData.add(Integer.toString(beverage));
+					}
+					response.setMessage(returnData);
+					response.setResponse(ServerResponse.ORDER_REPORT);
+				}
+			}
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+			break;
+		}
+		case "Income Reports":{
+			int supplierID=0;
+			int incomes=0;
+			SupplierIncome supplierIncome;
+			String supplierName=null;
+			String query = "SELECT * FROM incomes_reports WHERE Branch = ? AND Month = ? AND Year = ?";
+			try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+				stmt.setString(1, reportInfo.get(1));
+				stmt.setInt(2, Integer.valueOf(reportInfo.get(2)));
+				stmt.setInt(3, Integer.valueOf(reportInfo.get(3)));
+				try (ResultSet rs = stmt.executeQuery()){
+					while (rs.next()) {
+						supplierID=rs.getInt("SupplierID");
+						incomes=rs.getInt("Incomes");
+						supplierName=rs.getString("SupplierName");
+						supplierIncome= new SupplierIncome(supplierID, supplierName, incomes);
+						SupplierIncomeList.add(supplierIncome);
+					}
+				response.setMessage(SupplierIncomeList);
+				response.setResponse(ServerResponse.INCOME_REPORT);	
+				}
+			}
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+			break;
+		}
+		case "Performance Reports":{
+			String query = "SELECT * FROM performance_reports WHERE Branch = ? AND Month = ? AND Year = ?";
+			try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+				stmt.setString(1, reportInfo.get(1));
+				stmt.setString(2, reportInfo.get(2));
+				stmt.setInt(3, Integer.valueOf(reportInfo.get(3)));
+				try (ResultSet rs = stmt.executeQuery()){
+					if (rs.next()) {
+						int onTime = rs.getInt("OnTime");
+						int late = rs.getInt("Late");
+						returnData.add(Integer.toString(onTime));
+						returnData.add(Integer.toString(late));
+					}
+					response.setMessage(returnData);
+					response.setResponse(ServerResponse.PERFORMANCE_REPORT);
+				}
+			}
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+			break;
+		}}
+		return response;
+}
     /**
      * Updates user data in the database.
      * 
@@ -344,7 +449,7 @@ public class UserQuery {
      */
 	public void updateUserData(Connection dbConn, User user) throws Exception {
 		int affectedRows;
-		String query = "UPDATE users SET username=? ,password=? ,isLoggedIn=? ,Type=? ,Registered=? WHERE username = ?";
+		String query = "UPDATE users SET username=? AND password=? AND isLoggedIn=? AND Type=? AND Registered=? WHERE username = ?";
 		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
 			stmt.setString(1, user.getUserName());
 			stmt.setString(2, user.getPassword());

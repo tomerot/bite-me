@@ -113,6 +113,12 @@ public class ClientMainController {
 				userList);
 		ClientMainController.accept(request);
 	}
+	public static void requestReportData(List<String> ReportInfo) {
+		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.FETCH_REPORT_DATA,
+				ReportInfo);
+		ClientMainController.accept(request);
+	}
+	
 
 //    /**
 //     * Requests all restaurants available for a given customer from the server.

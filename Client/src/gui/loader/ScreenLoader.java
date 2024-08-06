@@ -6,9 +6,7 @@ import gui.controllers.BranchManagerController;
 import gui.controllers.CeoHomeScreenController;
 import gui.controllers.ChooseRestaurantScreenController;
 import gui.controllers.MonthlyReportScreenController;
-import gui.controllers.MonthlyReportScreenController2;
 import gui.controllers.MyOrdersScreenController;
-import gui.controllers.NewOrderScreenController;
 import gui.controllers.EditItemScreenController;
 import gui.controllers.EmployeeHomeScreenController;
 import gui.controllers.RemoveItemScreenController;
@@ -43,12 +41,7 @@ public class ScreenLoader {
 				MonthlyReportScreenController controller = new MonthlyReportScreenController(wholeScreen, currController);
 				loader.setController(controller);
 				loader.load();
-				break;
-			}
-			case MONTHLY_REPORT_SCREEN_TWO: {
-				MonthlyReportScreenController2 controller = new MonthlyReportScreenController2(wholeScreen, currController);
-				loader.setController(controller);
-				loader.load();
+				controller.setScreen();
 				break;
 			}
 			case REGISTRATION_SCREEN: {

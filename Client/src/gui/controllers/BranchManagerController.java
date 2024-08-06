@@ -115,6 +115,8 @@ public class BranchManagerController {
     	ScreenLoader screenLoader = new ScreenLoader();
     	String path = "/gui/view/MonthlyReportScreen.fxml";
     	AnchorPane nextDash = screenLoader.loadOnDashboard(screen, path, Screen.MONTHLY_REPORT_SCREEN, this);
+    	String css = getClass().getResource("/gui/view/MonthlyReportScreenGraph.css").toExternalForm();
+        nextDash.getStylesheets().add(css);
     	dashboard.getChildren().clear(); //Clear current dashboard
     	dashboard.getChildren().add(nextDash); //Assign the new dashboard
 	}
