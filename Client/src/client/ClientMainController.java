@@ -156,6 +156,18 @@ public class ClientMainController {
     	ClientRequestDataContainer request=new ClientRequestDataContainer(ClientRequest.GET_ORDERS_DATA, supplierID);
     	ClientMainController.accept(request);
     }
+    
+    public static void requestSuppleriUpdateOrderStatus(int[] orderInfo) {
+		
+		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.SUPPLIER_UPDATE_ORDER_STATUS, orderInfo);
+		ClientMainController.accept(request);
+	}
+    
+    public static void requestSupplerRefreshAwaitingOrders(Integer supplierID) {
+		
+		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.SUPPLIER_REFRESH_AWAITING_ORDERS, supplierID);
+		ClientMainController.accept(request);
+	}
 	
 	public static void requestAddItemData(Item item) {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.ADD_ITEM_DATA, item);
@@ -187,6 +199,5 @@ public class ClientMainController {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.UPDATE_ITEM, item);
 		ClientMainController.accept(request);
 	}
-    
 
 }

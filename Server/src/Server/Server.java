@@ -112,6 +112,20 @@ public class Server extends AbstractServer {
 			handleGetOrdersData(supplierID,client);
 			break;
 		}
+		
+		case SUPPLIER_UPDATE_ORDER_STATUS:{
+			System.out.println("Server got supplier update order status");
+			int[] orderInfo = (int[])data.getMessage();
+			handleSupplierUpdateOrderStatus(orderInfo, client);
+			break;
+		}
+			
+		case SUPPLIER_REFRESH_AWAITING_ORDERS: {
+			System.out.println("Server got supplier refresh");
+			Integer supplierID = (Integer)data.getMessage();
+			handleSupplierRefreshAwaitingOrders(supplierID, client);
+			break;
+		}
 			
 		case ADD_ITEM_DATA:
 			Item item = (Item) data.getMessage();
@@ -261,7 +275,24 @@ public class Server extends AbstractServer {
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
-		
+	}
+	
+	public void handleSupplierUpdateOrderStatus(int[] orderInfo, ConnectionToClient client){
+		ServerResponseDataContainer response = SupplierQuery.UpdateOrderStatus(dbConn, orderInfo);
+		try {
+			client.sendToClient(response);
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void handleSupplierRefreshAwaitingOrders(int supplierID, ConnectionToClient client){
+		ServerResponseDataContainer response = SupplierQuery.RefreshAwaitingOrders(dbConn, supplierID);
+		try {
+			client.sendToClient(response);
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 
@@ -461,11 +492,7 @@ public class Server extends AbstractServer {
 	    }
 	}
 	
-	
-	
-	
-	
-	
+
 	
 	
 	

@@ -16,9 +16,11 @@ import entities.ItemInOrder;
 import entities.Order;
 import entities.Supplier;
 import entities.User;
+import enums.ServerResponse;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
@@ -73,8 +75,11 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 	@FXML
 	private TextArea approvedOrderTextArea;
 	
+	@FXML
+	private Label resultMessage;
+	
 	private Map<Order, ArrayList<ItemInOrder>> awaitingOrdersMap = new HashMap<>(); // key is the order object , value is the items list of the order.	
-	private Map<Order, ArrayList<ItemInOrder>> ApprovedordersMap = new HashMap<>(); // key is the order object , value is the items list of the order.
+	private Map<Order, ArrayList<ItemInOrder>> approvedordersMap = new HashMap<>(); // key is the order object , value is the items list of the order.
  
 	
 	
@@ -83,6 +88,7 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {	
 		this.supplier = SupplierScreenController.getSupplier();
+		
 		// Set the TextArea to be read-only
 		awaitingOrderTextArea.setEditable(false);
 		approvedOrderTextArea.setEditable(false);
@@ -94,21 +100,26 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 		System.out.println("in controller: " + ordersMap);
 		
 		//let's divide the orders to awaiting and approved
-		initMapsAndLists(ordersMap);
+		initMaps(ordersMap);
+		
 		//initializeListsView
 		initListView( awaitingOrdersList, awaitingOrdersMap);
-		initListView( approvedOrdersList, ApprovedordersMap);
+		initListView( approvedOrdersList, approvedordersMap);
 		
 		// Set up selection listeners
         setupSelectionListener(awaitingOrdersList, awaitingOrdersMap, awaitingOrderTextArea);
-        setupSelectionListener(approvedOrdersList, ApprovedordersMap, approvedOrderTextArea);
+        setupSelectionListener(approvedOrdersList, approvedordersMap, approvedOrderTextArea);
 	}
 
 	//when user select row from the list we want to show the list details.
 	private void setupSelectionListener(ListView<Integer> listView, Map<Order, ArrayList<ItemInOrder>> ordersMap, TextArea textArea) {
 		System.out.println("In setup selection listener");
 			listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {  // When the user selects an OrderID in the ListView, the listener is triggered.
-				if (newValue != null) {
+				if(listView.getItems().isEmpty())
+					// Clear the TextArea if the ListView is empty
+		            textArea.clear();
+				
+				else if (newValue != null) {
 					for (Order order : ordersMap.keySet()) {
 						if (order.getOrderID() == newValue) {
 							displayOrderDetails(order, ordersMap.get(order), textArea);
@@ -123,6 +134,7 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 		System.out.println("inside Display Order details");
         StringBuilder details = new StringBuilder();
         details.append("Order ID: ").append(order.getOrderID()).append("\n")
+        	   .append("Customer ID: ").append(order.getCustomerID()).append("\n")
                .append("Recipient Name: ").append(order.getRecipient()).append("\n")
                .append("Recipient Phone: ").append(order.getRecipientPhone()).append("\n")
                .append("Recipient Email: ").append(order.getRecipientEmail()).append("\n")
@@ -161,17 +173,117 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 		ordersList.setItems(oList); 
 	}
 
-	public void initMapsAndLists(Map<Order, ArrayList<ItemInOrder>> ordersMap) {
+	public void initMaps(Map<Order, ArrayList<ItemInOrder>> ordersMap) {
 		for (Order order : ordersMap.keySet()) { //iterate on the keys of the map
             
             if("Awaiting".equals(order.getStatus())) 
             	awaitingOrdersMap.put(order, ordersMap.get(order));
 
 		   	else 
-		   		ApprovedordersMap.put(order, ordersMap.get(order)); 
+		   		approvedordersMap.put(order, ordersMap.get(order)); 
 		}
 		
 		System.out.println("awaiting map: " + awaitingOrdersMap);
-		System.out.println("approved map: " + ApprovedordersMap);
+		System.out.println("approved map: " + approvedordersMap);
+	}
+	
+	@FXML
+	private void onApproveClicked(ActionEvent event) throws Exception{
+		Integer selectedOrderID = awaitingOrdersList.getSelectionModel().getSelectedItem();
+		
+		// Check if any order is selected
+		if(selectedOrderID == null) {
+			resultMessage.setText("No item selected.");	
+        	return;
+		}
+
+		 // Update the database status to 'Approved' and set the approval time
+	    int[] orderInfo = {selectedOrderID, 0}; // 0 indicates transition from Awaiting to Approved
+		ClientMainController.requestSuppleriUpdateOrderStatus(orderInfo);
+		ServerResponseDataContainer response = ClientConsole.responseFromServer;
+		
+		
+		if(ServerResponse.SUPPLIER_UPDATE_ORDER_STATUS_SUCCESS.equals(response.getResponse())) {
+			//let's move the order to the approvedOrders map and list view.
+			for (Order order : awaitingOrdersMap.keySet()) { //iterate on the keys of the map
+				if(order.getOrderID() == selectedOrderID) {
+
+					order.setApprovalTime(response.getMessage().toString());
+					order.setStatus("Approved");
+					System.out.println("updated order:" +order.getApprovalTime() + order.getStatus());
+					
+					//update maps
+					approvedordersMap.put(order, awaitingOrdersMap.get(order)); //add to approved map
+					awaitingOrdersMap.remove(order); //remove from awaiting map
+					
+					//update lists view
+					awaitingOrdersList.getItems().remove(selectedOrderID);
+					approvedOrdersList.getItems().add(selectedOrderID);
+					
+					resultMessage.setText("The order was updated to 'Approved' successfully\n" +
+                            "An SMS was sent to the phone number: " + order.getRecipientPhone() + "\n" +
+                            "An email was sent to: " + order.getRecipientEmail());
+					resultMessage.setStyle("-fx-text-fill: black;");
+					break;
+				}
+			}
+		}
+		else {
+			resultMessage.setText("failed to update order because error in db");	
+			resultMessage.setStyle("-fx-text-fill: red;");
+		}
+	}
+	
+	@FXML
+	private void onRefreshClicked(ActionEvent event) throws Exception{ //we want to fetch from the database all the orders with status 'Awaiting' and to update the awaiting map and list view.
+		ClientMainController.requestSupplerRefreshAwaitingOrders(supplier.getSupplierID());
+		ServerResponseDataContainer response = ClientConsole.responseFromServer;
+		awaitingOrdersMap = (Map<Order, ArrayList<ItemInOrder>>) response.getMessage();
+		System.out.println("After refresh, awaiting orders: " + awaitingOrdersMap);
+		
+		//update the awaiting list view
+		initListView( awaitingOrdersList, awaitingOrdersMap);
+		
+		// Reattach the selection listener to the updated ListView
+	    setupSelectionListener(awaitingOrdersList, awaitingOrdersMap, awaitingOrderTextArea);
+	}
+	
+	@FXML
+	private void onUpdateReadyClicked(ActionEvent event) throws Exception{
+		Integer selectedOrderID = approvedOrdersList.getSelectionModel().getSelectedItem();
+		
+		// Check if any order is selected
+		if(selectedOrderID == null) {
+			resultMessage.setText("No item selected.");	
+        	return;
+		}
+		
+		 // Update the database status to 'Ready'.
+	    int[] orderInfo = {selectedOrderID, 1}; // 1 indicates transition from 'Approved' to 'Ready'
+		ClientMainController.requestSuppleriUpdateOrderStatus(orderInfo);
+		ServerResponseDataContainer response = ClientConsole.responseFromServer;
+		
+		if(ServerResponse.SUPPLIER_UPDATE_ORDER_STATUS_SUCCESS.equals(response.getResponse())) {
+			//let's remove the order from the approvedOrders map and list view.
+			for (Order order : approvedordersMap.keySet()) { //iterate on the keys of the map
+				if(order.getOrderID() == selectedOrderID) {	
+					//update map
+					approvedordersMap.remove(order); 
+					
+					//update lists view
+					approvedOrdersList.getItems().remove(selectedOrderID);
+					
+					resultMessage.setText("The order was updated to 'Ready' successfully\n" +
+                            "An SMS was sent to the phone number: " + order.getRecipientPhone() + "\n" +
+                            "An email was sent to: " + order.getRecipientEmail());
+					resultMessage.setStyle("-fx-text-fill: black;");
+					break;
+				}
+			}
+		}
+		else {
+			resultMessage.setText("failed to update order because error in db");	
+			resultMessage.setStyle("-fx-text-fill: red;");
+		}
 	}
 }

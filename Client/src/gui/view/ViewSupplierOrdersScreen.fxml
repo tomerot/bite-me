@@ -19,12 +19,15 @@
                   <Font size="22.0" />
                </font>
             </Label>
-            <Button fx:id="btnApprove" layoutX="752.0" layoutY="242.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="98.0" text="approve">
+            <Button fx:id="btnApprove" layoutX="752.0" layoutY="242.0" mnemonicParsing="false" onAction="#onApproveClicked" prefHeight="46.0" prefWidth="98.0" text="approve">
                <font>
                   <Font size="18.0" />
                </font>
             </Button>
-            <Button fx:id="btnUpdateReady" layoutX="752.0" layoutY="604.0" mnemonicParsing="false" prefHeight="61.0" prefWidth="139.0" text="update ready" />
+            <Button fx:id="btnUpdateReady" layoutX="752.0" layoutY="604.0" mnemonicParsing="false" onAction="#onUpdateReadyClicked" prefHeight="61.0" prefWidth="200.0" text="update ready order">
+         <font>
+            <Font size="18.0" />
+         </font></Button>
       <ListView fx:id="awaitingOrdersList" layoutX="67.0" layoutY="121.0" prefHeight="285.0" prefWidth="245.0" />
       <ListView fx:id="approvedOrdersList" layoutX="67.0" layoutY="513.0" prefHeight="273.0" prefWidth="245.0" />
       <TextArea fx:id="awaitingOrderTextArea" layoutX="400.0" layoutY="122.0" prefHeight="285.0" prefWidth="259.0" />
@@ -39,10 +42,11 @@
             <Font size="22.0" />
          </font>
       </Label>
-      <Button fx:id="btnRefresh" layoutX="752.0" layoutY="421.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="111.0" text="Refresh">
+      <Button fx:id="btnRefresh" layoutX="752.0" layoutY="421.0" mnemonicParsing="false" onAction="#onRefreshClicked" prefHeight="53.0" prefWidth="111.0" text="Refresh">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
+      <Label fx:id="resultMessage" layoutX="200.0" layoutY="816.0" prefHeight="126.0" prefWidth="459.0" />
    </children>
 </AnchorPane>

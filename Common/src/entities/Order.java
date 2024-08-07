@@ -13,6 +13,7 @@ public class Order implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private List<ItemInOrder> itemsList;
     private int orderID; //orderid
+    private String customerID;
     private String recipient; //recipient
     private String recipientPhone; //recipientPhone
     private String recipientEmail;
@@ -50,9 +51,10 @@ public class Order implements Serializable{
     }
     
     //Sagi Constructor
-    public Order(int orderID, String recipient,String recipientPhone,String recipientEmail, String city,String address,SupplyMethod supplyOption, OrderType type,
+    public Order(int orderID,String customerID, String recipient,String recipientPhone,String recipientEmail, String city,String address,SupplyMethod supplyOption, OrderType type,
     		String requestedDate, String requestedTime, String approvalTimer, String arrivalTime, float totalPrice, String status) {
     	this.orderID = orderID;
+    	this.customerID = customerID;
     	this.recipient = recipient;
     	this.recipientPhone = recipientPhone;
     	this.recipientEmail = recipientEmail;
@@ -66,6 +68,14 @@ public class Order implements Serializable{
     	this.approvalTime = approvalTimer;
     	this.arrivalTime = arrivalTime;
     	this.status = status;
+    }
+    
+    public String getCustomerID() {
+    	return customerID;
+    }
+    
+    public void setCustomerID(String customerID) {
+    	this.customerID = customerID;
     }
     
     
