@@ -79,7 +79,7 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 	private Label resultMessage;
 	
 	private Map<Order, ArrayList<ItemInOrder>> awaitingOrdersMap = new HashMap<>(); // key is the order object , value is the items list of the order.	
-	private Map<Order, ArrayList<ItemInOrder>> approvedordersMap = new HashMap<>(); // key is the order object , value is the items list of the order.
+	private Map<Order, ArrayList<ItemInOrder>> approvedOrdersMap = new HashMap<>(); // key is the order object , value is the items list of the order.
  
 	
 	
@@ -93,8 +93,8 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 		awaitingOrderTextArea.setEditable(false);
 		approvedOrderTextArea.setEditable(false);
 		
-		//get all the orders of the restaurant.
-		ClientMainController.requestOrdersData(supplier.getSupplierID()); //we retrieve just orders with "Awaiting" or "Approved" status.
+		//get all the orders with "Awaiting" or "Approved" status of the restaurant.
+		ClientMainController.requestOrdersData(supplier.getSupplierID());
 		ServerResponseDataContainer response = ClientConsole.responseFromServer;
 		Map<Order, ArrayList<ItemInOrder>> ordersMap = (Map<Order, ArrayList<ItemInOrder>>) response.getMessage();
 		System.out.println("in controller: " + ordersMap);
@@ -104,11 +104,11 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 		
 		//initializeListsView
 		initListView( awaitingOrdersList, awaitingOrdersMap);
-		initListView( approvedOrdersList, approvedordersMap);
+		initListView( approvedOrdersList, approvedOrdersMap);
 		
 		// Set up selection listeners
         setupSelectionListener(awaitingOrdersList, awaitingOrdersMap, awaitingOrderTextArea);
-        setupSelectionListener(approvedOrdersList, approvedordersMap, approvedOrderTextArea);
+        setupSelectionListener(approvedOrdersList, approvedOrdersMap, approvedOrderTextArea);
 	}
 
 	//when user select row from the list we want to show the list details.
@@ -158,8 +158,6 @@ public class ViewSupplierOrdersScreenController implements Initializable{
                    .append("\tPrice Per Unit: ").append(item.getPrice()).append("\n")
                    .append("\tQuantity: ").append(item.getQuantity()).append("\n\n");
         }
-        System.out.println("before set text area");
-        System.out.println(details.toString());
         textArea.setText(details.toString());
     }
 	
@@ -180,11 +178,11 @@ public class ViewSupplierOrdersScreenController implements Initializable{
             	awaitingOrdersMap.put(order, ordersMap.get(order));
 
 		   	else 
-		   		approvedordersMap.put(order, ordersMap.get(order)); 
+		   		approvedOrdersMap.put(order, ordersMap.get(order)); 
 		}
 		
 		System.out.println("awaiting map: " + awaitingOrdersMap);
-		System.out.println("approved map: " + approvedordersMap);
+		System.out.println("approved map: " + approvedOrdersMap);
 	}
 	
 	@FXML
@@ -210,19 +208,17 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 
 					order.setApprovalTime(response.getMessage().toString());
 					order.setStatus("Approved");
-					System.out.println("updated order:" +order.getApprovalTime() + order.getStatus());
+					System.out.println("updated order:" + order.getApprovalTime() + order.getStatus());
 					
 					//update maps
-					approvedordersMap.put(order, awaitingOrdersMap.get(order)); //add to approved map
+					approvedOrdersMap.put(order, awaitingOrdersMap.get(order)); //add to approved map
 					awaitingOrdersMap.remove(order); //remove from awaiting map
 					
 					//update lists view
 					awaitingOrdersList.getItems().remove(selectedOrderID);
 					approvedOrdersList.getItems().add(selectedOrderID);
 					
-					resultMessage.setText("The order was updated to 'Approved' successfully\n" +
-                            "An SMS was sent to the phone number: " + order.getRecipientPhone() + "\n" +
-                            "An email was sent to: " + order.getRecipientEmail());
+					resultMessage.setText("The order was updated to 'Approved' successfully\n");
 					resultMessage.setStyle("-fx-text-fill: black;");
 					break;
 				}
@@ -265,17 +261,15 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 		
 		if(ServerResponse.SUPPLIER_UPDATE_ORDER_STATUS_SUCCESS.equals(response.getResponse())) {
 			//let's remove the order from the approvedOrders map and list view.
-			for (Order order : approvedordersMap.keySet()) { //iterate on the keys of the map
+			for (Order order : approvedOrdersMap.keySet()) { //iterate on the keys of the map
 				if(order.getOrderID() == selectedOrderID) {	
 					//update map
-					approvedordersMap.remove(order); 
+					approvedOrdersMap.remove(order); 
 					
 					//update lists view
 					approvedOrdersList.getItems().remove(selectedOrderID);
 					
-					resultMessage.setText("The order was updated to 'Ready' successfully\n" +
-                            "An SMS was sent to the phone number: " + order.getRecipientPhone() + "\n" +
-                            "An email was sent to: " + order.getRecipientEmail());
+					resultMessage.setText("The order was updated to 'Ready' successfully\n" );
 					resultMessage.setStyle("-fx-text-fill: black;");
 					break;
 				}
