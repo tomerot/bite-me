@@ -22,7 +22,7 @@ public class ReportGenerator implements Runnable {
                 LocalDate today = LocalDate.now();
                 if (today.getDayOfMonth() == 7) {
                     generateOrdersReport();
-                    generateInventoryReport();
+                    generatePerformanceReport();
                     generateCustomerReport();
                 }
 
@@ -65,9 +65,28 @@ public class ReportGenerator implements Runnable {
 
 
 
-    private void generateInventoryReport() {
+    private void generatePerformanceReport() throws SQLException {
         System.out.println("Generating Inventory Report...");
-        // Implement your database logic here
+        String[] branches = {"North", "Center", "South"};
+        LocalDate today = LocalDate.now();
+        LocalDate startOfLastMonth = today.minusMonths(1).withDayOfMonth(1);
+        LocalDate endOfLastMonth = today.minusDays(1);  // till yesterday
+
+        for (String branch : branches) {
+            System.out.println("Processing report for region: " + branch);
+            ServerResponseDataContainer response = Server.fetchDataForPerformanceReport(startOfLastMonth, endOfLastMonth, branch);
+            if (response != null && response.getResponse() == ServerResponse.DATA_FOUND) {
+            	System.out.println(response.getMessage().toString());
+                if (response.getMessage() instanceof HashMap) {
+                    HashMap<String, Integer> data = (HashMap<String, Integer>) response.getMessage();
+                    Server.insertDataForPerformanceReport(data, branch, today.getYear(), today.getMonthValue() - 1);
+                } else {
+                    System.out.println("Data type mismatch: Expected HashMap, received " + response.getMessage().getClass().getSimpleName());
+                }
+            } else {
+                System.out.println("No data available or error for region: " + branch);
+            }
+        }
     }
 
     private void generateCustomerReport() {

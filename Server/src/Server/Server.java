@@ -285,6 +285,15 @@ public class Server extends AbstractServer {
 	public static void insertDataForReport(HashMap<String, Integer> data, String branch, int year, int month) {
 	    QueryControl.serverQueries.insertOrdersReportData(dbConn, data, branch, year, month);
 	}
+	
+	public static ServerResponseDataContainer fetchDataForPerformanceReport(LocalDate startOfLastMonth, LocalDate endOfLastMonth, String branch) {
+	    ServerResponseDataContainer response = QueryControl.serverQueries.fetchPerformanceReportData(dbConn, startOfLastMonth, endOfLastMonth, branch);
+	    return response;
+	}
+	
+	public static void insertDataForPerformanceReport(HashMap<String, Integer> data, String branch, int year, int month) throws SQLException {
+	    QueryControl.serverQueries.insertPerformanceReport(dbConn, data, branch, year, month);
+	}
 
 
 
