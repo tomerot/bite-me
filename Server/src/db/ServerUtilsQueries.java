@@ -4,63 +4,100 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map.Entry;
+
 import containers.ServerResponseDataContainer;
-import entities.User;
 import enums.ServerResponse;
-import enums.UserType;
 
 public class ServerUtilsQueries {
 
-    public ServerResponseDataContainer importUserInfo(Connection dbConn) {
+    public ServerResponseDataContainer fetchOrdersReportData(Connection dbConn, LocalDate startOfLastMonth, LocalDate endOfLastMonth, String branch) {
         ServerResponseDataContainer response = new ServerResponseDataContainer();
-        String query = "SELECT * FROM users WHERE username = ?";
+        HashMap<String, Integer> categoryQuantities = new HashMap<>();
+        String query = "SELECT iio.Category, iio.Quantity \r\n"
+                + "FROM orders o \r\n"
+                + "LEFT JOIN items_in_orders iio ON iio.OrderID = o.OrderID \r\n"
+                + "WHERE RequestDate >= ? AND RequestDate < ? AND o.Branch = ? \r\n";
 
         try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
-            // Set the username parameter in the query
-            stmt.setString(1, "CEO");
+            // Convert LocalDate to java.sql.Date and set the date parameters in the query
+            stmt.setDate(1, java.sql.Date.valueOf(startOfLastMonth));
+            stmt.setDate(2, java.sql.Date.valueOf(endOfLastMonth));
+            stmt.setString(3, branch);
 
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    // Extract data from the result set
-                    String password = rs.getString("password");
-                    int isLoggedIn = rs.getInt("isLoggedIn");
-                    String type = rs.getString("Type");
-                    int registered = rs.getInt("Registered");
+                while (rs.next()) {
+                    String category = rs.getString("Category");
+                    int quantity = rs.getInt("Quantity");
 
-                    User userInfo = null;
-
-                    // Handle different user types
-                    switch (type) {
-                        case "Manager":
-                            userInfo = new User("CEO", password, isLoggedIn, UserType.MANAGER, registered);
-                            break;
-                        case "Customer":
-                            userInfo = new User("CEO", password, isLoggedIn, UserType.CUSTOMER, registered);
-                            break;
-                        case "Supplier":
-                            userInfo = new User("CEO", password, isLoggedIn, UserType.SUPPLIER, registered);
-                            break;
-                        case "Employee":
-                            userInfo = new User("CEO", password, isLoggedIn, UserType.EMPLOYEE, registered);
-                            break;
-                        default:
-                            // Handle unknown types
-                            System.err.println("Unknown user type: " + type);
-                            break;
+                    // Skip null categories and quantities
+                    if (category != null && quantity != 0) {
+                        categoryQuantities.merge(category, quantity, Integer::sum);
                     }
-
-                    response.setMessage(userInfo);
-                    response.setResponse(userInfo != null ? ServerResponse.USER_FOUND : ServerResponse.USER_NOT_FOUND);
-                } else {
-                    response.setResponse(ServerResponse.USER_NOT_FOUND);
                 }
 
-        	} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
+                // Check if the map has any entries
+                if (!categoryQuantities.isEmpty()) {
+                    response.setMessage(categoryQuantities);
+                    response.setResponse(ServerResponse.DATA_FOUND);
+                } else {
+                    response.setResponse(ServerResponse.NO_DATA_FOUND);
+                    response.setMessage("No valid data found for the given criteria.");
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+                response.setResponse(ServerResponse.ERROR);
+                response.setMessage("SQL Error: " + e.getMessage());
+            }
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+            response.setResponse(ServerResponse.ERROR);
+            response.setMessage("Database connection error: " + e1.getMessage());
+        }
         return response;
     }
+    
+    
+    public void insertOrdersReportData(Connection dbConn, HashMap<String, Integer> data, String branch, int year, int month) {
+        String sql = "INSERT INTO orders_reports (Year, Month, Branch, Category, Orders) VALUES (?, ?, ?, ?, ?)";
+        
+        try (PreparedStatement pstmt = dbConn.prepareStatement(sql)) {
+            dbConn.setAutoCommit(false); // Ensure control over transaction commit
+            int totalInserted = 0; // Counter to keep track of inserted rows
+
+            for (Entry<String, Integer> entry : data.entrySet()) {
+                pstmt.setInt(1, year);
+                pstmt.setInt(2, month);
+                pstmt.setString(3, branch);
+                pstmt.setString(4, entry.getKey());
+                pstmt.setInt(5, entry.getValue());
+                totalInserted += pstmt.executeUpdate(); // Execute the update and increment the counter
+            }
+
+            dbConn.commit(); // Commit the transaction
+            System.out.println(totalInserted + " rows inserted successfully for branch: " + branch);
+
+        } catch (SQLException e) {
+            System.out.println("SQL Error: " + e.getMessage());
+            e.printStackTrace();
+            try {
+                dbConn.rollback(); // Rollback in case of an error
+                System.out.println("Transaction rolled back due to an error.");
+            } catch (SQLException ex) {
+                System.out.println("Error during transaction rollback: " + ex.getMessage());
+                ex.printStackTrace();
+            }
+        } finally {
+            try {
+                dbConn.setAutoCommit(true); // Reset auto-commit to true
+            } catch (SQLException e) {
+                System.out.println("Error setting auto-commit back to true: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

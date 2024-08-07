@@ -9,6 +9,8 @@ import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.util.Map;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import containers.ClientRequestDataContainer;
 import containers.ServerResponseDataContainer;
@@ -275,10 +277,15 @@ public class Server extends AbstractServer {
 		
 	}
 	
-	public static ServerResponseDataContainer fetchDataForReport() {
-		ServerResponseDataContainer response = QueryControl.serverQueries.importUserInfo(dbConn);
-		return response;
+	public static ServerResponseDataContainer fetchDataForReport(LocalDate startOfLastMonth, LocalDate endOfLastMonth, String branch) {
+	    ServerResponseDataContainer response = QueryControl.serverQueries.fetchOrdersReportData(dbConn, startOfLastMonth, endOfLastMonth, branch);
+	    return response;
 	}
+	
+	public static void insertDataForReport(HashMap<String, Integer> data, String branch, int year, int month) {
+	    QueryControl.serverQueries.insertOrdersReportData(dbConn, data, branch, year, month);
+	}
+
 
 
     /**
