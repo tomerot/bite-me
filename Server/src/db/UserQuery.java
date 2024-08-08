@@ -387,7 +387,13 @@ public class UserQuery {
 		}
 	}
 	
-	//add item to database
+	/**
+	 * Adds a new item to the database if it does not already exist.
+	 * 
+	 * @param dbConn the database connection used to execute the SQL queries
+	 * @param item the item to be added to the database
+	 * @return a {@link ServerResponseDataContainer} containing the result of the operation and a message
+	 */
 		public ServerResponseDataContainer AddItemInfo(Connection dbConn, Item item) {
 			// we distinguish between two items according to (name, supplierID), if there is  an item with these exact fields we don't permit to add it to the database.
 
@@ -451,6 +457,13 @@ public class UserQuery {
 		}
 		
 		
+		/**
+		 * Fetches a list of items for a specific supplier from the database.
+		 *
+		 * @param dbConn the database connection used to execute the SQL query
+		 * @param supplierID the ID of the supplier whose items are to be fetched
+		 * @return a {@link ServerResponseDataContainer} containing a map of item names to categories and a response message
+		 */
 		public ServerResponseDataContainer FetchItemsListInfo(Connection dbConn, int supplierID) {
 			System.out.println("stam");
 			String query = "SELECT Name, Category FROM items WHERE SupplierID = ?";
@@ -479,7 +492,13 @@ public class UserQuery {
 			return response;
 		}
 		
-		// here we get all the items *instances* that belongs to certain supplier.
+		/**
+		 * Fetches a detailed list of items for a specific supplier from the database.
+		 *
+		 * @param dbConn the database connection used to execute the SQL query
+		 * @param supplierID the ID of the supplier whose items are to be fetched
+		 * @return a {@link ServerResponseDataContainer} containing a map of item names to {@link Item} instances and a response message
+		 */
 		public ServerResponseDataContainer FetchFullItemsListInfo(Connection dbConn, int supplierID) {
 			System.out.println("Thanks God... We are going to bring the items full list");
 			String query = "SELECT * FROM items WHERE SupplierID = ?;";
@@ -537,6 +556,13 @@ public class UserQuery {
 			return response;
 		}
 		
+		/**
+		 * Removes an item from the database based on its name and supplier ID.
+		 *
+		 * @param dbConn the database connection used to execute the SQL query
+		 * @param itemData a map containing the item name and supplier ID of the item to be deleted
+		 * @return a {@link ServerResponseDataContainer} containing the result of the operation and a message
+		 */
 		public ServerResponseDataContainer RemoveItemInfo(Connection dbConn, Map<String,Integer> itemData) {
 			String query = "DELETE FROM items WHERE Name = ? AND SupplierID = ?;";
 			ServerResponseDataContainer response = new ServerResponseDataContainer();
@@ -566,6 +592,13 @@ public class UserQuery {
 			return response;
 		}
 		
+		/**
+		 * Updates the details of an existing item in the database.
+		 *
+		 * @param dbConn the database connection used to execute the SQL query
+		 * @param item the {@link Item} instance containing the updated information
+		 * @return a {@link ServerResponseDataContainer} containing the result of the operation and a message
+		 */
 		public ServerResponseDataContainer UpdateItemInfo(Connection dbConn, Item item) {
 			String query = "UPDATE items SET Description = ?, CustomSize = ?, CustomDoneness = ?, CustomRestrictions = ?, Price = ? WHERE ID = ?;";
 			ServerResponseDataContainer response = new ServerResponseDataContainer();

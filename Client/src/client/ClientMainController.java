@@ -151,29 +151,54 @@ public class ClientMainController {
 		ClientMainController.accept(request);
 	}
 
-    
+	/**
+     * Sends a request to get the orders data for the specified supplier.
+     *
+     * @param supplierID the ID of the supplier whose orders data is requested
+     */
     public static void requestOrdersData(int supplierID) {
     	ClientRequestDataContainer request=new ClientRequestDataContainer(ClientRequest.GET_ORDERS_DATA, supplierID);
     	ClientMainController.accept(request);
     }
     
-    public static void requestSuppleriUpdateOrderStatus(int[] orderInfo) {
+    /**
+     * Sends a request to update the status of an order.
+     *
+     * @param orderInfo an array containing the order ID and the status transition code
+     */
+    public static void requestSupplierUpdateOrderStatus(int[] orderInfo) {
 		
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.SUPPLIER_UPDATE_ORDER_STATUS, orderInfo);
 		ClientMainController.accept(request);
 	}
     
-    public static void requestSupplerRefreshAwaitingOrders(Integer supplierID) {
+    
+    /**
+     * Sends a request to refresh the list of awaiting orders for the specified supplier.
+     *
+     * @param supplierID the ID of the supplier whose awaiting orders are to be refreshed
+     */
+    public static void requestSupplierRefreshAwaitingOrders(Integer supplierID) {
 		
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.SUPPLIER_REFRESH_AWAITING_ORDERS, supplierID);
 		ClientMainController.accept(request);
 	}
 	
+    /**
+     * Sends a request to add a new item.
+     *
+     * @param item the item to be added
+     */
 	public static void requestAddItemData(Item item) {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.ADD_ITEM_DATA, item);
 		ClientMainController.accept(request);
 	}
 	
+	/**
+     * Sends a request to get the list of items for the specified supplier.
+     *
+     * @param supplierID the ID of the supplier whose items list is requested
+     */
 	public static void requestItemsList(int supplierID) {
 		
 		Integer suppID = supplierID;
@@ -181,6 +206,11 @@ public class ClientMainController {
 		ClientMainController.accept(request);
 	}
 	
+	/**
+     * Sends a request to get the full list of items for the specified supplier.
+     *
+     * @param supplierID the ID of the supplier whose full items list is requested
+     */
 	public static void requestFullItemsList(int supplierID) {
 		
 		Integer suppID = supplierID;
@@ -188,12 +218,22 @@ public class ClientMainController {
 		ClientMainController.accept(request);
 	}
 	
+	  /**
+     * Sends a request to remove an item.
+     *
+     * @param itemData a map containing item data, including item identifiers and quantities
+     */
 	public static void requestRemoveItem(Map<String,Integer> itemData) {
 		
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.REMOVE_ITEM, itemData);
 		ClientMainController.accept(request);
 	}
 	
+	  /**
+     * Sends a request to update an existing item.
+     *
+     * @param item the item with updated information
+     */
 	public static void requestUpdateItem(Item item) {
 		
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.UPDATE_ITEM, item);

@@ -27,15 +27,16 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
+
+/**
+ * Controller for the edit item screen in the GUI.
+ * This controller manages the interactions for editing items in a restaurant's menu.
+ */
 public class EditItemScreenController implements Initializable{
 
 	private EmployeeHomeScreenController prevController;
 	private HBox wholeScreen;
 
-	public EditItemScreenController(HBox wholeScreen, Object prevController) {
-		this.prevController = (EmployeeHomeScreenController) prevController;
-		this.wholeScreen = wholeScreen;
-	}
 
 	private AuthorizedEmployee employee;
 
@@ -72,7 +73,29 @@ public class EditItemScreenController implements Initializable{
 	private ComboBox<Category> categoryField;
 
 	ObservableList<Category> categoryList;
-
+	
+	
+	 /**
+     * Constructs an instance of EditItemScreenController.
+     *
+     * @param wholeScreen the HBox containing the entire screen
+     * @param prevController the previous main controller (EmployeeHomeScreenController)
+     */
+	public EditItemScreenController(HBox wholeScreen, Object prevController) {
+		this.prevController = (EmployeeHomeScreenController) prevController;
+		this.wholeScreen = wholeScreen;
+	}
+	
+	
+	
+	 /**
+     * Initializes the controller class.
+     * This method is called after the FXML file has been loaded.
+     * It sets up the category combo box, populates the item list, and sets up a listener for item selection.
+     *
+     * @param location  the location used to resolve relative paths for the root object, or null
+     * @param resources the resources used to localize the root object, or null
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -95,6 +118,9 @@ public class EditItemScreenController implements Initializable{
 	}
 	
 	
+	/**
+     * Sets up the category combo box with predefined categories.
+     */
 	private void setCategoryComboBox() {
 		ArrayList<Category> al = new ArrayList<Category>();	
 		al.add(Category.SALAD);
@@ -106,6 +132,14 @@ public class EditItemScreenController implements Initializable{
 		categoryField.setItems(categoryList);
 	}
 	
+	
+	 /**
+     * Handles the event when a category is selected from the combo box.
+     * Updates the list of items based on the selected category.
+     *
+     * @param event the action event
+     * @throws Exception if updating the list fails
+     */
 	@FXML
 	private void onCategoryClicked(ActionEvent event) throws Exception{
 		
@@ -122,6 +156,14 @@ public class EditItemScreenController implements Initializable{
         listOfItems.setItems(itemsInCategory);       
 	}
 	
+	
+	/**
+     * Handles the event when the edit button is clicked.
+     * Updates the selected item in the database with new details.
+     *
+     * @param event the action event
+     * @throws Exception if updating the item fails
+     */
 	@FXML
 	private void onEditClicked(ActionEvent event) throws Exception{
 		resultMessage.setStyle("-fx-text-fill: red;");
@@ -178,7 +220,11 @@ public class EditItemScreenController implements Initializable{
 			resultMessage.setText("Nothing changed");
 	}
 	
-	//will show on the text field the details of an item
+	  /**
+     * Populates the input fields with the details of the selected item.
+     *
+     * @param item the item whose details are to be displayed
+     */
 	private void populateFieldsWithItemDetails(Item item) {
 	    if (item != null) {
 	        priceField.setText(String.valueOf(item.getPrice()));

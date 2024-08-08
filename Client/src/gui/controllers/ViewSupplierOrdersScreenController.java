@@ -34,6 +34,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 
+
+/**
+ * Controller for the screen where a supplier can view and manage orders.
+ * This includes refreshing the list of awaiting orders, approving orders,
+ * and updating orders to "Ready".
+ */
 public class ViewSupplierOrdersScreenController implements Initializable{
 	
 	private User user;
@@ -41,18 +47,6 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 	private HBox wholeScreen;
 	private Supplier supplier;
 	
-	public ViewSupplierOrdersScreenController(HBox wholeScreen , Object prevController) {
-		this.prevController = (SupplierScreenController) prevController;
-		this.wholeScreen = wholeScreen;
-	}
-	
-	public void setUser(User user) {
-        this.user = user;
-    }
-	
-	public User getUser() {
-		return user;
-	}
 	
 	@FXML
 	private Button btnRefresh;
@@ -82,8 +76,42 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 	private Map<Order, ArrayList<ItemInOrder>> approvedOrdersMap = new HashMap<>(); // key is the order object , value is the items list of the order.
  
 	
+	 /**
+     * Constructs a ViewSupplierOrdersScreenController with the specified parameters.
+     *
+     * @param wholeScreen the HBox representing the whole screen
+     * @param prevController the previous controller (SupplierScreenController)
+     */
+	public ViewSupplierOrdersScreenController(HBox wholeScreen , Object prevController) {
+		this.prevController = (SupplierScreenController) prevController;
+		this.wholeScreen = wholeScreen;
+	}
 	
+	 /**
+     * Sets the user for this controller.
+     *
+     * @param user the user to set
+     */
+    public void setUser(User user) {
+        this.user = user;
+    }
+    
+    /**
+     * Gets the current user.
+     *
+     * @return the user
+     */
+    public User getUser() {
+        return user;
+    }
+    
 	
+    /**
+     * Initializes the controller. Retrieves orders and sets up the UI components.
+     *
+     * @param location the location used to resolve relative paths for the root object, or null
+     * @param resources the resources used to localize the root object, or null
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {	
@@ -111,7 +139,15 @@ public class ViewSupplierOrdersScreenController implements Initializable{
         setupSelectionListener(approvedOrdersList, approvedOrdersMap, approvedOrderTextArea);
 	}
 
-	//when user select row from the list we want to show the list details.
+	
+	
+	/**
+     * Sets up a selection listener for the given ListView. Displays order details in the TextArea when an item is selected.
+     *
+     * @param listView the ListView to set up the listener for
+     * @param ordersMap the map of orders
+     * @param textArea the TextArea to display order details
+     */
 	private void setupSelectionListener(ListView<Integer> listView, Map<Order, ArrayList<ItemInOrder>> ordersMap, TextArea textArea) {
 		System.out.println("In setup selection listener");
 			listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {  // When the user selects an OrderID in the ListView, the listener is triggered.
@@ -130,6 +166,13 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 			});
 	}
 	
+	 /**
+     * Displays details of the specified order in the TextArea.
+     *
+     * @param order the order to display
+     * @param items the items in the order
+     * @param textArea the TextArea to display the details
+     */
 	private void displayOrderDetails(Order order, ArrayList<ItemInOrder> items, TextArea textArea) {
 		System.out.println("inside Display Order details");
         StringBuilder details = new StringBuilder();
@@ -161,6 +204,12 @@ public class ViewSupplierOrdersScreenController implements Initializable{
         textArea.setText(details.toString());
     }
 	
+	 /**
+     * Initializes the ListView with the provided orders map.
+     *
+     * @param ordersList the ListView to initialize
+     * @param ordersMap the map of orders
+     */
 	void initListView(ListView<Integer> ordersList, Map<Order, ArrayList<ItemInOrder>> ordersMap) {
 		ObservableList<Integer> oList = FXCollections.observableArrayList();
 		
@@ -171,6 +220,11 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 		ordersList.setItems(oList); 
 	}
 
+	/**
+     * Initializes the awaiting and approved orders maps.
+     *
+     * @param ordersMap the map of orders
+     */
 	public void initMaps(Map<Order, ArrayList<ItemInOrder>> ordersMap) {
 		for (Order order : ordersMap.keySet()) { //iterate on the keys of the map
             
@@ -185,6 +239,13 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 		System.out.println("approved map: " + approvedOrdersMap);
 	}
 	
+	
+	/**
+     * Handles the event when the approve button is clicked. Updates the status of the selected order to "Approved".
+     *
+     * @param event the action event
+     * @throws Exception if updating the order status fails
+     */
 	@FXML
 	private void onApproveClicked(ActionEvent event) throws Exception{
 		Integer selectedOrderID = awaitingOrdersList.getSelectionModel().getSelectedItem();
@@ -197,7 +258,7 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 
 		 // Update the database status to 'Approved' and set the approval time
 	    int[] orderInfo = {selectedOrderID, 0}; // 0 indicates transition from Awaiting to Approved
-		ClientMainController.requestSuppleriUpdateOrderStatus(orderInfo);
+		ClientMainController.requestSupplierUpdateOrderStatus(orderInfo);
 		ServerResponseDataContainer response = ClientConsole.responseFromServer;
 		
 		
@@ -230,9 +291,15 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 		}
 	}
 	
+	/**
+     * Handles the event when the refresh button is clicked. Fetches the latest awaiting orders and updates the list.
+     *
+     * @param event the action event
+     * @throws Exception if refreshing the orders fails
+     */
 	@FXML
 	private void onRefreshClicked(ActionEvent event) throws Exception{ //we want to fetch from the database all the orders with status 'Awaiting' and to update the awaiting map and list view.
-		ClientMainController.requestSupplerRefreshAwaitingOrders(supplier.getSupplierID());
+		ClientMainController.requestSupplierRefreshAwaitingOrders(supplier.getSupplierID());
 		ServerResponseDataContainer response = ClientConsole.responseFromServer;
 		awaitingOrdersMap = (Map<Order, ArrayList<ItemInOrder>>) response.getMessage();
 		System.out.println("After refresh, awaiting orders: " + awaitingOrdersMap);
@@ -244,6 +311,12 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 	    setupSelectionListener(awaitingOrdersList, awaitingOrdersMap, awaitingOrderTextArea);
 	}
 	
+	/**
+     * Handles the event when the update ready button is clicked. Updates the status of the selected order to "Ready".
+     *
+     * @param event the action event
+     * @throws Exception if updating the order status fails
+     */
 	@FXML
 	private void onUpdateReadyClicked(ActionEvent event) throws Exception{
 		Integer selectedOrderID = approvedOrdersList.getSelectionModel().getSelectedItem();
@@ -256,7 +329,7 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 		
 		 // Update the database status to 'Ready'.
 	    int[] orderInfo = {selectedOrderID, 1}; // 1 indicates transition from 'Approved' to 'Ready'
-		ClientMainController.requestSuppleriUpdateOrderStatus(orderInfo);
+		ClientMainController.requestSupplierUpdateOrderStatus(orderInfo);
 		ServerResponseDataContainer response = ClientConsole.responseFromServer;
 		
 		if(ServerResponse.SUPPLIER_UPDATE_ORDER_STATUS_SUCCESS.equals(response.getResponse())) {

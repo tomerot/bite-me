@@ -223,6 +223,12 @@ public class Server extends AbstractServer {
 	}
 }
 	
+	/**
+	 * Handles a request to update an item's information.
+	 *
+	 * @param item the Item object containing the updated information
+	 * @param client the client that requested the update
+	 */
 	private void handleUpdateItemRequest(Item item, ConnectionToClient client) {
 		ServerResponseDataContainer response = QueryControl.userQueries.UpdateItemInfo(dbConn, item);
 		try {
@@ -232,6 +238,12 @@ public class Server extends AbstractServer {
 		}
 	}
 	
+	/**
+	 * Handles a request to fetch the full list of items for a given supplier.
+	 *
+	 * @param supplierID the ID of the supplier for whom to fetch the items
+	 * @param client the client that requested the data
+	 */
 	private void handleGetFullItemsListRequest(Integer supplierID, ConnectionToClient client) {
 		ServerResponseDataContainer response = QueryControl.userQueries.FetchFullItemsListInfo(dbConn, supplierID);
 		try {
@@ -241,6 +253,12 @@ public class Server extends AbstractServer {
 		}
 	}
 	
+	/**
+	 * Handles a request to fetch a list of items for a given supplier.
+	 *
+	 * @param supplierID the ID of the supplier for whom to fetch the items
+	 * @param client the client that requested the data
+	 */
 	private void handleGetItemsListRequest(Integer supplierID, ConnectionToClient client) {
 		ServerResponseDataContainer response = QueryControl.userQueries.FetchItemsListInfo(dbConn, supplierID);
 		try {
@@ -250,6 +268,12 @@ public class Server extends AbstractServer {
 		}
 	}
 	
+	/**
+	 * Handles a request to add a new item to the database.
+	 *
+	 * @param item the Item object containing the data of the item to be added
+	 * @param client the client that requested the update
+	 */
 	private void handleAddItemData(Item item, ConnectionToClient client) {
 		ServerResponseDataContainer response = QueryControl.userQueries.AddItemInfo(dbConn, item);
 		try {
@@ -259,6 +283,12 @@ public class Server extends AbstractServer {
 		}
 	}
 	
+	/**
+	 * Handles a request to remove an item from the database.
+	 *
+	 * @param itemData a Map containing the data of the item to be removed, with item name as the key and supplier ID as the value
+	 * @param client the client that requested the update
+	 */
 	private void handleRemoveItemData(Map<String,Integer> itemData, ConnectionToClient client) {
 		ServerResponseDataContainer response = QueryControl.userQueries.RemoveItemInfo(dbConn, itemData);
 		try {
@@ -268,6 +298,12 @@ public class Server extends AbstractServer {
 		}
 	}
 	
+	/**
+	 * Handles a request to fetch orders data for a given supplier.
+	 *
+	 * @param supplierID the ID of the supplier for whom to fetch the orders
+	 * @param client the client that requested the data
+	 */
 	public void handleGetOrdersData(Integer supplierID, ConnectionToClient client){
 		ServerResponseDataContainer response = SupplierQuery.getOrdersData(dbConn, supplierID);
 		try {
@@ -277,6 +313,12 @@ public class Server extends AbstractServer {
 		}
 	}
 	
+	/**
+	 * Handles a request to update the status of an order.
+	 *
+	 * @param orderInfo an array of integers where the first element is the order ID and the second element is the status flag
+	 * @param client the client that requested the update
+	 */
 	public void handleSupplierUpdateOrderStatus(int[] orderInfo, ConnectionToClient client){
 		ServerResponseDataContainer response = SupplierQuery.UpdateOrderStatus(dbConn, orderInfo);
 		try {
@@ -286,6 +328,12 @@ public class Server extends AbstractServer {
 		}
 	}
 	
+	/**
+	 * Handles a request to refresh awaiting orders for a given supplier.
+	 *
+	 * @param supplierID the ID of the supplier for whom to refresh awaiting orders
+	 * @param client the client that requested the data
+	 */
 	public void handleSupplierRefreshAwaitingOrders(int supplierID, ConnectionToClient client){
 		ServerResponseDataContainer response = SupplierQuery.RefreshAwaitingOrders(dbConn, supplierID);
 		try {
@@ -305,6 +353,7 @@ public class Server extends AbstractServer {
 	private void handleSpecificUserData(User user, ConnectionToClient client) {
 		UserType type = user.getUserType();
 		ServerResponseDataContainer response = null;
+		System.out.println(type.toString());
 		switch (type) {
 		case MANAGER:
 			response = QueryControl.userQueries.importManagerInfo(dbConn, user);

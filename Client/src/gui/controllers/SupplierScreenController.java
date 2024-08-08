@@ -44,6 +44,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+
+/**
+ * Controller for the supplier screen in the GUI.
+ * This controller manages the interactions and updates for the supplier's home screen,
+ * including moving to viewing orders and logging out.
+ */
 public class SupplierScreenController{
 	
 	private User user;
@@ -61,54 +67,93 @@ public class SupplierScreenController{
 	@FXML
 	private Label welcomeLbl;
 	
-	public void setUser(User user) {
+	/**
+     * Sets the user for this controller and updates the welcome label.
+     *
+     * @param user the user to set
+     */
+    public void setUser(User user) {
         this.user = user;
         if (user instanceof Supplier) {
             this.sup = (Supplier) user;
             UpdateLabel(sup);
         }
     }
-	
-	public static Supplier getSupplier() {
-		return sup;
-	}
-	
-	public User getUser() {
-		return user;
-	}
-	
-	public void UpdateLabel(Supplier supplier) {
-	    Platform.runLater(() -> {
-	        welcomeLbl.setText("Welcome, " + supplier.getName());
-	    });
-	}
 
-	 public void logOut(ActionEvent event) throws Exception{
-			user.setisLoggedIn(0);
-			ClientMainController.requestUpdateIsLoggedIn(user);
-			displayLogin(event);
-	    }
-	    
-		// Method to display login screen
-		public void displayLogin(ActionEvent event) throws Exception {
-			FXMLLoader loader = new FXMLLoader();
-			loader.setController(new LoginController());
-			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-			Stage primaryStage = new Stage();
-			Pane root = loader.load(getClass().getResource("/gui/view/LoginScreen.fxml").openStream());
-			Scene scene = new Scene(root);
-			scene.getStylesheets().add(getClass().getResource("/gui/view/LoginScreen.css").toExternalForm());
-			primaryStage.setTitle("Main");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		}
-		
-		@FXML
-		private void onViewOrdersClicked(ActionEvent event) throws IOException {
-			ScreenLoader screenLoader = new ScreenLoader();
-	    	String path = "/gui/view/ViewSupplierOrdersScreen.fxml";
-	    	AnchorPane nextDash = screenLoader.loadOnDashboard(screen, path, Screen.VIEW_SUPPLIER_ORDERS_SCREEN, this);
-	    	dashboard.getChildren().clear(); //Clear current dashboard
-	    	dashboard.getChildren().add(nextDash); //Assign the new dashboard
-		}
+    /**
+     * Gets the current supplier.
+     *
+     * @return the supplier
+     */
+    public static Supplier getSupplier() {
+        return sup;
+    }
+
+    /**
+     * Gets the current user.
+     *
+     * @return the user
+     */
+    public User getUser() {
+        return user;
+    }
+
+    /**
+     * Updates the welcome label with the supplier's name.
+     *
+     * @param supplier the supplier
+     */
+    public void UpdateLabel(Supplier supplier) {
+        Platform.runLater(() -> {
+            welcomeLbl.setText("Welcome, " + supplier.getName());
+        });
+    }
+
+    /**
+     * Logs out the current user and displays the login screen.
+     *
+     * @param event the action event
+     * @throws Exception if logging out or displaying the login screen fails
+     */
+    public void logOut(ActionEvent event) throws Exception {
+        user.setisLoggedIn(0);
+        ClientMainController.requestUpdateIsLoggedIn(user);
+        displayLogin(event);
+    }
+
+    /**
+     * Displays the login screen.
+     *
+     * @param event the action event
+     * @throws Exception if loading the FXML file fails
+     */
+    public void displayLogin(ActionEvent event) throws Exception {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setController(new LoginController());
+        ((Node) event.getSource()).getScene().getWindow().hide(); // Hides the primary window
+        Stage primaryStage = new Stage();
+        Pane root = loader.load(getClass().getResource("/gui/view/LoginScreen.fxml").openStream());
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/gui/view/LoginScreen.css").toExternalForm());
+        primaryStage.setTitle("Main");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    /**
+     * Handles the event when the view orders button is clicked.
+     * Loads the View Supplier Orders screen into the dashboard.
+     *
+     * @param event the action event
+     * @throws IOException if loading the FXML file fails
+     */
+    @FXML
+    private void onViewOrdersClicked(ActionEvent event) throws IOException {
+        ScreenLoader screenLoader = new ScreenLoader();
+        String path = "/gui/view/ViewSupplierOrdersScreen.fxml";
+        AnchorPane nextDash = screenLoader.loadOnDashboard(screen, path, Screen.VIEW_SUPPLIER_ORDERS_SCREEN, this);
+        dashboard.getChildren().clear(); // Clear current dashboard
+        dashboard.getChildren().add(nextDash); // Assign the new dashboard
+    }
 }
+

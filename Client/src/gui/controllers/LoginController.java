@@ -97,7 +97,7 @@ public class LoginController {
 								Ceo ceo = (Ceo) entityResponse.getMessage();
 								displayWindow(event, "CEO Home Page", "CeoScreen", ceo);
 								break;
-							case MANAGER_FOUND:
+							case MANAGER_FOUND:  
 								BranchManager manager = (BranchManager) entityResponse.getMessage();
 								displayWindow(event, "Branch Manager Home Page", "BranchManagerScreen", manager);
 								break;
