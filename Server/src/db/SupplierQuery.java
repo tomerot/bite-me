@@ -28,7 +28,7 @@ public class SupplierQuery {
 	 * @param supplierID the ID of the supplier whose orders are to be fetched
 	 * @return a {@link ServerResponseDataContainer} containing a map of orders to lists of items and a response message
 	 */
-    public static ServerResponseDataContainer getOrdersData(Connection dbConn, int supplierID) {
+    public ServerResponseDataContainer getOrdersData(Connection dbConn, int supplierID) {
         ServerResponseDataContainer response = new ServerResponseDataContainer();
         Map<Order, ArrayList<ItemInOrder>> ordersMap = new HashMap<>();
         String ordersQuery = "SELECT o.*, c.Email FROM orders AS o JOIN customers AS c ON o.CustomerID = c.ID WHERE o.SupplierID = ? AND o.Status IN ('Approved', 'Awaiting');";
@@ -58,7 +58,7 @@ public class SupplierQuery {
      * @param orderInfo an array where the first element is the order ID and the second element is the status flag
      * @return a {@link ServerResponseDataContainer} containing the result of the operation and the approval time if applicable
      */
-    public static ServerResponseDataContainer UpdateOrderStatus(Connection dbConn, int[] orderInfo) {
+    public ServerResponseDataContainer UpdateOrderStatus(Connection dbConn, int[] orderInfo) {
         ServerResponseDataContainer response = new ServerResponseDataContainer();
         int orderID = orderInfo[0];
         int statusFlag = orderInfo[1];
@@ -97,7 +97,7 @@ public class SupplierQuery {
      * @param supplierID the ID of the supplier whose awaiting orders are to be fetched
      * @return a {@link ServerResponseDataContainer} containing a map of orders to lists of items and a response message
      */
-    public static ServerResponseDataContainer RefreshAwaitingOrders(Connection dbConn, int supplierID) {
+    public ServerResponseDataContainer RefreshAwaitingOrders(Connection dbConn, int supplierID) {
         ServerResponseDataContainer response = new ServerResponseDataContainer();
         String query = "SELECT o.*, c.Email FROM orders AS o JOIN customers AS c ON o.CustomerID = c.ID WHERE o.SupplierID = ? AND o.Status ='Awaiting';";
         Map<Order, ArrayList<ItemInOrder>> ordersMap = new HashMap<>();
@@ -130,7 +130,7 @@ public class SupplierQuery {
      * @return an {@link Order} object populated with data from the {@link ResultSet}
      * @throws SQLException if a database access error occurs or the {@link ResultSet} is not properly configured
      */
-    private static Order createOrderFromResultSet(ResultSet rs) throws SQLException {
+    private Order createOrderFromResultSet(ResultSet rs) throws SQLException {
         int orderID = rs.getInt("OrderID");
         String customerID = rs.getString("CustomerID");
         String recipientName = rs.getString("Recipient");
@@ -189,7 +189,7 @@ public class SupplierQuery {
     * @return a {@link List} of {@link ItemInOrder} objects associated with the specified order ID
     * @throws SQLException if a database access error occurs or the SQL query fails
     */
-    private static List<ItemInOrder> fetchItemsForOrder(Connection dbConn, int orderID) throws SQLException {
+    private List<ItemInOrder> fetchItemsForOrder(Connection dbConn, int orderID) throws SQLException {
         List<ItemInOrder> itemsList = new ArrayList<>();
         String itemsQuery = "SELECT iio.*, i.Price FROM items_in_orders iio JOIN items i ON iio.ItemID = i.ID WHERE iio.OrderID = ?;";
         

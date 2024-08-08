@@ -14,6 +14,7 @@ import containers.ClientRequestDataContainer;
 import containers.ServerResponseDataContainer;
 import db.DBConnectionDetails;
 import db.DBController;
+import db.EmployeeQuery;
 import db.QueryControl;
 import db.SupplierQuery;
 import entities.Item;
@@ -230,8 +231,8 @@ public class Server extends AbstractServer {
 	 * @param client the client that requested the update
 	 */
 	private void handleUpdateItemRequest(Item item, ConnectionToClient client) {
-		ServerResponseDataContainer response = QueryControl.userQueries.UpdateItemInfo(dbConn, item);
-		try {
+		ServerResponseDataContainer response = QueryControl.employeeQuery.UpdateItemInfo(dbConn, item);
+		try {  
 			client.sendToClient(response);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -245,8 +246,8 @@ public class Server extends AbstractServer {
 	 * @param client the client that requested the data
 	 */
 	private void handleGetFullItemsListRequest(Integer supplierID, ConnectionToClient client) {
-		ServerResponseDataContainer response = QueryControl.userQueries.FetchFullItemsListInfo(dbConn, supplierID);
-		try {
+		ServerResponseDataContainer response = QueryControl.employeeQuery.FetchFullItemsListInfo(dbConn, supplierID);
+		try {             //.FetchFullItemsListInfo(dbConn, supplierID);
 			client.sendToClient(response);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -260,7 +261,7 @@ public class Server extends AbstractServer {
 	 * @param client the client that requested the data
 	 */
 	private void handleGetItemsListRequest(Integer supplierID, ConnectionToClient client) {
-		ServerResponseDataContainer response = QueryControl.userQueries.FetchItemsListInfo(dbConn, supplierID);
+		ServerResponseDataContainer response = QueryControl.employeeQuery.FetchItemsListInfo(dbConn, supplierID);
 		try {
 			client.sendToClient(response);
 		} catch (IOException e) {
@@ -275,7 +276,7 @@ public class Server extends AbstractServer {
 	 * @param client the client that requested the update
 	 */
 	private void handleAddItemData(Item item, ConnectionToClient client) {
-		ServerResponseDataContainer response = QueryControl.userQueries.AddItemInfo(dbConn, item);
+		ServerResponseDataContainer response = QueryControl.employeeQuery.AddItemInfo(dbConn, item);
 		try {
 			client.sendToClient(response);
 		} catch (IOException e) {
@@ -290,7 +291,7 @@ public class Server extends AbstractServer {
 	 * @param client the client that requested the update
 	 */
 	private void handleRemoveItemData(Map<String,Integer> itemData, ConnectionToClient client) {
-		ServerResponseDataContainer response = QueryControl.userQueries.RemoveItemInfo(dbConn, itemData);
+		ServerResponseDataContainer response = QueryControl.employeeQuery.RemoveItemInfo(dbConn, itemData);
 		try {
 			client.sendToClient(response);
 		} catch (IOException e) {
@@ -305,7 +306,7 @@ public class Server extends AbstractServer {
 	 * @param client the client that requested the data
 	 */
 	public void handleGetOrdersData(Integer supplierID, ConnectionToClient client){
-		ServerResponseDataContainer response = SupplierQuery.getOrdersData(dbConn, supplierID);
+		ServerResponseDataContainer response = QueryControl.supplierQuery.getOrdersData(dbConn, supplierID);
 		try {
 			client.sendToClient(response);
 		}catch(IOException e) {
@@ -320,8 +321,8 @@ public class Server extends AbstractServer {
 	 * @param client the client that requested the update
 	 */
 	public void handleSupplierUpdateOrderStatus(int[] orderInfo, ConnectionToClient client){
-		ServerResponseDataContainer response = SupplierQuery.UpdateOrderStatus(dbConn, orderInfo);
-		try {
+		ServerResponseDataContainer response = QueryControl.supplierQuery.UpdateOrderStatus(dbConn, orderInfo);
+		try {   
 			client.sendToClient(response);
 		}catch(IOException e) {
 			e.printStackTrace();
@@ -335,7 +336,7 @@ public class Server extends AbstractServer {
 	 * @param client the client that requested the data
 	 */
 	public void handleSupplierRefreshAwaitingOrders(int supplierID, ConnectionToClient client){
-		ServerResponseDataContainer response = SupplierQuery.RefreshAwaitingOrders(dbConn, supplierID);
+		ServerResponseDataContainer response = QueryControl.supplierQuery.RefreshAwaitingOrders(dbConn, supplierID);
 		try {
 			client.sendToClient(response);
 		}catch(IOException e) {
