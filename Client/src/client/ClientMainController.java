@@ -8,6 +8,7 @@ import java.util.List;
 import entities.BranchManager;
 import entities.Customer;
 import entities.Order;
+import entities.Supplier;
 import entities.User;
 import enums.Branch;
 import enums.ClientRequest;
@@ -187,6 +188,11 @@ public class ClientMainController {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.UPDATE_ITEM, item);
 		ClientMainController.accept(request);
 	}
+	
+    public static void requestSupplierItems(Supplier supplier) {
+        ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.GET_SUPPLIER_ITEMS, supplier);
+        ClientMainController.accept(request);
+    }
     
 
 }

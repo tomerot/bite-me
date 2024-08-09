@@ -19,6 +19,7 @@ import entities.Item;
 import entities.BranchManager;
 import entities.Customer;
 import entities.Order;
+import entities.Supplier;
 import entities.User;
 import enums.Branch;
 import enums.ClientRequest;
@@ -157,15 +158,6 @@ public class Server extends AbstractServer {
 			}
 			break;
 			
-//		case FETCH_BRANCH_RESTAURANTS:
-//			customer = (Customer) data.getMessage();
-//			try {
-//				handleRestaurantsData(customer,client);
-//			} catch (SQLException e) {
-//				e.printStackTrace();
-//			}
-//			break;
-			
 		case FETCH_BRANCH_RESTAURANTS:{
 			Branch branchName = (Branch) data.getMessage();
 			try {
@@ -204,6 +196,15 @@ public class Server extends AbstractServer {
 			break;
 		default:
 		    return;
+		    
+        case GET_SUPPLIER_ITEMS:
+            Supplier supplier = (Supplier) data.getMessage();
+            try {
+                handleImportSupplierItems(supplier,client);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            break;
 
 	}
 }
@@ -460,7 +461,14 @@ public class Server extends AbstractServer {
 	    }
 	}
 	
-	
+    private void handleImportSupplierItems(Supplier supplier, ConnectionToClient client) throws SQLException{
+        ServerResponseDataContainer response = QueryControl.orderQueries.importSupplierItems(dbConn, supplier);
+        try {
+            client.sendToClient(response);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 	
 	
 	

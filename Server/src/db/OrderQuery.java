@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import containers.ServerResponseDataContainer;
+import entities.Category;
 import entities.Customer;
+import entities.Item;
 import entities.Order;
 import entities.OrderType;
 import entities.Supplier;
@@ -24,62 +26,6 @@ public class OrderQuery {
 	public OrderQuery() {
 
 	}
-
-//	/**
-//	 * Retrieves a list of suppliers based on the customer's home branch.
-//	 *
-//	 * @param dbConn   the database connection
-//	 * @param customer the customer whose branch is used for querying
-//	 * @return a ServerResponseDataContainer containing the list of suppliers and
-//	 *         response status
-//	 * @throws SQLException if a database access error occurs
-//	 */
-//	public ServerResponseDataContainer importSuppliersByBranch(Connection dbConn, Customer customer)
-//			throws SQLException {
-//		ServerResponseDataContainer response = new ServerResponseDataContainer();
-//		List<Supplier> suppliers = new ArrayList<>();
-//		String query = "SELECT ID, Name, Email, Phone, Address, City FROM Suppliers WHERE Branch = ?";
-//		String br = null;
-//		switch (customer.getHomeBranch().toString()) {
-//		case "North Branch":
-//			br = "North";
-//			break;
-//		case "Center Branch":
-//			br = "Center";
-//			break;
-//		case "South Branch":
-//			br = "South";
-//			break;
-//		}
-//
-//		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
-//			stmt.setString(1, br);
-//
-//			try (ResultSet rs = stmt.executeQuery()) {
-//				while (rs.next()) {
-//
-//					// Extract data from the result set
-//					int id = rs.getInt("ID");
-//					String name = rs.getString("Name");
-//					String email = rs.getString("Email");
-//					String phone = rs.getString("Phone");
-//					String address = rs.getString("Address");
-//					String city = rs.getString("City");
-//
-//					Supplier supplier = new Supplier(id, name, city, address, null, email, phone, null, null);
-//					suppliers.add(supplier);
-//				}
-//
-//			} catch (SQLException e) {
-//				e.printStackTrace();
-//			}
-//		} catch (SQLException e1) {
-//			e1.printStackTrace();
-//		}
-//		response.setMessage(suppliers);
-//		response.setResponse(ServerResponse.SUPPLIER_DATA_BY_BRANCH);
-//		return response;
-//	}
 	
 	/**
 	 * Retrieves a list of suppliers based on a branch
@@ -240,6 +186,36 @@ public class OrderQuery {
 		}
 	}
 	
+    public ServerResponseDataContainer importSupplierItems(Connection dbConn, Supplier supplier) throws SQLException{
+        ServerResponseDataContainer response = new ServerResponseDataContainer();
+        String query = "SELECT * FROM items WHERE SupplierID = ?";
+        List<Item> specificSupplierItems = new ArrayList<>();
+        try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+            stmt.setInt(1, supplier.getSupplierID());
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    System.out.println("GOT In");
+                    int itemID = rs.getInt("ID");
+                    String name = rs.getString("Name");
+                    String category = rs.getString("Category");
+                    String description = rs.getString("Description");
+                    boolean customSize = rs.getBoolean("CustomSize");
+                    boolean customDonenessDegree = rs.getBoolean("CustomDoneness");
+                    boolean customRestrictions = rs.getBoolean("CustomRestrictions");
+                    float price = rs.getFloat("Price");
+                    
+                    Item item = new Item(itemID, supplier.getSupplierID(), name, categoryStringToEnum(category), description, customSize, customDonenessDegree, customRestrictions, price);
+                    specificSupplierItems.add(item);
+                }
+            }
+        }
+        response.setMessage(specificSupplierItems);
+        response.setResponse(ServerResponse.SUPPLIER_ITEMS);
+        
+        return response;
+    }
+	
 
 	
 	
@@ -399,5 +375,21 @@ public class OrderQuery {
         String formattedTime = currentTime.format(formatter);
         return formattedTime;
 	}
+	
+	private Category categoryStringToEnum(String type) {
+        if (type.equals("Main Course")) {
+            return Category.MAINCOURSE;
+        }
+        if (type.equals("First Course")) {
+            return Category.FIRSTCOURSE;
+        }
+        if (type.equals("Salad")){
+            return Category.SALAD;
+        }
+        if (type.equals("Dessert")) {
+            return Category.DESSERT;
+        }
+        else return Category.BEVERAGE;
+    }
 }
 

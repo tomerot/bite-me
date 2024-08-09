@@ -1,5 +1,7 @@
 package entities;
 
+import java.util.List;
+
 import enums.Branch;
 
 /**
@@ -9,12 +11,13 @@ import enums.Branch;
 public class Shared extends Delivery{
 	private float initialSharedFee=25;
 	private float minSharedFee=15;
-	private int numOfParticipants;
+	private List<Customer> customers;
 
-	public Shared(int orderID, Supplier supplier, Customer customer, Branch branchName, String desiredDate,
-            String desiredHour, OrderType type, float totalPrice, String acceptanceHour, String confirmedHour, SupplyMethod SHARED, String address, int numOfParticipants) {
-		super(orderID, supplier, customer, branchName, desiredDate,desiredHour, type, totalPrice, acceptanceHour, confirmedHour, SHARED, address);
-		this.numOfParticipants=numOfParticipants;
+	public Shared(List<ItemInOrder> itemsList, int orderID,String recipient,String recipientPhone,SupplyMethod supplyOption, Supplier supplier, Customer customer, Branch branchName, String requestedDate,
+            String requestedTime, OrderType type, float totalPrice, String approvalTimer, String arrivalTime, String status, String city, String address, List<Customer> customers) {
+		super(itemsList, orderID, recipient, recipientPhone, SupplyMethod.SHARED, supplier, null,  branchName,  requestedDate,
+	             requestedTime, type, totalPrice, approvalTimer, arrivalTime, status, city, address);
+		this.customers = customers;
 	}
     // MinSharedFee getter and setter
 	public float getMinSharedFee() { return minSharedFee; }
@@ -22,9 +25,5 @@ public class Shared extends Delivery{
     // initialSharedFee getter and setter
 	public float getInitialSharedFee() { return initialSharedFee; }
     public void setInitialSharedFee(float initialSharedFee) { this.initialSharedFee=initialSharedFee; }
-    // numOfParticipants getter and setter
-	public float getNumOfParticipants() { return numOfParticipants; }
-    public void setNumOfParticipants(int numOfParticipants) { this.numOfParticipants=numOfParticipants; }
-
     public void addFee() {}//unimplemented yet
 }

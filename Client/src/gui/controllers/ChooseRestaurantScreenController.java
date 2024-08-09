@@ -114,10 +114,10 @@ import javafx.scene.layout.HBox;
 			
 			for (Supplier supplier : suppliers) {
 				AnchorPane card = createRestaurantCard(supplier);
-				gridPane.add(card, gridPane.getChildren().size() % 2, gridPane.getChildren().size() / 2); // Add to gridPane
+				gridPane.add(card, gridPane.getChildren().size() % 3, gridPane.getChildren().size() / 3); // Add to gridPane
 			}
 			
-			gridPane.setHgap(20);
+			gridPane.setHgap(10); //Need to be fixed somehow
 		    gridPane.setVgap(30);
 			
 		}

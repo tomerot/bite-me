@@ -1,5 +1,7 @@
 package entities;
 
+import java.util.Objects;
+
 /**
  * This class represents an item in an order with additional customization options.
  * It extends the {@link Item} class and includes attributes for size, doneness degree, and restrictions.
@@ -8,8 +10,11 @@ public class ItemInOrder extends Item {
 	private String size=null;
 	private String donenessDegree=null;
 	private String restrictions=null;
-	public ItemInOrder(int itemID, String name, Category type, float price, boolean customSize, boolean customDonenessDegree, boolean customRestrictions, String size, String donenessDegree,String restrictions) {
-		super(itemID, name, type, price, customSize, customDonenessDegree, customRestrictions);
+	
+	public ItemInOrder(int itemID, int supplierID, String name, Category type, String description,
+					   boolean customSize, boolean customDonenessDegree, boolean customRestrictions, 
+					   String size, String donenessDegree,String restrictions, float price) {
+		super(itemID, supplierID, name, type, description, customSize, customDonenessDegree, customRestrictions, price);
 		if(customSize)
 			this.size=size;
 		if(customDonenessDegree)
@@ -17,6 +22,30 @@ public class ItemInOrder extends Item {
 		if(customRestrictions)
 			this.restrictions=restrictions;
 	}
+	
+	public ItemInOrder(Item item) {
+		super(item.getItemID(), item.getSupplierID(), item.getName(), item.getType(), item.getDescription(),
+			  item.getCustomSize(), item.getCustomDonenessDegree(), item.getCustomRestrictions(), item.getPrice());
+		this.size = "None";
+		this.donenessDegree = "None";
+		this.restrictions = "None";
+	}
+	
+	public boolean equals(Object that) {
+		if(this == that) return true;
+		if((that == null) || !(that instanceof ItemInOrder)) return false;
+		ItemInOrder other = (ItemInOrder) that;
+		return this.getItemID() == other.getItemID() &&
+			   this.getSize().equals(other.getSize()) &&
+			   this.getDonenessDegree().equals(other.getDonenessDegree()) &&
+			   this.getRestrictions().equals(other.getRestrictions());
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(getItemID(), size, donenessDegree, restrictions);
+	}
+	
     //size getter and setter
     public String getSize() { return size; }
     public void setSize(String size) { this.size = size; }

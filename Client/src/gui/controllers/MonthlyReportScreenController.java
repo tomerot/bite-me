@@ -52,12 +52,12 @@ public class MonthlyReportScreenController {
      * @param event the action event triggered by clicking the next page button
      * @throws Exception if an error occurs during the page transition
      */
-	public void displayNextPage(ActionEvent event) throws Exception {
-		ScreenLoader screenLoader = new ScreenLoader();
-		AnchorPane nextDash = screenLoader.loadOnDashboard(wholeScreen, "/gui/view/MonthlyReportScreen2.fxml", Screen.MONTHLY_REPORT_SCREEN_TWO, this);
-		dashboard.getChildren().clear();
-		dashboard.getChildren().add(nextDash);
-	}
+//	public void displayNextPage(ActionEvent event) throws Exception {
+//		ScreenLoader screenLoader = new ScreenLoader();
+//		AnchorPane nextDash = screenLoader.loadOnDashboard(wholeScreen, "/gui/view/MonthlyReportScreen2.fxml", Screen.MONTHLY_REPORT_SCREEN_TWO, this);
+//		dashboard.getChildren().clear();
+//		dashboard.getChildren().add(nextDash);
+//	}
 	
     /**
      * Returns to the previous screen based on the previous controller.

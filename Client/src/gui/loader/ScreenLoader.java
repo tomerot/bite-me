@@ -1,20 +1,22 @@
 package gui.loader;
 
 import java.io.IOException;
+
 import gui.controllers.AddItemScreenController;
 import gui.controllers.BranchManagerController;
 import gui.controllers.CeoHomeScreenController;
+import gui.controllers.CheckoutScreenController;
 import gui.controllers.ChooseRestaurantScreenController;
 import gui.controllers.CustomerHomeScreenController;
-import gui.controllers.MonthlyReportScreenController;
-import gui.controllers.MonthlyReportScreenController2;
-import gui.controllers.MyOrdersScreenController;
 import gui.controllers.EditItemScreenController;
 import gui.controllers.EmployeeHomeScreenController;
+import gui.controllers.MonthlyReportScreenController;
+import gui.controllers.MyOrdersScreenController;
+import gui.controllers.OrderSummaryScreenController;
+import gui.controllers.RegistrationScreenController;
 import gui.controllers.RemoveItemScreenController;
 import gui.controllers.RestaurantMenuScreenController;
 import gui.controllers.SupplierScreenController;
-import gui.controllers.RegistrationScreenController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -46,12 +48,6 @@ public class ScreenLoader {
 				loader.load();
 				break;
 			}
-			case MONTHLY_REPORT_SCREEN_TWO: {
-				MonthlyReportScreenController2 controller = new MonthlyReportScreenController2(wholeScreen, currController);
-				loader.setController(controller);
-				loader.load();
-				break;
-			}
 			case REGISTRATION_SCREEN: {
 				RegistrationScreenController controller = new RegistrationScreenController(wholeScreen, currController);
 				loader.setController(controller);
@@ -67,6 +63,18 @@ public class ScreenLoader {
 			}
 			case RESTAURANT_MENU_SCREEN:{
 				RestaurantMenuScreenController controller = new RestaurantMenuScreenController(wholeScreen, currController);
+				loader.setController(controller);
+				loader.load();
+				break;
+			}
+			case CHECKOUT_SCREEN:{
+				CheckoutScreenController controller = new CheckoutScreenController(wholeScreen, currController);
+				loader.setController(controller);
+				loader.load();
+				break;
+			}
+			case ORDER_SUMMARY_SCREEN:{
+				OrderSummaryScreenController controller = new OrderSummaryScreenController(wholeScreen, currController);
 				loader.setController(controller);
 				loader.load();
 				break;
@@ -155,11 +163,13 @@ public class ScreenLoader {
 			case MONTHLY_REPORT_SCREEN:
 				loader.setController((MonthlyReportScreenController) prevController);
 				break;
+			case RESTAURANT_MENU_SCREEN:
+				loader.setController((RestaurantMenuScreenController) prevController);
 			default:
 				break;
 		}
-		loader.load();
-		dashboard = loader.getRoot();
+		AnchorPane dashboard = loader.load();
+		//dashboard = loader.getRoot();
 		return dashboard;
 	}
 }
