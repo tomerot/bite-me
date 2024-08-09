@@ -161,15 +161,22 @@ public class Server extends AbstractServer {
 				e.printStackTrace();
 			}
 			break;
-		case FETCH_REPORT_DATA:
+		case FETCH_REPORT_DATA:{
 			List<String> reportInfo = (List<String>) data.getMessage();
 			try {
 				handleReportInfo(reportInfo, client);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			break;
-			
+			break;}
+		case FETCH_QUARTER_REPORT_DATA:{
+			List<String> reportInfo = (List<String>) data.getMessage();
+			try {
+				handleQuarterReportInfo(reportInfo, client);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;}
 			
 //		case FETCH_BRANCH_RESTAURANTS:
 //			customer = (Customer) data.getMessage();
@@ -372,7 +379,7 @@ public class Server extends AbstractServer {
      * @throws SQLException if an error occurs while fetching the customer data
      */
 	private void handleCustomersData(BranchManager manager, ConnectionToClient client) throws SQLException {
-		ServerResponseDataContainer response = QueryControl.userQueries.importCustomerList(dbConn, manager);
+		ServerResponseDataContainer response = QueryControl.managersQuery.importCustomerList(dbConn, manager);
 		try {
 			client.sendToClient(response);
 		} catch (IOException e) {
@@ -403,7 +410,7 @@ public class Server extends AbstractServer {
      * @throws Exception if an error occurs while updating the customer registration data
      */
 	private void handleUpdateCustomersRegister(List<String> userList, ConnectionToClient client) throws Exception {
-		QueryControl.userQueries.updateUsersRegister(dbConn, userList);
+		QueryControl.managersQuery.updateUsersRegister(dbConn, userList);
 		try {
 			client.sendToClient(new ServerResponseDataContainer());
 		} catch (IOException e) {
@@ -411,7 +418,15 @@ public class Server extends AbstractServer {
 		}
 	}
 	private void handleReportInfo(List<String> reportInfo, ConnectionToClient client) throws Exception {
-		ServerResponseDataContainer response = QueryControl.userQueries.importReportData(dbConn, reportInfo);
+		ServerResponseDataContainer response = QueryControl.managersQuery.importReportData(dbConn, reportInfo);
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	private void handleQuarterReportInfo(List<String> reportInfo, ConnectionToClient client) throws Exception {
+		ServerResponseDataContainer response = QueryControl.managersQuery.importQuarterReportData(dbConn, reportInfo);
 		try {
 			client.sendToClient(response);
 		} catch (IOException e) {

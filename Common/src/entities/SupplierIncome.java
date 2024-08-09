@@ -7,10 +7,17 @@ public class SupplierIncome implements Serializable {
 	private int supplierID;
 	private String supplierName;
 	private int incomes;
+	private int totalOrders;
 	public SupplierIncome(int supplierID, String supplierName, int incomes) {
 		this.incomes=incomes;
 		this.supplierID=supplierID;
 		this.supplierName=supplierName;
+	}
+	public SupplierIncome(int supplierID, String supplierName, int incomes, int totalOrders) {
+		this.incomes=incomes;
+		this.supplierID=supplierID;
+		this.supplierName=supplierName;
+		this.totalOrders=totalOrders;
 	}
 	public int getSupplierID() {
 		return this.supplierID;
@@ -20,5 +27,8 @@ public class SupplierIncome implements Serializable {
 	}
 	public String getSupplierName() {
 		return this.supplierName;
+	}
+	public int getTotalOrders() {
+		return this.totalOrders;
 	}
 }

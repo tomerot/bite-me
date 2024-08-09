@@ -126,5 +126,13 @@ public class CeoHomeScreenController {
     	dashboard.getChildren().clear(); //Clear current dashboard
     	dashboard.getChildren().add(nextDash); //Assign the new dashboard
 	}
+	
+	public void displayQuarterlyReportScreen(ActionEvent event) throws Exception {
+    	ScreenLoader screenLoader = new ScreenLoader();
+    	String path = "/gui/view/QuarterlyReportScreen.fxml";
+    	AnchorPane nextDash = screenLoader.loadOnDashboard(screen, path, Screen.QUARTERLY_REPORT_SCREEN, this);
+    	dashboard.getChildren().clear(); //Clear current dashboard
+    	dashboard.getChildren().add(nextDash); //Assign the new dashboard
+	}
     
 }

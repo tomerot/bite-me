@@ -29,5 +29,8 @@ public enum ServerResponse {
 	INCOME_REPORT,
 	DATA_FOUND,
 	NO_DATA_FOUND,
-	ERROR;
+	ERROR,
+	QUARTER_REPORT_DATA
+	;
+
 }
