@@ -156,15 +156,22 @@ public class Server extends AbstractServer {
 				e.printStackTrace();
 			}
 			break;
-		case FETCH_REPORT_DATA:
+		case FETCH_REPORT_DATA:{
 			List<String> reportInfo = (List<String>) data.getMessage();
 			try {
 				handleReportInfo(reportInfo, client);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			break;
-			
+			break;}
+		case FETCH_QUARTER_REPORT_DATA:{
+			List<String> reportInfo = (List<String>) data.getMessage();
+			try {
+				handleQuarterReportInfo(reportInfo, client);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;}
 			
 //		case FETCH_BRANCH_RESTAURANTS:
 //			customer = (Customer) data.getMessage();
@@ -387,6 +394,14 @@ public class Server extends AbstractServer {
 	}
 	private void handleReportInfo(List<String> reportInfo, ConnectionToClient client) throws Exception {
 		ServerResponseDataContainer response = QueryControl.userQueries.importReportData(dbConn, reportInfo);
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	private void handleQuarterReportInfo(List<String> reportInfo, ConnectionToClient client) throws Exception {
+		ServerResponseDataContainer response = QueryControl.userQueries.importQuarterReportData(dbConn, reportInfo);
 		try {
 			client.sendToClient(response);
 		} catch (IOException e) {

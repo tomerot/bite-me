@@ -118,6 +118,12 @@ public class ClientMainController {
 				ReportInfo);
 		ClientMainController.accept(request);
 	}
+	public static void requestQuarterReportData(List<String> ReportInfo) {
+		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.FETCH_QUARTER_REPORT_DATA,
+				ReportInfo);
+		ClientMainController.accept(request);
+	}
+	
 	
 
 //    /**

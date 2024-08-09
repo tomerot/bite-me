@@ -21,6 +21,7 @@ import entities.OrderType;
 import entities.Customer;
 import entities.Supplier;
 import entities.SupplierIncome;
+import entities.SupplierQuarterReportData;
 import entities.User;
 import enums.Branch;
 import enums.CustomerType;
@@ -439,7 +440,117 @@ public class UserQuery {
 			break;
 		}}
 		return response;
-}
+	}
+	public ServerResponseDataContainer importQuarterReportData(Connection dbConn, List<String> reportInfo) throws SQLException {
+		ServerResponseDataContainer response = new ServerResponseDataContainer();
+		List<SupplierQuarterReportData> SupplierQuarterReportList=new ArrayList<SupplierQuarterReportData>();
+		String query=null;
+		if((java.time.Year.now().getValue()==Integer.valueOf(reportInfo.get(2)))&&(((java.time.YearMonth.now().getMonthValue()+2)/3)<=Integer.valueOf(reportInfo.get(1)))){
+			response.setMessage(SupplierQuarterReportList);
+			response.setResponse(ServerResponse.QUARTER_REPORT_DATA);
+			}
+		else {
+			switch(reportInfo.get(1)) {
+			case "1":{
+				query = "SELECT\r\n"
+						+ "    s.ID AS SupplierID,\r\n"
+						+ "    s.Name AS supplierName,\r\n"
+						+ "    COALESCE(COUNT(o.OrderID), 0) AS totalOrders,\r\n"
+						+ "    ROUND(COALESCE(SUM(o.TotalPrice), 0), 2) AS totalIncome\r\n"
+						+ "FROM\r\n"
+						+ "    suppliers s\r\n"
+						+ "LEFT JOIN orders o ON s.ID = o.SupplierID\r\n"
+						+ "    AND YEAR(o.RequestDate) = ?\r\n"
+						+ "    AND MONTH(o.RequestDate) BETWEEN 1 AND 3\r\n"
+						+ "    AND s.Branch = o.Branch\r\n"
+						+ "WHERE\r\n"
+						+ "    s.Branch = ?\r\n"
+						+ "GROUP BY\r\n"
+						+ "    s.ID, s.Name\r\n"
+						+ "ORDER BY totalIncome DESC;";		
+				break;
+			}
+			case "2":{
+				query = "SELECT\r\n"
+						+ "    s.ID AS SupplierID,\r\n"
+						+ "    s.Name AS supplierName,\r\n"
+						+ "    COALESCE(COUNT(o.OrderID), 0) AS totalOrders,\r\n"
+						+ "    ROUND(COALESCE(SUM(o.TotalPrice), 0), 2) AS totalIncome\r\n"
+						+ "FROM\r\n"
+						+ "    suppliers s\r\n"
+						+ "LEFT JOIN orders o ON s.ID = o.SupplierID\r\n"
+						+ "    AND YEAR(o.RequestDate) = ?\r\n"
+						+ "    AND MONTH(o.RequestDate) BETWEEN 4 AND 6\r\n"
+						+ "    AND s.Branch = o.Branch\r\n"
+						+ "WHERE\r\n"
+						+ "    s.Branch = ?\r\n"
+						+ "GROUP BY\r\n"
+						+ "    s.ID, s.Name\r\n"			
+						+ "ORDER BY totalIncome DESC;";			
+				break;
+			}
+			case "3":{
+				query = "SELECT\r\n"
+						+ "    s.ID AS SupplierID,\r\n"
+						+ "    s.Name AS supplierName,\r\n"
+						+ "    COALESCE(COUNT(o.OrderID), 0) AS totalOrders,\r\n"
+						+ "    ROUND(COALESCE(SUM(o.TotalPrice), 0), 2) AS totalIncome\r\n"
+						+ "FROM\r\n"
+						+ "    suppliers s\r\n"
+						+ "LEFT JOIN orders o ON s.ID = o.SupplierID\r\n"
+						+ "    AND YEAR(o.RequestDate) = ?\r\n"
+						+ "    AND MONTH(o.RequestDate) BETWEEN 7 AND 9\r\n"
+						+ "    AND s.Branch = o.Branch\r\n"
+						+ "WHERE\r\n"
+						+ "    s.Branch = ?\r\n"
+						+ "GROUP BY\r\n"
+						+ "    s.ID, s.Name\r\n"
+						+ "ORDER BY totalIncome DESC;";
+				break;
+			}
+			case "4":{
+				query = "SELECT\r\n"
+						+ "    s.ID AS SupplierID,\r\n"
+						+ "    s.Name AS supplierName,\r\n"
+						+ "    COALESCE(COUNT(o.OrderID), 0) AS totalOrders,\r\n"
+						+ "    ROUND(COALESCE(SUM(o.TotalPrice), 0), 2) AS totalIncome\r\n"
+						+ "FROM\r\n"
+						+ "    suppliers s\r\n"
+						+ "LEFT JOIN orders o ON s.ID = o.SupplierID\r\n"
+						+ "    AND YEAR(o.RequestDate) = ?\r\n"
+						+ "    AND MONTH(o.RequestDate) BETWEEN 10 AND 12\r\n"
+						+ "    AND s.Branch = o.Branch\r\n"
+						+ "WHERE\r\n"
+						+ "    s.Branch = ?\r\n"
+						+ "GROUP BY\r\n"
+						+ "    s.ID, s.Name\r\n"
+						+ "ORDER BY totalIncome DESC;";
+				break;
+			}
+			}
+			
+			try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+				stmt.setString(1, reportInfo.get(2));
+				stmt.setString(2, reportInfo.get(0));
+				try (ResultSet rs = stmt.executeQuery()){
+					while (rs.next()) {
+						int totalOrders = rs.getInt("totalOrders");
+						float totalIncome = rs.getFloat("totalIncome");
+						String supplierName = rs.getString("supplierName");
+						int SupplierID = rs.getInt("SupplierID");
+						SupplierQuarterReportData supplierQuarterReportData = new SupplierQuarterReportData(SupplierID, supplierName, totalIncome, totalOrders);
+						SupplierQuarterReportList.add(supplierQuarterReportData);
+					}
+					response.setMessage(SupplierQuarterReportList);
+					response.setResponse(ServerResponse.QUARTER_REPORT_DATA);
+				}
+			}
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return response;
+	}
     /**
      * Updates user data in the database.
      * 
