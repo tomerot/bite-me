@@ -9,12 +9,15 @@ import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.util.Map;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import containers.ClientRequestDataContainer;
 import containers.ServerResponseDataContainer;
 import db.DBConnectionDetails;
 import db.DBController;
 import db.QueryControl;
+import db.ReportGenerator;
 import entities.Item;
 import entities.BranchManager;
 import entities.Customer;
@@ -43,7 +46,9 @@ public class Server extends AbstractServer {
 	// Use Singleton DesignPattern -> only 1 server may be running in our system.
 	private static Server server = null;
 	private ServerPortController serverController;
-	private Connection dbConn;
+	private static Connection dbConn;
+	private ReportGenerator reportGenerator;
+    private Thread reportThread;
 
 	
     /**
@@ -278,6 +283,25 @@ public class Server extends AbstractServer {
 		}
 		
 	}
+	
+	public static ServerResponseDataContainer fetchDataForReport(LocalDate startOfLastMonth, LocalDate endOfLastMonth, String branch) {
+	    ServerResponseDataContainer response = QueryControl.serverQueries.fetchOrdersReportData(dbConn, startOfLastMonth, endOfLastMonth, branch);
+	    return response;
+	}
+	
+	public static void insertDataForReport(HashMap<String, Integer> data, String branch, int year, int month) {
+	    QueryControl.serverQueries.insertOrdersReportData(dbConn, data, branch, year, month);
+	}
+	
+	public static ServerResponseDataContainer fetchDataForPerformanceReport(LocalDate startOfLastMonth, LocalDate endOfLastMonth, String branch) {
+	    ServerResponseDataContainer response = QueryControl.serverQueries.fetchPerformanceReportData(dbConn, startOfLastMonth, endOfLastMonth, branch);
+	    return response;
+	}
+	
+	public static void insertDataForPerformanceReport(HashMap<String, Integer> data, String branch, int year, int month) throws SQLException {
+	    QueryControl.serverQueries.insertPerformanceReport(dbConn, data, branch, year, month);
+	}
+
 
 
     /**
@@ -312,6 +336,7 @@ public class Server extends AbstractServer {
 			e.printStackTrace();
 		}
 	}
+	
 	
     /**
      * Handles the request to update user data in the database.
@@ -547,6 +572,7 @@ public class Server extends AbstractServer {
 
 		try {
 			server.listen();
+			server.startReportGenerator();
 			return true;
 			// update connection in server gui.
 		} catch (Exception ex) {
@@ -555,6 +581,19 @@ public class Server extends AbstractServer {
 			return false;
 		}
 	}
+	
+    private void startReportGenerator() {
+        reportGenerator = new ReportGenerator();
+        reportThread = new Thread(reportGenerator);
+        reportThread.start();
+    }
+
+    private void stopReportGenerator() {
+        if (reportGenerator != null) {
+            reportGenerator.stop();
+            reportThread.interrupt(); // Interrupt the sleep to stop immediately
+        }
+    }
 
 	// send client message with his IP,host,status
 	private void handleClientConnection(ConnectionToClient client) {
@@ -634,6 +673,7 @@ public class Server extends AbstractServer {
 		try {
 			server.stopListening();
 			server.close();
+			server.stopReportGenerator();
 			server = null;
 		} catch (IOException ex) {
 			System.out.println("Error while closing server");
