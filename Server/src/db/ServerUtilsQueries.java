@@ -5,11 +5,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.Year;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import containers.ServerResponseDataContainer;
+import entities.SupplierIncome;
 import enums.ServerResponse;
 
 public class ServerUtilsQueries {
@@ -161,6 +166,83 @@ public class ServerUtilsQueries {
             System.out.println("Inserted " + affectedRows + " rows into performance_reports.");
         }
     }
+    
+    
+    public ServerResponseDataContainer fetchIncomeReportData(Connection dbConn, LocalDate startOfLastMonth, LocalDate endOfLastMonth, String branch) {
+        ServerResponseDataContainer response = new ServerResponseDataContainer();
+        List<SupplierIncome> results = new ArrayList<>();
+
+        String query = "SELECT "
+                + "s.ID AS SupplierID, "
+                + "s.Name AS supplierName, "
+                + "ROUND(COALESCE(SUM(o.TotalPrice), 0), 2) AS incomes, "
+                + "COUNT(o.OrderID) AS totalOrders "
+                + "FROM "
+                + "suppliers s "
+                + "LEFT JOIN orders o ON s.ID = o.SupplierID "
+                + "AND o.RequestDate BETWEEN ? AND ? "
+                + "AND s.Branch = o.Branch "
+                + "WHERE "
+                + "s.Branch = ? "
+                + "GROUP BY "
+                + "s.ID, s.Name "
+                + "ORDER BY incomes DESC";
+
+        try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+            stmt.setDate(1, java.sql.Date.valueOf(startOfLastMonth));
+            stmt.setDate(2, java.sql.Date.valueOf(endOfLastMonth));
+            stmt.setString(3, branch);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int supplierID = rs.getInt("SupplierID");
+                    String supplierName = rs.getString("supplierName");
+                    int incomes = rs.getInt("incomes");
+                    int totalOrders = rs.getInt("totalOrders");
+                    results.add(new SupplierIncome(supplierID, supplierName, incomes, totalOrders));
+                }
+
+                if (!results.isEmpty()) {
+                    response.setMessage(results); // Set the List as the message instead of a String
+                    response.setResponse(ServerResponse.DATA_FOUND);
+                } else {
+                    response.setResponse(ServerResponse.NO_DATA_FOUND);
+                    response.setMessage("No data found for the specified criteria.");
+                }
+            }
+        } catch (SQLException e) {
+            response.setResponse(ServerResponse.ERROR);
+            response.setMessage("SQL Error: " + e.getMessage());
+        }
+        return response;
+    }
+
+
+    
+    public void insertIncomeReport(Connection dbConn, List<SupplierIncome> incomes, String branch, int year, int month) {
+        String insertQuery = "INSERT INTO incomes_reports (Year, Month, Branch, SupplierID, SupplierName, Incomes) VALUES (?, ?, ?, ?, ?, ?)";
+        int count = 0;  // To keep track of inserted rows
+
+        try (PreparedStatement stmt = dbConn.prepareStatement(insertQuery)) {
+            for (SupplierIncome income : incomes) {
+                stmt.setInt(1, year);
+                stmt.setInt(2, month);
+                stmt.setString(3, branch);
+                stmt.setInt(4, income.getSupplierID());
+                stmt.setString(5, income.getSupplierName());
+                stmt.setInt(6, income.getIncome());
+                stmt.addBatch();  // Add to batch
+                count++;
+            }
+            int[] updateCounts = stmt.executeBatch();  // Execute all batches
+            System.out.println(count + " rows inserted successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error inserting data: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
 
 
 
