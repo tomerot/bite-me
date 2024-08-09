@@ -14,17 +14,26 @@ import containers.ServerResponseDataContainer;
 import entities.SupplierIncome;
 import enums.ServerResponse;
 
+/**
+ * ReportGenerator is responsible for generating various reports (Orders, Performance, Income)
+ * and running periodically to check and generate reports on a specific day of the month.
+ */
 public class ReportGenerator implements Runnable {
 
     private volatile boolean running = true;
+
+    /**
+     * The run method checks daily if reports need to be generated and triggers report generation.
+     * It runs continuously until the running flag is set to false.
+     */
     @Override
     public void run() {
         while (running) {
             try {
                 LocalDate today = LocalDate.now();
                 if (today.getDayOfMonth() == 9) {
-                    //generateOrdersReport();
-                    //generatePerformanceReport();
+                    generateOrdersReport();
+                    generatePerformanceReport();
                     generateIncomeReport();
                 }
 
@@ -40,6 +49,10 @@ public class ReportGenerator implements Runnable {
         }
     }
 
+    /**
+     * Generates an orders report for each branch for the last month.
+     * Fetches data and inserts it into the database.
+     */
     private void generateOrdersReport() {
         System.out.println("Generating Orders Report...");
 
@@ -52,7 +65,7 @@ public class ReportGenerator implements Runnable {
             System.out.println("Processing report for region: " + branch);
             ServerResponseDataContainer response = Server.fetchDataForReport(startOfLastMonth, endOfLastMonth, branch);
             if (response != null && response.getResponse() == ServerResponse.DATA_FOUND) {
-            	System.out.println(response.getMessage().toString());
+                System.out.println(response.getMessage().toString());
                 if (response.getMessage() instanceof HashMap) {
                     HashMap<String, Integer> data = (HashMap<String, Integer>) response.getMessage();
                     Server.insertDataForReport(data, branch, today.getYear(), today.getMonthValue() - 1);
@@ -65,20 +78,24 @@ public class ReportGenerator implements Runnable {
         }
     }
 
-
-
+    /**
+     * Generates a performance report for each branch for the last month.
+     * Fetches data and inserts it into the database.
+     *
+     * @throws SQLException if there is an error during database operations.
+     */
     private void generatePerformanceReport() throws SQLException {
         System.out.println("Generating Inventory Report...");
         String[] branches = {"North", "Center", "South"};
         LocalDate today = LocalDate.now();
         LocalDate startOfLastMonth = today.minusMonths(1).withDayOfMonth(1);
-        LocalDate endOfLastMonth = today.minusDays(1);  
+        LocalDate endOfLastMonth = today.minusDays(1);
 
         for (String branch : branches) {
             System.out.println("Processing report for region: " + branch);
             ServerResponseDataContainer response = Server.fetchDataForPerformanceReport(startOfLastMonth, endOfLastMonth, branch);
             if (response != null && response.getResponse() == ServerResponse.DATA_FOUND) {
-            	System.out.println(response.getMessage().toString());
+                System.out.println(response.getMessage().toString());
                 if (response.getMessage() instanceof HashMap) {
                     HashMap<String, Integer> data = (HashMap<String, Integer>) response.getMessage();
                     Server.insertDataForPerformanceReport(data, branch, today.getYear(), today.getMonthValue() - 1);
@@ -91,6 +108,12 @@ public class ReportGenerator implements Runnable {
         }
     }
 
+    /**
+     * Generates an income report for each branch for the last month.
+     * Fetches data and inserts it into the database.
+     *
+     * @throws SQLException if there is an error during database operations.
+     */
     private void generateIncomeReport() throws SQLException {
         System.out.println("Generating Income Report...");
         String[] branches = {"North", "Center", "South"};
@@ -124,7 +147,9 @@ public class ReportGenerator implements Runnable {
         }
     }
 
-
+    /**
+     * Stops the report generation process.
+     */
     public void stop() {
         running = false;
     }

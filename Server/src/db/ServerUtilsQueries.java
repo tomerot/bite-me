@@ -19,6 +19,16 @@ import enums.ServerResponse;
 
 public class ServerUtilsQueries {
 
+    /**
+     * Fetches the order report data for a given branch and date range.
+     *
+     * @param dbConn            The database connection to use for the query.
+     * @param startOfLastMonth  The start date of the range to fetch data for.
+     * @param endOfLastMonth    The end date of the range to fetch data for.
+     * @param branch            The branch for which to fetch the data.
+     * @return A ServerResponseDataContainer containing the results of the query,
+     *         either a map of category quantities or an error message.
+     */
     public ServerResponseDataContainer fetchOrdersReportData(Connection dbConn, LocalDate startOfLastMonth, LocalDate endOfLastMonth, String branch) {
         ServerResponseDataContainer response = new ServerResponseDataContainer();
         HashMap<String, Integer> categoryQuantities = new HashMap<>();
@@ -65,11 +75,19 @@ public class ServerUtilsQueries {
         }
         return response;
     }
-    
-    
+
+    /**
+     * Inserts the order report data into the database for a specified branch and month.
+     *
+     * @param dbConn The database connection to use for the insert operation.
+     * @param data   A HashMap containing categories and their corresponding order quantities.
+     * @param branch The branch for which the report is being inserted.
+     * @param year   The year for the report entry.
+     * @param month  The month for the report entry.
+     */
     public void insertOrdersReportData(Connection dbConn, HashMap<String, Integer> data, String branch, int year, int month) {
         String sql = "INSERT INTO orders_reports (Year, Month, Branch, Category, Orders) VALUES (?, ?, ?, ?, ?)";
-        
+
         try (PreparedStatement pstmt = dbConn.prepareStatement(sql)) {
             dbConn.setAutoCommit(false); // Ensure control over transaction commit
             int totalInserted = 0; // Counter to keep track of inserted rows
@@ -105,8 +123,17 @@ public class ServerUtilsQueries {
             }
         }
     }
-    
-    
+
+    /**
+     * Fetches performance report data for a given branch and date range.
+     *
+     * @param dbConn           The database connection to use for the query.
+     * @param startOfLastMonth The start date of the range to fetch data for.
+     * @param endOfLastMonth   The end date of the range to fetch data for.
+     * @param branch           The branch for which to fetch the data.
+     * @return A ServerResponseDataContainer containing the results of the query,
+     *         either a map of performance metrics or an error message.
+     */
     public ServerResponseDataContainer fetchPerformanceReportData(Connection dbConn, LocalDate startOfLastMonth, LocalDate endOfLastMonth, String branch) {
         ServerResponseDataContainer response = new ServerResponseDataContainer();
         Map<String, Integer> results = new HashMap<>();
@@ -151,8 +178,18 @@ public class ServerUtilsQueries {
         }
         return response;
     }
-    
-    public void insertPerformanceReport(Connection dbConn, HashMap<String, Integer> data,String branch,int year, int month) throws SQLException {
+
+    /**
+     * Inserts the performance report data into the database for a specified branch and month.
+     *
+     * @param dbConn The database connection to use for the insert operation.
+     * @param data   A HashMap containing performance metrics.
+     * @param branch The branch for which the report is being inserted.
+     * @param year   The year for the report entry.
+     * @param month  The month for the report entry.
+     * @throws SQLException If an error occurs during the SQL execution.
+     */
+    public void insertPerformanceReport(Connection dbConn, HashMap<String, Integer> data, String branch, int year, int month) throws SQLException {
         String query = "INSERT INTO performance_reports (Year, Month, Branch, OnTime, Late) VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
@@ -166,8 +203,17 @@ public class ServerUtilsQueries {
             System.out.println("Inserted " + affectedRows + " rows into performance_reports.");
         }
     }
-    
-    
+
+    /**
+     * Fetches the income report data for a given branch and date range.
+     *
+     * @param dbConn            The database connection to use for the query.
+     * @param startOfLastMonth  The start date of the range to fetch data for.
+     * @param endOfLastMonth    The end date of the range to fetch data for.
+     * @param branch            The branch for which to fetch the data.
+     * @return A ServerResponseDataContainer containing the results of the query,
+     *         either a list of SupplierIncome objects or an error message.
+     */
     public ServerResponseDataContainer fetchIncomeReportData(Connection dbConn, LocalDate startOfLastMonth, LocalDate endOfLastMonth, String branch) {
         ServerResponseDataContainer response = new ServerResponseDataContainer();
         List<SupplierIncome> results = new ArrayList<>();
@@ -217,8 +263,15 @@ public class ServerUtilsQueries {
         return response;
     }
 
-
-    
+    /**
+     * Inserts the income report data into the database for a specified branch and month.
+     *
+     * @param dbConn  The database connection to use for the insert operation.
+     * @param incomes A list of SupplierIncome objects representing the data to insert.
+     * @param branch  The branch for which the report is being inserted.
+     * @param year    The year for the report entry.
+     * @param month   The month for the report entry.
+     */
     public void insertIncomeReport(Connection dbConn, List<SupplierIncome> incomes, String branch, int year, int month) {
         String insertQuery = "INSERT INTO incomes_reports (Year, Month, Branch, SupplierID, SupplierName, Incomes) VALUES (?, ?, ?, ?, ?, ?)";
         int count = 0;  // To keep track of inserted rows
@@ -231,19 +284,14 @@ public class ServerUtilsQueries {
                 stmt.setInt(4, income.getSupplierID());
                 stmt.setString(5, income.getSupplierName());
                 stmt.setInt(6, income.getIncome());
-                stmt.addBatch();  // Add to batch
+                stmt.addBatch();  
                 count++;
             }
-            int[] updateCounts = stmt.executeBatch();  // Execute all batches
+            int[] updateCounts = stmt.executeBatch();  
             System.out.println(count + " rows inserted successfully.");
         } catch (SQLException e) {
             System.out.println("Error inserting data: " + e.getMessage());
             e.printStackTrace();
         }
     }
-
-
-
-
-
 }
