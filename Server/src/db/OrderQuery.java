@@ -4,16 +4,20 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import containers.ServerResponseDataContainer;
 import entities.Category;
 import entities.Customer;
 import entities.Item;
+import entities.ItemInOrder;
 import entities.Order;
 import entities.OrderType;
 import entities.Supplier;
@@ -83,7 +87,7 @@ public class OrderQuery {
 			throws SQLException {
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
 		List<Order> waitingOrders = new ArrayList<>();
-		String query = "SELECT o.* FROM orders o JOIN orders_participants op ON o.OrderID = op.OrderID WHERE op.CustomerID = ? AND o.Status IN ('Awaiting', 'Approved', 'Ready')";
+		String query = "SELECT * FROM orders WHERE CustomerID = ? AND Status IN ('Awaiting', 'Approved', 'Ready')";
 
 		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
 			stmt.setInt(1, customer.getId());
@@ -127,7 +131,7 @@ public class OrderQuery {
 	public ServerResponseDataContainer importCustomerHistoryOrders(Connection dbConn, Customer customer) throws SQLException {
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
 		List<Order> waitingOrders = new ArrayList<>();
-		String query = "SELECT o.* FROM orders o JOIN orders_participants op ON o.OrderID = op.OrderID WHERE op.CustomerID = ? AND o.Status IN ('On-time', 'Late')";
+		String query = "SELECT * FROM orders WHERE CustomerID = ? AND Status IN ('On-time', 'Late')";
 
 		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
 			stmt.setInt(1, customer.getId());
@@ -195,7 +199,6 @@ public class OrderQuery {
             
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    System.out.println("GOT In");
                     int itemID = rs.getInt("ID");
                     String name = rs.getString("Name");
                     String category = rs.getString("Category");
@@ -216,11 +219,121 @@ public class OrderQuery {
         return response;
     }
 	
+    
+    
+	public ServerResponseDataContainer FetchRelevantCities(Connection dbConn, Supplier supplier) throws SQLException {
+		ServerResponseDataContainer response = new ServerResponseDataContainer();
+		List<String> cities = new ArrayList<>();
+		String query = "SELECT City FROM suppliers_cities WHERE SupplierID = ?";
 
+		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+			stmt.setInt(1, supplier.getSupplierID());
+
+			try (ResultSet rs = stmt.executeQuery()) {
+				while (rs.next()) {
+					String city =rs.getString("City");
+					
+					cities.add(city);
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		response.setMessage(cities);
+		response.setResponse(ServerResponse.SUPPLIER_RELEVANT_CITIES);
+		return response;
+	}
 	
 	
+	public void updateOrderAndItems(Connection dbConn, Order order, Map<ItemInOrder, Integer> receivedCart)
+			throws SQLException {
+		// Ensure auto-commit is turned off for transaction management
+		dbConn.setAutoCommit(false);
 
-					/* PRIAVET METHODS HERE FOR COMFORT*/
+		try {
+
+			// Insert into orders table with manually assigned OrderID
+			String insertOrderSQL = "INSERT INTO orders (CustomerID, Recipient, `Recipient Phone`, SupplierID, City, Address, Branch, SupplyOption, Type, RequestDate, RequestTime, ApprovalTime, ApprovalDate, ArrivalTime, TotalPrice, Status) "
+					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+			try (PreparedStatement orderStmt = dbConn.prepareStatement(insertOrderSQL,
+					Statement.RETURN_GENERATED_KEYS)) {
+				orderStmt.setInt(1, order.getCustomer().getId());
+				orderStmt.setString(2, order.getRecipient());
+				orderStmt.setString(3, order.getRecipientPhone());
+				orderStmt.setInt(4, order.getSupplier().getSupplierID());
+				orderStmt.setString(5, order.getCity());
+				orderStmt.setString(6, order.getAddress());
+				orderStmt.setString(7, order.getBranchName().toShortStringTwo()); // Assuming this is correct
+				String supplyOption = getDatabaseSupplyOption(order.getSupplyOption());
+				orderStmt.setString(8, supplyOption); // Use the mapping function
+				String orderType = getDatabaseOrderType(order.getType());
+				orderStmt.setString(9, orderType); // Use the mapping function
+				orderStmt.setDate(10, java.sql.Date.valueOf(order.getRequestedDate()));
+				orderStmt.setString(11, order.getRequestedTime());
+				orderStmt.setString(12, order.getApprovalTimer());
+				orderStmt.setDate(13, null);
+				orderStmt.setTime(14, null);
+				orderStmt.setFloat(15, order.getTotalPrice());
+				orderStmt.setString(16, "Awaiting");
+
+				// Execute the insert statement
+				int affectedRows = orderStmt.executeUpdate();
+				
+				// Update items_in_order table with the new OrderID
+				if (affectedRows > 0) {
+	                try (ResultSet generatedKeys = orderStmt.getGeneratedKeys()) {
+	                    if (generatedKeys.next()) {
+	                        int newOrderID = generatedKeys.getInt(1);
+
+	                        // Insert items into items_in_orders table
+	                        String insertItemSQL = "INSERT INTO items_in_orders (OrderID, ItemID, SupplierID, ItemName, Size, Doneness, Restrictions, Quantity) "
+	                                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+	                        try (PreparedStatement itemStmt = dbConn.prepareStatement(insertItemSQL)) {
+	                            for (Map.Entry<ItemInOrder, Integer> entry : receivedCart.entrySet()) {
+	                                ItemInOrder item = entry.getKey();
+	                                int quantity = entry.getValue();
+
+	                                itemStmt.setInt(1, newOrderID);
+	                                itemStmt.setInt(2, item.getItemID());
+	                                itemStmt.setInt(3, item.getSupplierID());
+	                                itemStmt.setString(4, item.getName());
+	                                itemStmt.setString(5, item.getSize());
+	                                itemStmt.setString(6, item.getDonenessDegree());
+	                                itemStmt.setString(7, item.getRestrictions());
+	                                itemStmt.setInt(8, quantity);
+
+	                                itemStmt.addBatch();
+	                            }
+
+	                            // Execute batch insert
+	                            itemStmt.executeBatch();
+	                        }
+	                    }
+	                }
+	            }
+	        }
+
+	        // Commit the transaction
+	        dbConn.commit();
+	    } catch (SQLException e) {
+	        // Rollback the transaction in case of an error
+	        dbConn.rollback();
+	        e.printStackTrace();
+	        throw e;
+	    } finally {
+	        // Restore auto-commit mode
+	        dbConn.setAutoCommit(true);
+	    }
+	}
+	
+	
+	
+	/* PRIAVET METHODS HERE FOR COMFORT*/
 	
 	
 	/**
@@ -233,7 +346,7 @@ public class OrderQuery {
 	 *                       related to the database connection, query syntax, or data manipulation.
 	 */
 	private void updateCustomerWalletBalance(Connection dbConn, Order order) throws SQLException {
-		String query = "Select * FROM orders_participants WHERE OrderID = ?";
+		String query = "Select * FROM orders WHERE OrderID = ?";
 		
 		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
 			stmt.setInt(1, order.getOrderID());
@@ -241,7 +354,7 @@ public class OrderQuery {
 			try (ResultSet rs = stmt.executeQuery()) {
 				while (rs.next()) {
 					int customerID = rs.getInt("CustomerID");
-					float amountPaid = rs.getFloat("AmountPaid");
+					float amountPaid = rs.getFloat("TotalPrice");
 					
 					//get the amount i need to update
 					double refundAmount = amountPaid * 0.5;
@@ -296,17 +409,32 @@ public class OrderQuery {
      * @return the corresponding SupplyMethod enum
      */
 	private SupplyMethod getSupplyOption(String method) {
-		if (method.equals("TakeAway")) {
+		if (method.equals("Takeaway")) {
 			return SupplyMethod.TAKEAWAY;
 		}
-		if (method.equals("Robot")) {
+		if (method.equals("Robot Delivery")) {
 			return SupplyMethod.ROBOT;
 		}
-		if (method.equals("Basic")) {
+		if (method.equals("Basic Delivery")) {
 			return SupplyMethod.BASIC;
 		} else {
 			return SupplyMethod.SHARED;
 		}
+	}
+	
+	private  String getDatabaseSupplyOption(SupplyMethod supplyMethod) {
+	    switch (supplyMethod) {
+	        case TAKEAWAY:
+	            return "Takeaway"; // Matches your database enum value
+	        case ROBOT:
+	            return "Robot Delivery";
+	        case BASIC:
+	            return "Basic Delivery";
+	        case SHARED:
+	            return "Shared Delivery";
+	        default:
+	            throw new IllegalArgumentException("Unexpected value: " + supplyMethod);
+	    }
 	}
 
 	   /**
@@ -338,6 +466,17 @@ public class OrderQuery {
 		} else {
 			return OrderType.REGULAR;
 		}
+	}
+	
+	private  String getDatabaseOrderType(OrderType orderType) {
+	    switch (orderType) {
+	        case PRE_ORDER:
+	            return "Pre-order"; // Matches your database enum value
+	        case REGULAR:
+	            return "Regular";
+	        default:
+	            throw new IllegalArgumentException("Unexpected value: " + orderType);
+	    }
 	}
 	
 	

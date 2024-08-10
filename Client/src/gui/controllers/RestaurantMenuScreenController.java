@@ -259,6 +259,7 @@ public class RestaurantMenuScreenController {
 	private void showAlert(AlertType type, String title, String message) {
 		Alert alert = new Alert(type);
 		alert.setTitle(title);
+		alert.setHeaderText(null);
 		alert.setContentText(message);
 		alert.showAndWait();
 	}
@@ -307,52 +308,57 @@ public class RestaurantMenuScreenController {
 	}
 	
 	private void enableItemOptionsPane(Item item) {
-		
+
 		boolean isSizeCustomizable = item.getCustomSize();
 		boolean isDonenessCustomizable = item.getCustomDonenessDegree();
 		boolean isRestrictionsCustomizable = item.getCustomRestrictions();
-		
+
 		itemOptionsPane.setOpacity(1);
 		addToCartBtn.setDisable(false);
 		pickedItem.setText(item.getName());
 		pickedItem.setVisible(true);
-		/*NEED TO ADD IMAGE*/
-		
-		setSizePane(isSizeCustomizable); //Enables size pane in case item has an option to change size
-		setDonenessPane(isDonenessCustomizable); //Enables doneness pane in case item has an option to change doneness
-		setRestrictionsPane(isRestrictionsCustomizable); //Enables restrictions pane in case item has an option to change restrictions
-		
-		//Gather size radio buttons together
+		/* NEED TO ADD IMAGE */
+
+		setSizePane(isSizeCustomizable); // Enables size pane in case item has an option to change size
+		setDonenessPane(isDonenessCustomizable); // Enables doneness pane in case item has an option to change doneness
+		setRestrictionsPane(isRestrictionsCustomizable); // Enables restrictions pane in case item has an option to
+															// change restrictions
+
+		// Gather size radio buttons together
 		ToggleGroup sizes = new ToggleGroup();
 		small.setToggleGroup(sizes);
 		medium.setToggleGroup(sizes);
 		large.setToggleGroup(sizes);
-		
-		//Gather doneness radio buttons together
+
+		// Gather doneness radio buttons together
 		ToggleGroup doneness = new ToggleGroup();
 		MR.setToggleGroup(doneness);
 		M.setToggleGroup(doneness);
 		MW.setToggleGroup(doneness);
 		WD.setToggleGroup(doneness);
-		
-		//In case of item edit
-		if(item instanceof ItemInOrder) {
+
+		// In case of item edit
+		if (item instanceof ItemInOrder) {
 			addToCartBtn.setText("Edit");
-			if(isSizeCustomizable) {
-				switch(((ItemInOrder)item).getSize()) {
-					case "Small":
-						sizes.selectToggle(small);
-						break;
-					case "Medium":
-						sizes.selectToggle(medium);
-						break;
-					case "Large":
-						sizes.selectToggle(large);
-						break;
+			cartGrid.setDisable(true);
+			gridPane.setDisable(true);
+			garbageBtn.setDisable(true);
+			checkoutBtn.setDisable(true);
+			if (isSizeCustomizable) {
+				switch (((ItemInOrder) item).getSize()) {
+				case "Small":
+					sizes.selectToggle(small);
+					break;
+				case "Medium":
+					sizes.selectToggle(medium);
+					break;
+				case "Large":
+					sizes.selectToggle(large);
+					break;
 				}
 			}
-			if(isDonenessCustomizable) {
-				switch(((ItemInOrder)item).getDonenessDegree()) {
+			if (isDonenessCustomizable) {
+				switch (((ItemInOrder) item).getDonenessDegree()) {
 				case "MR":
 					doneness.selectToggle(MR);
 					break;
@@ -367,52 +373,54 @@ public class RestaurantMenuScreenController {
 					break;
 				}
 			}
-			if(isRestrictionsCustomizable) {
-				String restrictionsTxt = ((ItemInOrder)item).getRestrictions();
-				if(!restrictionsTxt.equals("None")) {
+			if (isRestrictionsCustomizable) {
+				String restrictionsTxt = ((ItemInOrder) item).getRestrictions();
+				if (!restrictionsTxt.equals("None")) {
 					restrictions.setText(restrictionsTxt);
 				}
 			}
 		}
-		
+
 		addToCartBtn.setOnAction(event -> {
 			ItemInOrder itemInOrder = new ItemInOrder(item);
 			Toggle selectedSize = sizes.getSelectedToggle();
 			Toggle selectedDoneness = doneness.getSelectedToggle();
-			
-			boolean missingInfo = false; //True in case user forgot to select options
-			
-			//Set user's size selection:
-			if(isSizeCustomizable && selectedSize != null)
+
+			boolean missingInfo = false; // True in case user forgot to select options
+
+			// Set user's size selection:
+			if (isSizeCustomizable && selectedSize != null)
 				itemInOrder.setSize(((RadioButton) selectedSize).getText());
-			else if(isSizeCustomizable) {
-				mustSelectSize.setVisible(true); //A mark for the user what's needed to be selected if not selected
+			else if (isSizeCustomizable) {
+				mustSelectSize.setVisible(true); // A mark for the user what's needed to be selected if not selected
 				missingInfo = true;
 			}
-			
-			//Set user's doneness selection:
-			if(isDonenessCustomizable && selectedDoneness != null)
+
+			// Set user's doneness selection:
+			if (isDonenessCustomizable && selectedDoneness != null)
 				itemInOrder.setDonenessDegree(((RadioButton) selectedDoneness).getText());
-			else if(isDonenessCustomizable) {
-				mustSelectDoneness.setVisible(true); //A mark for the user what's needed to be selected if not selected
+			else if (isDonenessCustomizable) {
+				mustSelectDoneness.setVisible(true); // A mark for the user what's needed to be selected if not selected
 				missingInfo = true;
 			}
-			
-			if(isRestrictionsCustomizable) {
+
+			if (isRestrictionsCustomizable) {
 				String fill = restrictions.getText();
-				if(!fill.trim().isEmpty()) //In case the fill is not empty
+				if (!fill.trim().isEmpty()) // In case the fill is not empty
 					itemInOrder.setRestrictions(fill);
 			}
-			
-			if(missingInfo)
+
+			if (missingInfo)
 				showAlert(AlertType.ERROR, "Missing Information", "You must select marked options");
 			else {
-				if(item instanceof ItemInOrder) {
+				if (item instanceof ItemInOrder) {
 					int quantity = cart.get(item);
 					AnchorPane card = cartCards.get(item);
 					Integer row = GridPane.getRowIndex(card);
 					Parity cardPlaceParity = (row % 2 == 0) ? Parity.EVEN : Parity.ODD;
 					AnchorPane newCard = createCartItemCard(itemInOrder, cardPlaceParity);
+					Label qty = (Label) newCard.lookup("#qty");
+					qty.setText("Qty: " + quantity);
 					cartGrid.getChildren().remove(card);
 					cartGrid.add(newCard, 0, row);
 					cart.remove(item);
@@ -420,8 +428,11 @@ public class RestaurantMenuScreenController {
 					cart.put(itemInOrder, quantity);
 					cartCards.put(itemInOrder, newCard);
 					addToCartBtn.setText("Add to Cart");
-				}
-				else {
+					cartGrid.setDisable(false);
+					gridPane.setDisable(false);
+					garbageBtn.setDisable(false);
+					checkoutBtn.setDisable(false);
+				} else {
 					addToCart(itemInOrder);
 				}
 				disableItemOptionsPane();
@@ -596,7 +607,6 @@ public class RestaurantMenuScreenController {
 	
 	@FXML
 	private void pressCheckout() throws IOException {
-		System.out.println("Total Price: " + totalPrice);
 		ScreenLoader screenLoader = new ScreenLoader();
     	String path = "/gui/view/CheckoutScreen.fxml";
     	AnchorPane nextDash = screenLoader.loadOnDashboard(wholeScreen, path, Screen.CHECKOUT_SCREEN, this);
@@ -604,4 +614,20 @@ public class RestaurantMenuScreenController {
     	dashboard.getChildren().add(nextDash); //Assign the new dashboard
 	}
 	
+	
+	public Map<ItemInOrder, Integer> getCart() {
+	    return cart;
+	}
+	
+	public Customer getCustomer() {
+		return customer;
+	}
+	
+	public Supplier getSupplier() {
+		return supplier;
+	}
+	
+	public float getTotalPrice() {
+		return totalPrice;
+	}
 }

@@ -194,5 +194,13 @@ public class ClientMainController {
         ClientMainController.accept(request);
     }
     
+    public static void requestAllRelevantCitys(Supplier supplier) {
+        ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.GET_RELEVANT_CITIES, supplier);
+        ClientMainController.accept(request);
+    }
 
+    public static void updateOrderAndItems(List<Object> list) {
+        ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.UPDATE_ORDER_AND_ITEMS, list);
+        ClientMainController.accept(request);
+    }
 }

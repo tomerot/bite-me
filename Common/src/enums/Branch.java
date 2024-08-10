@@ -28,4 +28,18 @@ public enum Branch {
         return name;
 
     }
+    
+
+    public String toShortStringTwo() {
+        switch (this) {
+            case NORTH:
+                return "North";
+            case CENTER:
+                return "Center";
+            case SOUTH:
+                return "South";
+            default:
+                throw new IllegalArgumentException("Unknown branch: " + this);
+        }
+    }
 }

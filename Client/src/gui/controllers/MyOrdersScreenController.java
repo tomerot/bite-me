@@ -111,7 +111,7 @@ public class MyOrdersScreenController {
         );
 
         // we only add the approve button if the order status is Ready or Approved
-        if (!order.getStatus().equals("Awaiting")) {
+        if (!order.getStatus().equals("Awaiting") && !order.getStatus().equals("Approved")) {
             Button approveButton = new Button("Approve");
             approveButton.setOnAction(e -> approveOrder(order));
             approveButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
@@ -158,7 +158,13 @@ public class MyOrdersScreenController {
         label.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333;");
 
         if (status.length > 0 && "Awaiting".equals(status[0])) {
-            label.setStyle(label.getStyle() + " -fx-text-fill: #FF0000;");
+            label.setStyle(label.getStyle() + " -fx-text-fill: #FF0000;"); //red
+        }
+        if (status.length > 0 && "Approved".equals(status[0])) {
+        	label.setStyle(label.getStyle() + " -fx-text-fill: #FFD700;"); //gold
+        }
+        if (status.length > 0 && "Ready".equals(status[0])) {
+        	label.setStyle(label.getStyle() + " -fx-text-fill: #90EE90;"); //green
         }
 
         return label;

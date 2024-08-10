@@ -165,6 +165,12 @@ public class ScreenLoader {
 				break;
 			case RESTAURANT_MENU_SCREEN:
 				loader.setController((RestaurantMenuScreenController) prevController);
+				break;
+				
+			case  CHECKOUT_SCREEN:
+				loader.setController((CheckoutScreenController) prevController);
+				break;
+				
 			default:
 				break;
 		}

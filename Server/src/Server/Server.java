@@ -16,6 +16,7 @@ import db.DBConnectionDetails;
 import db.DBController;
 import db.QueryControl;
 import entities.Item;
+import entities.ItemInOrder;
 import entities.BranchManager;
 import entities.Customer;
 import entities.Order;
@@ -194,8 +195,6 @@ public class Server extends AbstractServer {
 				e.printStackTrace();
 			}
 			break;
-		default:
-		    return;
 		    
         case GET_SUPPLIER_ITEMS:
             Supplier supplier = (Supplier) data.getMessage();
@@ -206,8 +205,40 @@ public class Server extends AbstractServer {
             }
             break;
 
+        case GET_RELEVANT_CITIES:
+            Supplier supplier1 = (Supplier) data.getMessage();
+            try {
+                handleImportRelevantCities(supplier1,client);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            break;
+            
+        case UPDATE_ORDER_AND_ITEMS:
+        	List<Object> receivedList = (List<Object>) data.getMessage();
+        	Order receivedOrder = (Order) receivedList.get(0);
+        	Map<ItemInOrder, Integer> receivedCart = (Map<ItemInOrder, Integer>) receivedList.get(1);
+        	try {
+				handleUpdateOrderAndItem(receivedOrder, receivedCart, client);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+        	break;
+        		
+		default:
+		    return;
 	}
 }
+	
+	private void handleUpdateOrderAndItem(Order order,Map<ItemInOrder, Integer> receivedCart ,ConnectionToClient client) throws SQLException {
+		
+		QueryControl.orderQueries.updateOrderAndItems(dbConn, order, receivedCart);
+		try {
+			client.sendToClient(new ServerResponseDataContainer());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	private void handleUpdateItemRequest(Item item, ConnectionToClient client) {
 		ServerResponseDataContainer response = QueryControl.userQueries.UpdateItemInfo(dbConn, item);
@@ -471,7 +502,14 @@ public class Server extends AbstractServer {
     }
 	
 	
-	
+	private void handleImportRelevantCities(Supplier supplier, ConnectionToClient client) throws SQLException {
+		ServerResponseDataContainer response = QueryControl.orderQueries.FetchRelevantCities(dbConn, supplier);
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	
 	
