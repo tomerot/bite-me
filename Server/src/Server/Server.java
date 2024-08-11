@@ -302,12 +302,18 @@ public class Server extends AbstractServer {
 	public static void insertDataForPerformanceReport(HashMap<String, Integer> data, String branch, int year, int month) throws SQLException {
 	    QueryControl.serverQueries.insertPerformanceReport(dbConn, data, branch, year, month);
 	}
+
 	public static ServerResponseDataContainer fetchDataForIncomeReport(LocalDate startOfLastMonth, LocalDate endOfLastMonth, String branch) {
 	    ServerResponseDataContainer response = QueryControl.serverQueries.fetchIncomeReportData(dbConn, startOfLastMonth, endOfLastMonth, branch);
 	    return response;
 	}
 	public static void insertDataForIncomeReport(List<SupplierIncome> data, String branch, int year, int month) throws SQLException {
 	    QueryControl.serverQueries.insertIncomeReport(dbConn, data, branch, year, month);
+	}
+
+	public static void importCustomerSimulation() throws SQLException {
+		  QueryControl.serverQueries.insertCustomersList(dbConn);
+
 	}
 
 

@@ -294,4 +294,37 @@ public class ServerUtilsQueries {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Inserts customer and user data into the database from CSV files as an import simulation.
+     * 
+     * This method performs two separate bulk insert operations:
+     * - Loads user data from 'Users.csv' into the 'users' table.
+     * - Loads customer data from 'Customers.csv' into the 'customers' table.
+     * 
+     * Each CSV file should be properly formatted and located in the specified directory.
+     * 
+     * @param dbConn The database connection to use for the insert operations.
+     * 
+     * @throws SQLException If a database access error occurs or the SQL statements fail.
+     */
+    public void insertCustomersList(Connection dbConn) throws SQLException {
+        String query = "LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Users.csv' INTO TABLE users FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' IGNORE 1 LINES (Username,Password,IsLoggedIn,Type,Registered);";
+        try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+            int affectedRows = stmt.executeUpdate();
+            System.out.println("Inserted " + affectedRows + " users into users.");
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        query = "LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customers.csv' INTO TABLE customers FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' IGNORE 1 LINES (Username,ID,Type,CompanyID,FirstName,LastName,Email,Phone,HomeBranch,Credit,CVV,ValidMonth,ValidYear,WalletBalance);";
+        try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+            int affectedRows = stmt.executeUpdate();
+            System.out.println("Inserted " + affectedRows + " customers into customers.");
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+    }
 }

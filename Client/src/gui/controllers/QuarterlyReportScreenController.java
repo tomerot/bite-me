@@ -95,7 +95,13 @@ public class QuarterlyReportScreenController {
 	private String year2;
 	private String quarter2;
 
-	
+	/**
+	 * Constructs a new QuarterlyReportScreenController with the specified HBox and previous controller.
+	 * This constructor initializes the fields to manage the screen layout and previous controller state.
+	 *
+	 * @param wholeScreen    the HBox representing the entire screen layout for the report
+	 * @param prevController the previous controller, which is cast to CeoHomeScreenController
+	 */
 	public QuarterlyReportScreenController(HBox wholeScreen , Object prevController) {
 		this.prevCeoController = (CeoHomeScreenController) prevController;
 		this.wholeScreen = wholeScreen;
@@ -135,7 +141,12 @@ public class QuarterlyReportScreenController {
 		wholeScreen.getChildren().clear();
 		wholeScreen.getChildren().add(prevWholeScreen);
 	}
-	
+	/**
+	 * Sets up the screen by populating the ComboBoxes with the appropriate branch, quarter, and year options.
+	 * The branch and quarter ComboBoxes are populated with predefined values, while the year ComboBoxes
+	 * are populated with values ranging from 1995 to the current year. 
+	 * This method also calls `setAllInvisible()` to initialize the visibility of elements.
+	 */
 	public void setScreen() {
 		branchSelect.getItems().addAll("North", "Center", "South");
 		branchSelect2.getItems().addAll("North", "Center", "South");
@@ -176,7 +187,15 @@ public class QuarterlyReportScreenController {
 	    	headlineLabel.setText(msg);
 	    });
     }
-   
+    /**
+     * Displays the quarterly report based on the user's selection.
+     * This method retrieves data for one or both selected reports, processes the data,
+     * and updates the UI with the appropriate graphs and labels.
+     * If no valid report selection is made, an error message is displayed to the user.
+     *
+     * @param event the ActionEvent that triggered the display of the report
+     * @throws IOException if an I/O error occurs while retrieving the report data
+     */
 	public void displayReport(ActionEvent event) throws IOException {
 		String labelText=null;
 		ServerResponseDataContainer entityResponse1 = null;
@@ -254,6 +273,20 @@ public class QuarterlyReportScreenController {
 		}
 
 	}
+	/**
+	 * Processes a single quarterly report by populating the provided bar charts with data.
+	 * The method iterates through the list of supplier report data, creates data points
+	 * for total income and total orders, and then adds these points to the corresponding bar charts.
+	 * Additionally, it adjusts the chart width based on the number of suppliers and displays the charts
+	 * based on the specified type (main or mini charts).
+	 *
+	 * @param quarterReportData the list of {@link SupplierQuarterReportData} containing the data for the suppliers in the selected quarter
+	 * @param incomeChart       the {@link BarChart} to display the total income data
+	 * @param orderChart        the {@link BarChart} to display the total orders data
+	 * @param type              a {@link String} indicating the type of chart to be displayed: 
+	 *                          "Main" for the main chart, "Mini1" for the first mini chart, 
+	 *                          or "Mini2" for the second mini chart
+	 */
 	public void processSingleQuarterReport(List<SupplierQuarterReportData> quarterReportData, BarChart<String, Number> incomeChart, BarChart<String, Number> orderChart, String type) {
 	    XYChart.Series<String, Number> incomeSeries = new XYChart.Series<>();
 	    XYChart.Series<String, Number> ordersSeries = new XYChart.Series<>();
@@ -323,19 +356,44 @@ public class QuarterlyReportScreenController {
 		miniHistogram2IncomeScroll.setVisible(false);
 		miniHistogram2OrdersScroll.setVisible(true);
 	}
-	
+	/**
+	 * Creates a JavaFX node with a tooltip to be used as a data point in a bar chart.
+	 * The node is a label with a tooltip that displays additional information when hovered over.
+	 *
+	 * @param tooltipText the text to be displayed in the tooltip
+	 * @return a {@link javafx.scene.Node} (specifically a {@link javafx.scene.control.Label}) with the specified tooltip
+	 */
 	private javafx.scene.Node createBarNode(String tooltipText) {
 	    javafx.scene.control.Tooltip tooltip = new javafx.scene.control.Tooltip(tooltipText);
 	    javafx.scene.control.Label label = new javafx.scene.control.Label();
 	    label.setTooltip(tooltip);
 	    return label;
 	}
-	
+	/**
+	 * Applies a specified color to all bars in the given chart series.
+	 * This method sets the fill color of each bar in the series using the provided color hex code.
+	 *
+	 * @param series   the {@link XYChart.Series} to which the color should be applied
+	 * @param colorHex the hex code of the color to be applied (e.g., "#FF0000" for red)
+	 */
 	private void applySeriesColor(XYChart.Series<String, Number> series, String colorHex) {
 	    for (XYChart.Data<String, Number> data : series.getData()) {
 	        data.getNode().setStyle("-fx-bar-fill: " + colorHex + ";");
 	    }
 	}
+	/**
+	 * Adjusts the width of the chart based on the number of suppliers and the type of chart.
+	 * The method calculates the required width by considering the number of bars and gaps,
+	 * and sets the minimum width and category gap for the specified chart type.
+	 *
+	 * @param numberOfSuppliers the number of suppliers, which determines the number of bars and gaps in the chart
+	 * @param type              the type of chart to be adjusted; can be "Main", "Mini1", or "Mini2"
+	 *
+	 * The method performs the following adjustments based on the chart type:
+	 * - "Main": Sets the minimum width and category gap for the main histogram charts.
+	 * - "Mini1": Sets the minimum width and category gap for the first mini histogram charts.
+	 * - "Mini2": Sets the minimum width and category gap for the second mini histogram charts.
+	 */
 	private void adjustChartWidth(int numberOfSuppliers, String type) {
 		switch(type) {
 		case "Main":{
@@ -373,6 +431,13 @@ public class QuarterlyReportScreenController {
 		}
 		}
 	}
+	/**
+	 * Clears all selected values from the various selection controls and resets their states.
+	 * The method performs the following actions:
+	 * - Clears the selection in `yearSelect`, `quarterSelect`, and `branchSelect`.
+	 * - Clears the selection in `yearSelect2`, `quarterSelect2`, and `branchSelect2`.
+	 * - Resets the branch, quarter, and year selections for both sets of controls to their default states.
+	 */
 	public void clearAllSelection() {
 		yearSelect.getSelectionModel().clearSelection();
 		quarterSelect.getSelectionModel().clearSelection();
@@ -387,6 +452,13 @@ public class QuarterlyReportScreenController {
 		setYearSelection();
 		setYear2Selection();
 	}
+	/**
+	 * Hides all chart and scroll pane elements by setting their visibility to false.
+	 * The method performs the following actions:
+	 * - Hides the mini histogram charts for orders and income (`mini1OrderGraph`, `mini2OrderGraph`, `mini1IncomeGraph`, `mini2IncomeGraph`).
+	 * - Hides the main histogram charts for orders and income (`ordersGraph`, `incomeGraph`).
+	 * - Hides the scroll panes associated with the histograms (`mainHistogramIncomeScroll`, `mainHistogramOrdersScroll`, `miniHistogram1IncomeScroll`, `miniHistogram1OrdersScroll`, `miniHistogram2IncomeScroll`, `miniHistogram2OrdersScroll`).
+	 */
 	private void setAllInvisible() {
 		mini1OrderGraph.setVisible(false);
 		mini2OrderGraph.setVisible(false);
@@ -401,7 +473,12 @@ public class QuarterlyReportScreenController {
 		miniHistogram2IncomeScroll.setVisible(false);
 		miniHistogram2OrdersScroll.setVisible(false);
 	}
-	
+	/**
+	 * Clears all data from the histogram charts by removing all data series.
+	 * The method performs the following actions:
+	 * - Clears the data from the main histogram charts for income and orders (`mainHistogramIncome`, `mainHistogramOrders`).
+	 * - Clears the data from the mini histogram charts for income and orders (`miniHistogram1Income`, `miniHistogram1Orders`, `miniHistogram2Income`, `miniHistogram2Orders`).
+	 */
 	private void clearAllData() {
 		mainHistogramIncome.getData().clear();
 		mainHistogramOrders.getData().clear();
