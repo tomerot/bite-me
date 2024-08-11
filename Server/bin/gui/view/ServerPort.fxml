@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane fx:id="playButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="548.0" prefWidth="859.0" stylesheets="@ServerPort.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.ServerPortController">
+<Pane fx:id="playButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="548.0" prefWidth="859.0" stylesheets="@ServerPort.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.ServerPortController">
    <children>
       <TextField fx:id="ipField" layoutX="300.0" layoutY="68.0" text="localhost" />
       <Text layoutX="59.0" layoutY="85.0" strokeType="OUTSIDE" strokeWidth="0.0" text="IP" wrappingWidth="123.9140625" />
@@ -25,15 +25,16 @@
       <TextField fx:id="dbPasswordField" layoutX="300.0" layoutY="288.0" text="Db Password" />
       <Text layoutX="59.0" layoutY="305.0" strokeType="OUTSIDE" strokeWidth="0.0" text="DB Password" wrappingWidth="123.9140625" />
       
-      <Button fx:id="connectBtn" layoutX="312.0" layoutY="374.0" mnemonicParsing="false" onAction="#onConnectServerClicked" prefHeight="25.0" prefWidth="124.0" styleClass="connectBtn" text="Connect to server" />
-      <Button fx:id="exitBtn" layoutX="312.0" layoutY="470.0" mnemonicParsing="false" onAction="#getExitBtn" prefHeight="25.0" prefWidth="124.0" styleClass="exitBtn" text="Exit" />
+      <Button fx:id="connectBtn" layoutX="312.0" layoutY="391.0" mnemonicParsing="false" onAction="#onConnectServerClicked" prefHeight="25.0" prefWidth="124.0" styleClass="connectBtn" text="Connect to server" />
+      <Button fx:id="exitBtn" layoutX="312.0" layoutY="485.0" mnemonicParsing="false" onAction="#getExitBtn" prefHeight="25.0" prefWidth="124.0" styleClass="exitBtn" text="Exit" />
       <Label fx:id="lblServerStatus" layoutX="38.0" layoutY="358.0" prefHeight="101.0" prefWidth="245.0" styleClass="lblServerStatus" />
       <ListView fx:id="lvConnectedClients" layoutX="485.0" layoutY="68.0" prefHeight="200.0" prefWidth="344.0" />
-      <Button fx:id="disconnectBtn" layoutX="312.0" layoutY="424.0" mnemonicParsing="false" onAction="#onDisconnectClicked" prefHeight="25.0" prefWidth="124.0" styleClass="disconnectBtn" text="Disconnenct" />
+      <Button fx:id="disconnectBtn" layoutX="312.0" layoutY="439.0" mnemonicParsing="false" onAction="#onDisconnectClicked" prefHeight="25.0" prefWidth="124.0" styleClass="disconnectBtn" text="Disconnenct" />
       <Label layoutX="234.0" layoutY="25.0" prefHeight="17.0" prefWidth="281.0" text="BiteMe Server-Database Connection:">
          <font>
             <Font size="17.0" />
          </font>
       </Label>
+      <Button fx:id="importCustomerBtn" layoutX="287.0" layoutY="346.0" mnemonicParsing="false" onAction="#importCustomerSimulation" prefHeight="25.0" prefWidth="175.0" visible="false" text="Import Customer Information" />
    </children>
 </Pane>

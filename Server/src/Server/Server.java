@@ -301,6 +301,9 @@ public class Server extends AbstractServer {
 	public static void insertDataForPerformanceReport(HashMap<String, Integer> data, String branch, int year, int month) throws SQLException {
 	    QueryControl.serverQueries.insertPerformanceReport(dbConn, data, branch, year, month);
 	}
+	public static void importCustomerSimulation() throws SQLException {
+		  QueryControl.serverQueries.insertCustomersList(dbConn);
+	}
 
 
 

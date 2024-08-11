@@ -27,10 +27,20 @@ import enums.Branch;
 import enums.CustomerType;
 import enums.ServerResponse;
 import enums.UserType;
-
+/**
+ * Handles SQL queries related to various reports and user management tasks.
+ */
 public class ManagersQuery {
 	public ManagersQuery() {
 	}
+    /**
+     * Imports report data based on the provided report type and information.
+     *
+     * @param dbConn the database connection to use
+     * @param reportInfo a list of strings containing report parameters: [reportType, branch, month, year]
+     * @return a {@link ServerResponseDataContainer} containing the report data
+     * @throws SQLException if a database access error occurs
+     */
 	public ServerResponseDataContainer importReportData(Connection dbConn, List<String> reportInfo) throws SQLException {
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
 		List<String> returnData=new ArrayList<String>();
@@ -136,6 +146,14 @@ public class ManagersQuery {
 		}}
 		return response;
 	}
+    /**
+     * Imports quarterly report data.
+     *
+     * @param dbConn the database connection to use
+     * @param reportInfo a list of strings containing report parameters: [quarter, branch, year]
+     * @return a {@link ServerResponseDataContainer} containing the quarterly report data
+     * @throws SQLException if a database access error occurs
+     */
 	public ServerResponseDataContainer importQuarterReportData(Connection dbConn, List<String> reportInfo) throws SQLException {
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
 		List<SupplierQuarterReportData> SupplierQuarterReportList=new ArrayList<SupplierQuarterReportData>();
@@ -246,6 +264,15 @@ public class ManagersQuery {
 		}
 		return response;
 	}
+	/**
+	 * Imports a list of unregistered customers from the database for a given branch managed by the provided manager.
+	 * The customers are those who are marked as unregistered.
+	 * 
+	 * @param dbConn the database connection to use
+	 * @param manager the branch manager requesting the customer list
+	 * @return a {@link ServerResponseDataContainer} containing a list of unregistered {@link Customer} objects
+	 * @throws SQLException if a database access error occurs
+	 */
 	public ServerResponseDataContainer importCustomerList(Connection dbConn, BranchManager manager) throws SQLException {
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
 		List<Customer> unRegisteredCustomers= new ArrayList<Customer>();
