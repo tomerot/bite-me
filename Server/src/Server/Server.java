@@ -224,17 +224,37 @@ public class Server extends AbstractServer {
 				e.printStackTrace();
 			}
         	break;
+        	
+        case UPDATE_CUSTOMER_WALLET:
+        	List<Object> listOW = (List<Object>) data.getMessage();
+        	Order requestedOrder = (Order) listOW.get(0);
+        	float walletUsedAmount = (Float) listOW.get(1);
+        	try {
+				handleUpdateCustomerWallet(requestedOrder,walletUsedAmount,client);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+        	break;
+        	
         		
 		default:
 		    return;
 	}
 }
 	
-	private void handleUpdateOrderAndItem(Order order,Map<ItemInOrder, Integer> receivedCart ,ConnectionToClient client) throws SQLException {
-		
-		QueryControl.orderQueries.updateOrderAndItems(dbConn, order, receivedCart);
+	private void handleUpdateCustomerWallet(Order order,Float walletUsedAmount ,ConnectionToClient client) throws SQLException {
+		QueryControl.orderQueries.updateCustomerWalletBalance(dbConn, order, walletUsedAmount);
 		try {
 			client.sendToClient(new ServerResponseDataContainer());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void handleUpdateOrderAndItem(Order order,Map<ItemInOrder, Integer> receivedCart ,ConnectionToClient client) throws SQLException {
+		ServerResponseDataContainer response =QueryControl.orderQueries.updateOrderAndItems(dbConn, order, receivedCart);
+		try {
+			client.sendToClient(response);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

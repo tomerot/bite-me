@@ -17,6 +17,7 @@ import gui.controllers.RegistrationScreenController;
 import gui.controllers.RemoveItemScreenController;
 import gui.controllers.RestaurantMenuScreenController;
 import gui.controllers.SupplierScreenController;
+import gui.controllers.ThankYouScreenController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -101,6 +102,12 @@ public class ScreenLoader {
 			}
 			case EDIT_ITEM_SCREEN:{
 				EditItemScreenController controller=new EditItemScreenController(wholeScreen, currController);
+				loader.setController(controller);
+				loader.load();
+				break;
+			}
+			case THANK_YOU_SCREEN:{
+				ThankYouScreenController controller=new ThankYouScreenController(wholeScreen, currController);
 				loader.setController(controller);
 				loader.load();
 				break;

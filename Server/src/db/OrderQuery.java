@@ -4,9 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.sql.Time;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -98,19 +100,22 @@ public class OrderQuery {
 					String recipient = rs.getString("Recipient");
 					String recipientPhone = rs.getString("Recipient Phone");
 					int supplierID = rs.getInt("SupplierID");
+					String city = rs.getString("City");
+					String address =rs.getString("Address");
 					String branch = rs.getString("Branch");
 					String supplyOption = rs.getString("SupplyOption");
 					String type = rs.getString("Type");
 					String requestedDate = rs.getString("RequestDate");
 					String requestedTime = rs.getString("RequestTime");
 					String approvalTime = rs.getString("ApprovalTime");
-					String arrivalTime = rs.getString("ArrivalTime");
+					String approvalDate = rs.getString("ApprovalDate");
+					String arrivalTime = rs.getString("ArrivalTime"); //?
 					float totalPrice = rs.getFloat("TotalPrice");
 					String status = rs.getString("Status");
 
 					Order order = new Order(null, orderID, recipient, recipientPhone, getSupplyOption(supplyOption),
 							getSupplierById(dbConn,supplierID), customer, getBranch(branch), requestedDate, requestedTime, getOrderType(type),
-							totalPrice, approvalTime, arrivalTime, status);
+							totalPrice, approvalTime, arrivalTime, status, city, address, approvalDate, null);
 					waitingOrders.add(order);
 				}
 			}
@@ -142,19 +147,23 @@ public class OrderQuery {
 					String recipient = rs.getString("Recipient");
 					String recipientPhone = rs.getString("Recipient Phone");
 					int supplierID = rs.getInt("SupplierID");
+					String city = rs.getString("City");
+					String address =rs.getString("Address");
 					String branch = rs.getString("Branch");
 					String supplyOption = rs.getString("SupplyOption");
 					String type = rs.getString("Type");
 					String requestedDate = rs.getString("RequestDate");
 					String requestedTime = rs.getString("RequestTime");
 					String approvalTime = rs.getString("ApprovalTime");
+					String approvalDate = rs.getString("ApprovalDate");
 					String arrivalTime = rs.getString("ArrivalTime");
+					String arrivalDate = rs.getString("ArrivalDate");
 					float totalPrice = rs.getFloat("TotalPrice");
 					String status = rs.getString("Status");
 
 					Order order = new Order(null, orderID, recipient, recipientPhone, getSupplyOption(supplyOption),
 							getSupplierById(dbConn,supplierID), customer, getBranch(branch), requestedDate, requestedTime, getOrderType(type),
-							totalPrice, approvalTime, arrivalTime, status);
+							totalPrice, approvalTime, arrivalTime, status, city, address, approvalDate, arrivalDate);
 					waitingOrders.add(order);
 				}
 			}
@@ -173,19 +182,21 @@ public class OrderQuery {
      * @throws SQLException if a database access error occurs
      */
 	public void updateOrderStatusTime(Connection dbConn, Order order) throws SQLException {
-		String query = "UPDATE orders SET ArrivalTime = ? ,status = ? WHERE OrderID = ?";
-		boolean late = isLateByTimeDiffAndStatus(order.getType(),order.getApprovalTimer());
+		String query = "UPDATE orders SET ArrivalTime = ? ,ArrivalDate = ? ,status = ? WHERE OrderID = ?";
+		boolean late = isLateByTimeDiffAndStatus(order.getType(),order.getApprovalTimer(), order.getApprovalDate());
 		String status;
 		String currTime = getCurrTime();
+		String currDate = getTodayDate();
 		if (late) {
 			status = "Late";
-			updateCustomerWalletBalance(dbConn,order);
+			updateCustomerWalletBalance(dbConn,order,0);
 			}
 		else {status = "On-time";}
 		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
 			stmt.setString(1, currTime);
-			stmt.setString(2, status);
-			stmt.setInt(3, order.getOrderID());
+			stmt.setString(2, currDate);
+			stmt.setString(3, status);
+			stmt.setInt(4, order.getOrderID());
 			stmt.executeUpdate();
 		}
 	}
@@ -248,13 +259,13 @@ public class OrderQuery {
 	}
 	
 	
-	public void updateOrderAndItems(Connection dbConn, Order order, Map<ItemInOrder, Integer> receivedCart)
+	public ServerResponseDataContainer updateOrderAndItems(Connection dbConn, Order order, Map<ItemInOrder, Integer> receivedCart)
 			throws SQLException {
+		ServerResponseDataContainer response = new ServerResponseDataContainer();
 		// Ensure auto-commit is turned off for transaction management
 		dbConn.setAutoCommit(false);
 
 		try {
-
 			// Insert into orders table with manually assigned OrderID
 			String insertOrderSQL = "INSERT INTO orders (CustomerID, Recipient, `Recipient Phone`, SupplierID, City, Address, Branch, SupplyOption, Type, RequestDate, RequestTime, ApprovalTime, ApprovalDate, ArrivalTime, TotalPrice, Status) "
 					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -274,11 +285,11 @@ public class OrderQuery {
 				orderStmt.setString(9, orderType); // Use the mapping function
 				orderStmt.setDate(10, java.sql.Date.valueOf(order.getRequestedDate()));
 				orderStmt.setString(11, order.getRequestedTime());
-				orderStmt.setString(12, order.getApprovalTimer());
+				orderStmt.setString(12, null); //approvalTime
 				orderStmt.setDate(13, null);
 				orderStmt.setTime(14, null);
 				orderStmt.setFloat(15, order.getTotalPrice());
-				orderStmt.setString(16, "Awaiting");
+				orderStmt.setString(16, "Awaiting");		
 
 				// Execute the insert statement
 				int affectedRows = orderStmt.executeUpdate();
@@ -289,9 +300,12 @@ public class OrderQuery {
 	                    if (generatedKeys.next()) {
 	                        int newOrderID = generatedKeys.getInt(1);
 
+	                        response.setMessage(newOrderID);
+	                        response.setResponse(ServerResponse.UPDATED_ORDER_ID);
+	                        
 	                        // Insert items into items_in_orders table
-	                        String insertItemSQL = "INSERT INTO items_in_orders (OrderID, ItemID, SupplierID, ItemName, Size, Doneness, Restrictions, Quantity) "
-	                                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+	                        String insertItemSQL = "INSERT INTO items_in_orders (OrderID, CustomerID, ItemID, SupplierID, ItemName, Category, Size, Doneness, Restrictions, Quantity) "
+	                                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 	                        try (PreparedStatement itemStmt = dbConn.prepareStatement(insertItemSQL)) {
 	                            for (Map.Entry<ItemInOrder, Integer> entry : receivedCart.entrySet()) {
@@ -299,14 +313,16 @@ public class OrderQuery {
 	                                int quantity = entry.getValue();
 
 	                                itemStmt.setInt(1, newOrderID);
-	                                itemStmt.setInt(2, item.getItemID());
-	                                itemStmt.setInt(3, item.getSupplierID());
-	                                itemStmt.setString(4, item.getName());
-	                                itemStmt.setString(5, item.getSize());
-	                                itemStmt.setString(6, item.getDonenessDegree());
-	                                itemStmt.setString(7, item.getRestrictions());
-	                                itemStmt.setInt(8, quantity);
-
+	                                itemStmt.setInt(2, order.getCustomer().getId());
+	                                itemStmt.setInt(3, item.getItemID());
+	                                itemStmt.setInt(4, item.getSupplierID());
+	                                itemStmt.setString(5, item.getName());
+	                                itemStmt.setString(6, item.getType().toString());
+	                                itemStmt.setString(7, item.getSize());
+	                                itemStmt.setString(8, item.getDonenessDegree());
+	                                itemStmt.setString(9, item.getRestrictions());
+	                                itemStmt.setInt(10, quantity);
+                         
 	                                itemStmt.addBatch();
 	                            }
 
@@ -320,15 +336,20 @@ public class OrderQuery {
 
 	        // Commit the transaction
 	        dbConn.commit();
-	    } catch (SQLException e) {
-	        // Rollback the transaction in case of an error
+		} catch (SQLIntegrityConstraintViolationException | java.sql.BatchUpdateException e) {
+			System.err.println("Nice try");
+			response.setResponse(ServerResponse.ITEM_WAS_DELETED);
+			response.setMessage("The Supplier Deleted this item before you could finish the order");
 	        dbConn.rollback();
-	        e.printStackTrace();
+	        return response;
+	    } catch (SQLException e) {
+	        dbConn.rollback();
+	        System.err.println("SQL Error: " + e.getMessage());
 	        throw e;
 	    } finally {
-	        // Restore auto-commit mode
 	        dbConn.setAutoCommit(true);
 	    }
+	    return response;
 	}
 	
 	
@@ -345,7 +366,9 @@ public class OrderQuery {
 	 * @throws SQLException If an SQL error occurs during the execution of the queries. This includes errors 
 	 *                       related to the database connection, query syntax, or data manipulation.
 	 */
-	private void updateCustomerWalletBalance(Connection dbConn, Order order) throws SQLException {
+	// if amount == 0 then refund, alse remove amount from total price
+	public void updateCustomerWalletBalance(Connection dbConn, Order order, float amount) throws SQLException {
+		double updateAmount = 0;
 		String query = "Select * FROM orders WHERE OrderID = ?";
 		
 		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
@@ -356,13 +379,18 @@ public class OrderQuery {
 					int customerID = rs.getInt("CustomerID");
 					float amountPaid = rs.getFloat("TotalPrice");
 					
+					if (amount == 0) {
 					//get the amount i need to update
-					double refundAmount = amountPaid * 0.5;
+						updateAmount = amountPaid * 0.5;	
+					}
+					else {
+						updateAmount = ((-1) * amount ); 
+					}
 					
 					//nested query to update the wallet balance
 					String updateWalletQuery = "UPDATE customers SET WalletBalance = WalletBalance + ? WHERE ID = ?";
 					try (PreparedStatement updateStmt = dbConn.prepareStatement(updateWalletQuery)) {
-                        updateStmt.setDouble(1, refundAmount);
+                        updateStmt.setDouble(1, updateAmount);
                         updateStmt.setInt(2, customerID);
                         updateStmt.executeUpdate();
                     }
@@ -487,21 +515,30 @@ public class OrderQuery {
      * @param approvalTime the approval time of the order
      * @return true if the order is late, false otherwise
      */
-	private boolean isLateByTimeDiffAndStatus(OrderType type , String approvalTime) {
+	private boolean isLateByTimeDiffAndStatus(OrderType type , String approvalTime , String approvalDateStr) {
+	    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // Adjust the pattern to match your date format
+	    LocalDate approvalDate = LocalDate.parse(approvalDateStr, dateFormatter);
+	    
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 		LocalTime givenTime = LocalTime.parse(approvalTime, formatter);
 		LocalTime currentTime = LocalTime.now();
+		LocalDate currentDate = LocalDate.now();
+		
 		Duration duration = Duration.between(givenTime, currentTime);
 		long totalMinutes = duration.toMinutes();
-		if (type.toString().equals("Regular") && totalMinutes > 60) {
-			return true;
-		}
-		
-		else if (type.toString().equals("PreOrder") && totalMinutes > 20) {
-			return true;
-		}
-		return false;
+	    if (type.toString().equals("Regular")) {
+	        if (totalMinutes > 60 || approvalDate.isBefore(currentDate)) {
+	            return true;
+	        }
+	    } else if (type.toString().equals("PreOrder")) {
+	        if (totalMinutes > 20 || approvalDate.isBefore(currentDate)) {
+	            return true;
+	        }
+	    }
+	    return false;
 	}
+	
+	
 	
     /**
      * Retrieves the current time formatted as HH:mm:ss.
@@ -513,6 +550,12 @@ public class OrderQuery {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         String formattedTime = currentTime.format(formatter);
         return formattedTime;
+	}
+	
+	public String getTodayDate() {
+	    LocalDate today = LocalDate.now();
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	    return today.format(formatter);
 	}
 	
 	private Category categoryStringToEnum(String type) {

@@ -10,7 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import client.ClientConsole;
 import client.ClientMainController;
+import containers.ServerResponseDataContainer;
 import entities.Customer;
 import entities.ItemInOrder;
 import entities.Order;
@@ -19,6 +21,7 @@ import gui.loader.Screen;
 import gui.loader.ScreenLoader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
@@ -26,12 +29,15 @@ import javafx.scene.layout.HBox;
 
 public class OrderSummaryScreenController {
 	
+	private ChooseRestaurantScreenController restaurantController;
+	
 	private Map<ItemInOrder, Integer> cart = new HashMap<>();
 	private Customer customer;
 	private Supplier supplier;
 	private Order order;
 	private float walletUsedAmount;
 	private int peopleInOrder;
+	private int orderID;
 	
 	
 	private HBox wholeScreen;
@@ -80,6 +86,7 @@ public class OrderSummaryScreenController {
 	public OrderSummaryScreenController(HBox wholeScreen, Object prevController) {
 		this.wholeScreen = wholeScreen;
 		this.prevController = (CheckoutScreenController) prevController;
+		this.restaurantController = this.prevController.getRestaurantController();
 		this.cart = this.prevController.getCart();
 		this.customer = this.prevController.getCustomer();
 		this.supplier = this.prevController.getSupplier();
@@ -96,7 +103,7 @@ public class OrderSummaryScreenController {
 		phoneLbl.setText(order.getRecipientPhone());
 		cityLbl.setText(order.getCity());
 		addressLbl.setText(order.getAddress());
-		supplyMethodLbl.setText(String.format("%s + participents: %d",order.getSupplyOption(),peopleInOrder));
+		supplyMethodLbl.setText(String.format("%s,  participents: %d",order.getSupplyOption(),peopleInOrder));
 		requestedDateLbl.setText(order.getRequestedDate());
 		requestedTimeLbl.setText(order.getRequestedTime());
 		orderTypeLbl.setText(order.getType().toString());
@@ -118,31 +125,82 @@ public class OrderSummaryScreenController {
 	
 	
     @FXML
-    void approveOrderClicked(ActionEvent event) {
-    	LocalTime currentTime = LocalTime.now();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        String formattedTime = currentTime.format(formatter);
-        
-    	System.out.println(formattedTime);
-    	order.setApprovalTimer((formattedTime));
-    	
-	    //CALL SERVER UPDATE ORDER AND ITEMS_IN_ORDER
-	    List<Object> list = new ArrayList<>();
-	    list.add(order);
-	    list.add(cart);
-	    ClientMainController.updateOrderAndItems(list); //update the order and items_in_order DB rows
-	    
-	    //update here the customer wallet in the if stetmant
-	    if (walletUsedAmount != 0 ) {
-	    	
-	    }
-	    
-	    
-	    
-	    
-	    
-	    
-    }
+	void approveOrderClicked(ActionEvent event) throws IOException {
+//    	LocalTime currentTime = LocalTime.now();
+//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+//        String formattedTime = currentTime.format(formatter);
+//    	order.setApprovalTimer((formattedTime));
+
+		// CALL SERVER UPDATE ORDER AND ITEMS_IN_ORDER
+		List<Object> list = new ArrayList<>();
+		list.add(order);
+		list.add(cart);
+		ClientMainController.updateOrderAndItems(list); // update the order and items_in_order DB rows
+		ServerResponseDataContainer response = ClientConsole.responseFromServer;
+		switch (response.getResponse()) {
+		case ITEM_WAS_DELETED:
+			String msg = (String) response.getMessage();
+			showAlert("Error", msg);
+			backToRestaurant();
+			break;
+
+		case UPDATED_ORDER_ID:
+			int orderId = (int) response.getMessage();
+			order.setOrderID(orderId);
+			this.orderID = orderId;
+
+			// update here the customer wallet in the if stetmant
+			if (walletUsedAmount != 0) {
+				List<Object> orderAndWallet = new ArrayList<>();
+				orderAndWallet.add(order);
+				orderAndWallet.add(walletUsedAmount);
+				ClientMainController.updateCustomerWallet(orderAndWallet);
+				float updatedWalletBalance = customer.getWalletBalance() - walletUsedAmount;
+				customer.setWalletBalance(updatedWalletBalance);
+			}
+
+			ThankYouScreen();
+			break;
+		}
+	}
+    
+    
+	@FXML
+	private void ThankYouScreen() throws IOException {
+		ScreenLoader screenLoader = new ScreenLoader();
+    	String path = "/gui/view/ThankYouScreen.fxml";
+    	AnchorPane nextDash = screenLoader.loadOnDashboard(wholeScreen, path, Screen.THANK_YOU_SCREEN, this);
+    	dashboard.getChildren().clear(); //Clear current dashboard
+    	dashboard.getChildren().add(nextDash); //Assign the new dashboard
+	}
 	
+	
+	@FXML
+	private void backToRestaurant() throws IOException {
+		ScreenLoader screenLoader = new ScreenLoader();
+    	String path = "/gui/view/RestaurantMenuScreen.fxml";
+    	AnchorPane nextDash = screenLoader.loadOnDashboard(wholeScreen, path, Screen.RESTAURANT_MENU_SCREEN, this.restaurantController);
+    	dashboard.getChildren().clear(); //Clear current dashboard
+    	dashboard.getChildren().add(nextDash); //Assign the new dashboard
+	}
+	
+	/**
+	 * Shows an alert with the specified title and message to provide feedback to the user
+	 * regarding errors or important information.
+	 *
+	 * @param title   the title of the alert.
+	 * @param message the content of the alert message.
+	 */
+	private void showAlert(String title, String message) {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle(title);
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
+	}
+	
+	public int getOrderID() {
+		return orderID;
+	}
 }
 	

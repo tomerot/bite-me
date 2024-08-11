@@ -43,6 +43,8 @@ import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
 
 public class CheckoutScreenController {
+	
+	private ChooseRestaurantScreenController restaurantController;
 
 	private Map<ItemInOrder, Integer> cart = new HashMap<>();
 	private List<String> relevantDeliveryCities;
@@ -134,6 +136,7 @@ public class CheckoutScreenController {
 	public CheckoutScreenController(HBox wholeScreen, Object prevController) {
 		this.wholeScreen = wholeScreen;
 		this.prevController = (RestaurantMenuScreenController) prevController;
+		this.restaurantController = this.prevController.getRestaurantController();
 		this.cart = this.prevController.getCart();
 		this.customer = this.prevController.getCustomer();
 		this.supplier = this.prevController.getSupplier();
@@ -155,7 +158,7 @@ public class CheckoutScreenController {
 		// ADD LIST WITH ITEMS
 		// Get the current wallet balance for the customer and display it in the wallet
 		// balance label
-		supplyTimeField.setText("20:00:00");
+		supplyTimeField.setText("00:00:00");
 		orderType = "Regular";
 		orderTypeLbl.setVisible(false);
 		orderTypeLbl.setText("Order Type: " + orderType);
@@ -270,7 +273,7 @@ public class CheckoutScreenController {
 		amountField.textProperty().addListener((obs, oldValue, newValue) -> {
 			updatePriceLabels(); // Update price labels
 			validateWalletField();
-			validateSupplyTime(); // Validate supply time
+			//validateSupplyTime(); // Validate supply time
 			checkSupplyTime(datePicker.getValue(), supplyTimeField.getText());
 			orderTypeLbl.setText("Order Type: " + orderType);
 		});
@@ -280,19 +283,26 @@ public class CheckoutScreenController {
 		WalletField.textProperty().addListener((obs, oldValue, newValue) -> {
 			updatePriceLabels(); // Update price labels
 		});
-
+		
 		// Add a listener to the DatePicker to validate the supply time when the date
 		// changes
 		datePicker.valueProperty().addListener(new ChangeListener<LocalDate>() {
 			@Override
 			public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldDate, LocalDate newDate) {
-				validateSupplyTime(); // Validate supply time
-				checkSupplyTime(datePicker.getValue(), supplyTimeField.getText());
-				orderTypeLbl.setText("Order Type: " + orderType);
-				updatePriceLabels();
+				String timeText = supplyTimeField.getText();
+				if (isValidTimeFormat(timeText)) {
+					validateSupplyTime(); // Validate supply time
+					checkSupplyTime(datePicker.getValue(), supplyTimeField.getText());
+					orderTypeLbl.setText("Order Type: " + orderType);
+					updatePriceLabels();
+				}
+				else {
+					supplyTimeField.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+		            orderTypeLbl.setText("Invalid time format, please correct.");
+				}
 			}
 		});
-		
+	
 		supplyTimeField.textProperty().addListener(new ChangeListener<String>() {
 		    @Override
 		    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -309,6 +319,7 @@ public class CheckoutScreenController {
 		        }
 		    }
 		});
+
 
 		// Configure available radio buttons based on the current state
 		configureAvailableRadioButtons();
@@ -667,21 +678,21 @@ public class CheckoutScreenController {
 	        if (amount == 1) {
 	        	deliveryPrice = 25;
 		        if (orderType.equals("PreOrder")) {
-		        	deliveryPrice = (float) (deliveryPrice - (deliveryPrice*0.1));
+		        	deliveryPrice = (float) (deliveryPrice - (deliveryPrice * 0.1));
 		        }
 	        }
 	        
 	        else if (amount == 2) {
 	        	deliveryPrice = 40;
 		        if (orderType.equals("PreOrder")) {
-		        	deliveryPrice = (float) (deliveryPrice - (deliveryPrice*0.1));
+		        	deliveryPrice = (float) (deliveryPrice - (deliveryPrice * 0.1));
 		        }
 	        }
 	        
 	        else {
 	        	deliveryPrice = amount * 15;
 		        if (orderType.equals("PreOrder")) {
-		        	deliveryPrice = (float) (deliveryPrice - (deliveryPrice*0.1));
+		        	deliveryPrice = (float) (deliveryPrice - (deliveryPrice * 0.1));
 		        }
 	        }       
 	    } 
@@ -818,11 +829,17 @@ public class CheckoutScreenController {
      * @return {@code true} if the time string is in the correct format, {@code false} otherwise.
      */
     private boolean isValidTimeFormat(String timeText) {
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        try {
-            LocalTime.parse(timeText, timeFormatter);
-            return true;
-        } catch (DateTimeParseException e) {
+    	String timePattern = "([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)";
+    	
+        if (timeText.matches(timePattern)) {
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+            try {
+                LocalTime.parse(timeText, timeFormatter);
+                return true;
+            } catch (DateTimeParseException e) {
+                return false;
+            }
+        } else {
             return false;
         }
     }
@@ -857,6 +874,10 @@ public class CheckoutScreenController {
 	}
 	public Map<ItemInOrder, Integer> getCart() {
 	    return cart;
+	}
+	
+	public ChooseRestaurantScreenController getRestaurantController(){
+		return restaurantController;
 	}
     
 }

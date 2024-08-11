@@ -203,4 +203,9 @@ public class ClientMainController {
         ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.UPDATE_ORDER_AND_ITEMS, list);
         ClientMainController.accept(request);
     }
+    
+    public static void updateCustomerWallet(List<Object> list) {
+        ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.UPDATE_CUSTOMER_WALLET, list);
+        ClientMainController.accept(request);
+    }
 }

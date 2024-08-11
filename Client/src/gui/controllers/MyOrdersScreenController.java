@@ -132,15 +132,14 @@ public class MyOrdersScreenController {
 
         VBox content = new VBox(10);
         content.getChildren().addAll(
-            createStyledLabel("Customer name: " + customer.getFirstName() + " " + customer.getLastName()),
+            createStyledLabel("Customer name: " + customer.getFirstName() + ", " + customer.getLastName()),
             createStyledLabel("Recipient info: " + order.getRecipient() + ", " + order.getRecipientPhone()),
-            createStyledLabel("Order Date and time: " + order.getRequestedDate() + " " + order.getRequestedTime()),
-            createStyledLabel("Acceptance Hour: " + order.getApprovalTimer()),
-            createStyledLabel("Confirmed Hour: " + order.getArrivalTime()),
-            createStyledLabel("Supply Method: " + order.getSupplyOption()),
-            createStyledLabel("Order Type: " + order.getType()),
+            createStyledLabel("Order Requested Date and time: " + order.getRequestedDate() + " " + order.getRequestedTime()),
+            createStyledLabel("Order Approval Date and time: " + order.getApprovalDate() + " " + order.getApprovalTimer()),
+            createStyledLabel("Order Arrival Date and time: " + order.getArrivalDate() + ", " + order.getArrivalTime()),
+            createStyledLabel("Supply Method and type: " + order.getSupplyOption() + ", " + order.getType()),
             createStyledLabel("Status: " + order.getStatus(), order.getStatus()),
-            createStyledLabel("Total Price: $" + order.getTotalPrice())
+            createStyledLabel("Total Price: ₪" + order.getTotalPrice())
         );
 
         return new TitledPane(title, content);
@@ -155,7 +154,7 @@ public class MyOrdersScreenController {
      */
     private Label createStyledLabel(String text, String... status) {
         Label label = new Label(text);
-        label.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333;");
+        label.setStyle("-fx-font-size: 14px; -fx-text-fill: #333;");
 
         if (status.length > 0 && "Awaiting".equals(status[0])) {
             label.setStyle(label.getStyle() + " -fx-text-fill: #FF0000;"); //red

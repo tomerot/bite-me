@@ -132,7 +132,7 @@ public class RestaurantMenuScreenController {
 	
 	@FXML
 	private Label ttlPrice;
-	
+		
 	public RestaurantMenuScreenController(HBox wholeScreen, Object prevController) {
 		this.wholeScreen = wholeScreen;
 		this.prevController = (ChooseRestaurantScreenController) prevController;
@@ -629,5 +629,9 @@ public class RestaurantMenuScreenController {
 	
 	public float getTotalPrice() {
 		return totalPrice;
+	}
+	
+	public ChooseRestaurantScreenController getRestaurantController(){
+		return prevController;
 	}
 }
