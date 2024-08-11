@@ -2,6 +2,7 @@ package gui.controllers;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.sql.SQLException;
 
 import Server.Server;
 import db.DBConnectionDetails;
@@ -24,7 +25,8 @@ import javafx.stage.Stage;
  * Handles user interactions for starting, stopping, and managing server connections.
  */
 public class ServerPortController {
-
+	@FXML
+	private Button importCustomerBtn;
 	@FXML
 	private Button connectBtn;
 	@FXML
@@ -110,11 +112,31 @@ public class ServerPortController {
 			updateServerStatus("Server successfully started.\n ip to connect is: " + ipv4 + "\n " + "on Port: " + portNumber);
 			connectBtn.setDisable(true);
 			disconnectBtn.setDisable(false);
+			importCustomerBtn.setVisible(true);
 		} else {
 			updateServerStatus("Failed to start server.");
 		}
 	}
-	
+	/**
+	 * Simulates importing customer data and hides the import button upon completion.
+	 * 
+	 * This method calls a static method `importCustomerSimulation` from the `Server` class
+	 * to perform the customer import operation. If a `SQLException` is thrown during
+	 * the operation, it is caught and its stack trace is printed. After the import process
+	 * is complete, the import button is set to be invisible.
+	 * 
+	 * @throws SQLException If an SQL error occurs during the import operation. 
+	 *                       (This is caught internally and does not propagate.)
+	 */
+	public void importCustomerSimulation() {
+		try {
+			Server.importCustomerSimulation();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		importCustomerBtn.setVisible(false);
+	}
 	//add connected client to the list
     public void addConnectedClient(String clientInfo) {
         Platform.runLater(() -> connectedClientsList.add(clientInfo));

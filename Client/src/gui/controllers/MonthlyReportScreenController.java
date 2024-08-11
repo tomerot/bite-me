@@ -124,7 +124,16 @@ public class MonthlyReportScreenController {
 		wholeScreen.getChildren().clear();
 		wholeScreen.getChildren().add(prevWholeScreen);
 	}
-	
+	/**
+	 * Sets up the screen by initializing various selection controls and configuring their visibility.
+	 * The method performs the following actions:
+	 * - Populates the `reportType` combo box with options for "Orders Reports", "Income Reports", and "Performance Reports".
+	 * - Populates the `branchSelect` combo box with branch options ("North", "Center", "South").
+	 * - Populates the `monthSelect` combo box with month values, formatted as "01" to "12".
+	 * - Populates the `yearSelect` combo box with years from 1995 to the current year.
+	 * - Hides the `branchSelect` control if `prevCeoController` is `null`.
+	 * - Sets the visibility of `incomeChart`, `performanceChart`, and `orderChart` to `false`.
+	 */
 	public void setScreen() {
 		reportType.getItems().addAll("Orders Reports", "Income Reports", "Performance Reports");
 		branchSelect.getItems().addAll("North", "Center", "South");
@@ -132,7 +141,7 @@ public class MonthlyReportScreenController {
 			monthSelect.getItems().add("0"+i);
 		}
 		monthSelect.getItems().addAll("10","11","12");
-		for(int j=1995; j<2051;j++) {
+		for(int j=1995; j<=java.time.Year.now().getValue() ;j++) {
 			yearSelect.getItems().add(Integer.toString(j));
 		}
 		if(this.prevCeoController==null) {
@@ -163,7 +172,24 @@ public class MonthlyReportScreenController {
 	    	errorLabel.setText(msg);
 	    });
     }
-   
+    /**
+     * Handles the display of the selected report based on user input.
+     * 
+     * This method first checks if all required fields (`report`, `month`, `year`, and `branch`) are filled. If any field is missing, it updates the label to prompt the user to fill all required fields.
+     * If all fields are filled, it clears the visibility and data of the charts and retrieves the report data from the server. The method then processes the report data based on the type of report received.
+     * 
+     * @param event the action event that triggered the report display (e.g., a button click)
+     * @throws IOException if an I/O error occurs during report data retrieval from the server
+     * 
+     * The method performs the following actions:
+     * - Checks if `report`, `month`, `year`, or `branch` is null and updates the label if any field is missing.
+     * - Sets visibility of `orderChart`, `performanceChart`, and `incomeChart` to false and clears their data.
+     * - Prepares a list of report information and requests the report data from the server via `ClientMainController.requestReportData`.
+     * - Processes the received data based on the type of report:
+     *   - If the report is an order report, it processes order report data using `processOrderReport`.
+     *   - If the report is a performance report, it processes performance report data using `processPerformanceReport`.
+     *   - If the report is an income report, it processes income report data using `processIncomeReport`.
+     */
 	public void displayReport(ActionEvent event) throws IOException {
 		if(this.report==null||this.month==null||this.year==null||this.branch==null) {
 			updateLabel("Please fill all the required fields");
@@ -200,6 +226,23 @@ public class MonthlyReportScreenController {
 
 		}
 	}
+	/**
+	 * Processes and displays the order report data in a pie chart.
+	 * 
+	 * This method updates the label to indicate the order report details and then populates a pie chart with the order data divided by food category. It runs on the JavaFX Application Thread using `Platform.runLater` to ensure that UI updates are made on the correct thread.
+	 * 
+	 * @param orderReportData a list of strings where each element represents the total orders for a specific food category
+	 * 
+	 * The method performs the following actions:
+	 * - Checks if the `orderReportData` list is not empty.
+	 * - Updates the label with the report details for the specified branch, month, and year.
+	 * - Clears any existing data from the `orderChart`.
+	 * - Creates and populates a `PieChart` with data from `orderReportData`, categorizing by food type.
+	 * - Sets the name of each slice in the pie chart to include the value of the slice.
+	 * - Sets the visibility of the `orderChart` to true.
+	 * 
+	 * If `orderReportData` is empty, it updates the label to indicate that the order report does not exist.
+	 */
 	public void processOrderReport(List<String> orderReportData) {
 		if (!orderReportData.isEmpty()) {
 			updateLabel("Order report for the "+this.branch+" branch, "+ this.month+"/"+this.year+", divided by food category");
@@ -224,6 +267,22 @@ public class MonthlyReportScreenController {
 			updateLabel(this.branch+" branch "+ this.month+"/"+this.year+" order report does not exist");
 		}
 	}
+	/**
+	 * Processes and displays the income report data in a table.
+	 * 
+	 * This method updates the label to indicate the income report details and then populates a table with the supplier income data. It sets the cell value factories for each column in the table and updates the table with the provided data.
+	 * 
+	 * @param SupplierIncomeList a list of {@link SupplierIncome} objects, where each object contains information about a supplier's income
+	 * 
+	 * The method performs the following actions:
+	 * - Checks if the `SupplierIncomeList` is not empty.
+	 * - Updates the label with the income report details for the specified branch, month, and year.
+	 * - Configures the cell value factories for the table columns to display supplier ID, supplier name, and total income.
+	 * - Creates an `ObservableList` from the `SupplierIncomeList` and sets it as the items for the table.
+	 * - Sets the visibility of the `incomeChart` to true.
+	 * 
+	 * If `SupplierIncomeList` is empty, it updates the label to indicate that the income report does not exist.
+	 */
 	public void processIncomeReport(List<SupplierIncome> SupplierIncomeList) {
 		if (!SupplierIncomeList.isEmpty()) {
 			updateLabel(this.branch+" branch "+ this.month+"/"+this.year+" income report");
@@ -241,6 +300,24 @@ public class MonthlyReportScreenController {
 			updateLabel(this.branch+" branch "+ this.month+"/"+this.year+" income report does not exist");
 		}
 	}
+	/**
+	 * Processes and displays the performance report data in a pie chart.
+	 * 
+	 * This method updates the label to indicate the performance report details and then populates a pie chart with the performance data, showing the distribution of on-time and late orders. It updates the chart with the provided data and sets its visibility to true.
+	 * 
+	 * @param performanceReportData a list of {@link String} values representing the performance report data; the first value is the count of on-time orders and the second value is the count of late orders
+	 * 
+	 * The method performs the following actions:
+	 * - Checks if the `performanceReportData` list is not empty.
+	 * - Updates the label with the performance report details for the specified branch, month, and year.
+	 * - Clears any existing data from the `performanceChart`.
+	 * - Creates an `ObservableList` of `PieChart.Data` from the `performanceReportData`, with each data point representing either on-time or late orders.
+	 * - Adds the pie chart data to the `performanceChart`.
+	 * - Sets formatted names and values for each pie chart data point.
+	 * - Sets the visibility of the `performanceChart` to true.
+	 * 
+	 * If `performanceReportData` is empty, it updates the label to indicate that the performance report does not exist.
+	 */
 	public void processPerformanceReport(List<String> performanceReportData) {
 		if (!performanceReportData.isEmpty()) {
 			updateLabel("Performance report for the "+this.branch+" branch, "+ this.month+"/"+this.year+", divided by Late/On-Time orders");
