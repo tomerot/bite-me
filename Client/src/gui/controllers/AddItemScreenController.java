@@ -25,25 +25,12 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
-
-/**
- * Controller for the Add Item screen in the GUI.
- * This controller manages the user interface for adding a new item
- * and interacting with the server.
- */
 public class AddItemScreenController implements Initializable{
 
 	private EmployeeHomeScreenController prevController;
 	private HBox wholeScreen;
 	private AuthorizedEmployee employee;
 	
-	
-	/**
-     * Constructs an instance of the AddItemScreenController.
-     *
-     * @param wholeScreen the HBox representing the whole screen
-     * @param prevController the previous main controller (EmployeeHomeScreenController)
-     */
 	public AddItemScreenController(HBox wholeScreen , Object prevController) {
 		this.prevController = (EmployeeHomeScreenController) prevController;
 		this.wholeScreen = wholeScreen;
@@ -85,59 +72,38 @@ public class AddItemScreenController implements Initializable{
 	
 	private User user;
    
-	 /**
-     * Sets the user for this controller.
-     *
-     * @param user the user to set
-     */
-    public void setUser(User user) {
+	
+	public void setUser(User user) {
         this.user = user;
     }
-
-    /**
-     * Gets the current user of this controller.
-     *
-     * @return the user
-     */
-    public User getUser() {
-        return user;
-    }
-
-    /**
-     * Initializes the controller class.
-     * This method is called after the FXML file has been loaded.
-     *
-     * @param location the location used to resolve relative paths for the root object, or null
-     * @param resources the resources used to localize the root object, or null
-     */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        setCategoryComboBox();
-        this.employee = EmployeeHomeScreenController.getEmployee();
-    }
-
-    /**
-     * Sets up the category combo box with predefined categories.
-     */
-    private void setCategoryComboBox() {
-        ArrayList<Category> categories = new ArrayList<>();
-        categories.add(Category.SALAD);
-        categories.add(Category.FIRSTCOURSE);
-        categories.add(Category.MAINCOURSE);
-        categories.add(Category.DESSERT);
-        categories.add(Category.BEVERAGE);
-
-        list = FXCollections.observableArrayList(categories);
-        categoryField.setItems(list);
-    }
-
-    /**
-     * Handles the event when the Add Item button is clicked.
-     * Validates the input, creates an Item object, and sends it to the server.
-     *
-     * @param event the action event
-     * @throws Exception if the request to the server fails
-     */
+	
+	
+	public User getUser() {
+		return user;
+	}
+	//the first method that activate when the file AddItemScreen.hxml is loaded
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {	
+		setCategoryComboBox();	
+		this.employee=EmployeeHomeScreenController.getEmployee();
+	}
+	
+	
+	
+	// creating list of Categories
+	private void setCategoryComboBox() {
+		ArrayList<Category> al = new ArrayList<Category>();	
+		al.add(Category.SALAD);
+		al.add(Category.FIRSTCOURSE);
+		al.add(Category.MAINCOURSE);
+		al.add(Category.DESSERT);
+		al.add(Category.BEVERAGE);
+		
+		list = FXCollections.observableArrayList(al);
+		
+		categoryField.setItems(list);
+	}
+	
 	@FXML
 	private void onAddItemClicked(ActionEvent event) throws Exception{
 		resultMessage.setStyle("-fx-text-fill: red;");

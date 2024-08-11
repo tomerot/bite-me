@@ -13,23 +13,21 @@ public class Order implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private List<ItemInOrder> itemsList;
     private int orderID; //orderid
-    private String customerID;
     private String recipient; //recipient
     private String recipientPhone; //recipientPhone
-    private String recipientEmail;
     private SupplyMethod supplyOption; //supplyOption 
     private Supplier supplier; // can get id,city,address
-    private Customer customer;
-    private String city;
-    private String address;
+    private Customer customer; 
     private Branch branchName;
     private String requestedDate; //requested date?
     private String requestedTime; //requested time?
     private OrderType type;
     private float totalPrice;
     private String approvalTimer; //approval time?
-    private String arrivalTimer; //arrival time?
+    private String arrivalTime; //arrival time?
     private String status;
+	private String city;
+    private String address;
     private String approvalDate;
     private String arrivalDate;
     
@@ -48,45 +46,10 @@ public class Order implements Serializable{
     	this.type = type;
     	this.totalPrice = totalPrice;
     	this.approvalTimer = approvalTimer;
-    	this.arrivalTimer = arrivalTime;
+    	this.arrivalTime = arrivalTime;
     	this.status = status;
     }
     
-    public Order(int orderID,String customerID, String recipient,String recipientPhone,String recipientEmail, String city,String address,SupplyMethod supplyOption, OrderType type,
-    		String requestedDate, String requestedTime, String approvalTimer, String arrivalTime, float totalPrice, String status) {
-    	this.orderID = orderID;
-    	this.customerID = customerID;
-    	this.recipient = recipient;
-    	this.recipientPhone = recipientPhone;
-    	this.recipientEmail = recipientEmail;
-    	this.city = city;
-    	this.address = address;
-    	this.supplyOption = supplyOption;
-    	this.type = type;
-    	this.requestedDate = requestedDate;
-    	this.requestedTime = requestedTime;
-    	this.totalPrice = totalPrice;
-    	this.approvalTimer = approvalTimer;
-    	this.arrivalTimer = arrivalTime;
-    	this.status = status;
-    }
-    
-    public String getCustomerID() {
-    	return customerID;
-    }
-    
-    public void setCustomerID(String customerID) {
-    	this.customerID = customerID;
-    }
-    
-    
-    public String getRecipientEmail() {
-    	return recipientEmail;
-    }
-    
-    public void setRecipientEmail(String recipientEmail) {
-    	this.recipientEmail = recipientEmail;
-    }
     public Order(List<ItemInOrder> itemsList, int orderID,String recipient,String recipientPhone,SupplyMethod supplyOption, Supplier supplier, Customer customer, Branch branchName, String requestedDate,
             String requestedTime, OrderType type, float totalPrice, String approvalTimer, String arrivalTime, String status, String city, String address) {
     	this.itemsList=itemsList;
@@ -102,7 +65,7 @@ public class Order implements Serializable{
     	this.type = type;
     	this.totalPrice = totalPrice;
     	this.approvalTimer = approvalTimer;
-    	this.arrivalTimer = arrivalTime;
+    	this.arrivalTime = arrivalTime;
     	this.status = status;
     	this.city = city;
     	this.address = address;
@@ -123,7 +86,7 @@ public class Order implements Serializable{
     	this.type = type;
     	this.totalPrice = totalPrice;
     	this.approvalTimer = approvalTimer;
-    	this.arrivalTimer = arrivalTime;
+    	this.arrivalTime = arrivalTime;
     	this.status = status;
     	this.city = city;
     	this.address = address;
@@ -227,20 +190,20 @@ public class Order implements Serializable{
 		this.totalPrice = totalPrice;
 	}
 
-	public String getApprovalTime() {
+	public String getApprovalTimer() {
 		return approvalTimer;
 	}
 
-	public void setApprovalTime(String approvalTime) {
-		this.approvalTimer = approvalTime;
+	public void setApprovalTimer(String approvalTimer) {
+		this.approvalTimer = approvalTimer;
 	}
 
 	public String getArrivalTime() {
-		return arrivalTimer;
+		return arrivalTime;
 	}
 
 	public void setArrivalTime(String arrivalTime) {
-		this.arrivalTimer = arrivalTime;
+		this.arrivalTime = arrivalTime;
 	}
 
 	public String getStatus() {
@@ -250,19 +213,19 @@ public class Order implements Serializable{
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
-	public String getCity() {
+
+    public String getCity() {
 		return city;
 	}
-	
+
 	public void setCity(String city) {
 		this.city = city;
 	}
-	
+
 	public String getAddress() {
 		return address;
 	}
-	
+
 	public void setAddress(String address) {
 		this.address = address;
 	}

@@ -13,12 +13,13 @@ import gui.controllers.MyOrdersScreenController;
 import gui.controllers.QuarterlyReportScreenController;
 import gui.controllers.EditItemScreenController;
 import gui.controllers.EmployeeHomeScreenController;
-import gui.controllers.RemoveItemScreenController;
-import gui.controllers.SupplierScreenController;
-import gui.controllers.ViewSupplierOrdersScreenController;
+import gui.controllers.MonthlyReportScreenController;
+import gui.controllers.MyOrdersScreenController;
 import gui.controllers.OrderSummaryScreenController;
 import gui.controllers.RegistrationScreenController;
+import gui.controllers.RemoveItemScreenController;
 import gui.controllers.RestaurantMenuScreenController;
+import gui.controllers.SupplierScreenController;
 import gui.controllers.ThankYouScreenController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
@@ -113,13 +114,6 @@ public class ScreenLoader {
 			}
 			case EDIT_ITEM_SCREEN:{
 				EditItemScreenController controller=new EditItemScreenController(wholeScreen, currController);
-				loader.setController(controller);
-				loader.load();
-				break;
-			}
-			
-			case VIEW_SUPPLIER_ORDERS_SCREEN:{
-				ViewSupplierOrdersScreenController controller=new ViewSupplierOrdersScreenController(wholeScreen, currController);
 				loader.setController(controller);
 				loader.load();
 				break;
