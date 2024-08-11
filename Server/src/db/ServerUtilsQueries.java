@@ -5,15 +5,30 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.Year;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import containers.ServerResponseDataContainer;
+import entities.SupplierIncome;
 import enums.ServerResponse;
 
 public class ServerUtilsQueries {
 
+    /**
+     * Fetches the order report data for a given branch and date range.
+     *
+     * @param dbConn            The database connection to use for the query.
+     * @param startOfLastMonth  The start date of the range to fetch data for.
+     * @param endOfLastMonth    The end date of the range to fetch data for.
+     * @param branch            The branch for which to fetch the data.
+     * @return A ServerResponseDataContainer containing the results of the query,
+     *         either a map of category quantities or an error message.
+     */
     public ServerResponseDataContainer fetchOrdersReportData(Connection dbConn, LocalDate startOfLastMonth, LocalDate endOfLastMonth, String branch) {
         ServerResponseDataContainer response = new ServerResponseDataContainer();
         HashMap<String, Integer> categoryQuantities = new HashMap<>();
@@ -60,11 +75,19 @@ public class ServerUtilsQueries {
         }
         return response;
     }
-    
-    
+
+    /**
+     * Inserts the order report data into the database for a specified branch and month.
+     *
+     * @param dbConn The database connection to use for the insert operation.
+     * @param data   A HashMap containing categories and their corresponding order quantities.
+     * @param branch The branch for which the report is being inserted.
+     * @param year   The year for the report entry.
+     * @param month  The month for the report entry.
+     */
     public void insertOrdersReportData(Connection dbConn, HashMap<String, Integer> data, String branch, int year, int month) {
         String sql = "INSERT INTO orders_reports (Year, Month, Branch, Category, Orders) VALUES (?, ?, ?, ?, ?)";
-        
+
         try (PreparedStatement pstmt = dbConn.prepareStatement(sql)) {
             dbConn.setAutoCommit(false); // Ensure control over transaction commit
             int totalInserted = 0; // Counter to keep track of inserted rows
@@ -100,8 +123,17 @@ public class ServerUtilsQueries {
             }
         }
     }
-    
-    
+
+    /**
+     * Fetches performance report data for a given branch and date range.
+     *
+     * @param dbConn           The database connection to use for the query.
+     * @param startOfLastMonth The start date of the range to fetch data for.
+     * @param endOfLastMonth   The end date of the range to fetch data for.
+     * @param branch           The branch for which to fetch the data.
+     * @return A ServerResponseDataContainer containing the results of the query,
+     *         either a map of performance metrics or an error message.
+     */
     public ServerResponseDataContainer fetchPerformanceReportData(Connection dbConn, LocalDate startOfLastMonth, LocalDate endOfLastMonth, String branch) {
         ServerResponseDataContainer response = new ServerResponseDataContainer();
         Map<String, Integer> results = new HashMap<>();
@@ -146,8 +178,18 @@ public class ServerUtilsQueries {
         }
         return response;
     }
-    
-    public void insertPerformanceReport(Connection dbConn, HashMap<String, Integer> data,String branch,int year, int month) throws SQLException {
+
+    /**
+     * Inserts the performance report data into the database for a specified branch and month.
+     *
+     * @param dbConn The database connection to use for the insert operation.
+     * @param data   A HashMap containing performance metrics.
+     * @param branch The branch for which the report is being inserted.
+     * @param year   The year for the report entry.
+     * @param month  The month for the report entry.
+     * @throws SQLException If an error occurs during the SQL execution.
+     */
+    public void insertPerformanceReport(Connection dbConn, HashMap<String, Integer> data, String branch, int year, int month) throws SQLException {
         String query = "INSERT INTO performance_reports (Year, Month, Branch, OnTime, Late) VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
@@ -161,6 +203,98 @@ public class ServerUtilsQueries {
             System.out.println("Inserted " + affectedRows + " rows into performance_reports.");
         }
     }
+
+    /**
+     * Fetches the income report data for a given branch and date range.
+     *
+     * @param dbConn            The database connection to use for the query.
+     * @param startOfLastMonth  The start date of the range to fetch data for.
+     * @param endOfLastMonth    The end date of the range to fetch data for.
+     * @param branch            The branch for which to fetch the data.
+     * @return A ServerResponseDataContainer containing the results of the query,
+     *         either a list of SupplierIncome objects or an error message.
+     */
+    public ServerResponseDataContainer fetchIncomeReportData(Connection dbConn, LocalDate startOfLastMonth, LocalDate endOfLastMonth, String branch) {
+        ServerResponseDataContainer response = new ServerResponseDataContainer();
+        List<SupplierIncome> results = new ArrayList<>();
+
+        String query = "SELECT "
+                + "s.ID AS SupplierID, "
+                + "s.Name AS supplierName, "
+                + "ROUND(COALESCE(SUM(o.TotalPrice), 0), 2) AS incomes, "
+                + "COUNT(o.OrderID) AS totalOrders "
+                + "FROM "
+                + "suppliers s "
+                + "LEFT JOIN orders o ON s.ID = o.SupplierID "
+                + "AND o.RequestDate BETWEEN ? AND ? "
+                + "AND s.Branch = o.Branch "
+                + "WHERE "
+                + "s.Branch = ? "
+                + "GROUP BY "
+                + "s.ID, s.Name "
+                + "ORDER BY incomes DESC";
+
+        try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+            stmt.setDate(1, java.sql.Date.valueOf(startOfLastMonth));
+            stmt.setDate(2, java.sql.Date.valueOf(endOfLastMonth));
+            stmt.setString(3, branch);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int supplierID = rs.getInt("SupplierID");
+                    String supplierName = rs.getString("supplierName");
+                    int incomes = rs.getInt("incomes");
+                    int totalOrders = rs.getInt("totalOrders");
+                    results.add(new SupplierIncome(supplierID, supplierName, incomes, totalOrders));
+                }
+
+                if (!results.isEmpty()) {
+                    response.setMessage(results); // Set the List as the message instead of a String
+                    response.setResponse(ServerResponse.DATA_FOUND);
+                } else {
+                    response.setResponse(ServerResponse.NO_DATA_FOUND);
+                    response.setMessage("No data found for the specified criteria.");
+                }
+            }
+        } catch (SQLException e) {
+            response.setResponse(ServerResponse.ERROR);
+            response.setMessage("SQL Error: " + e.getMessage());
+        }
+        return response;
+    }
+
+    /**
+     * Inserts the income report data into the database for a specified branch and month.
+     *
+     * @param dbConn  The database connection to use for the insert operation.
+     * @param incomes A list of SupplierIncome objects representing the data to insert.
+     * @param branch  The branch for which the report is being inserted.
+     * @param year    The year for the report entry.
+     * @param month   The month for the report entry.
+     */
+    public void insertIncomeReport(Connection dbConn, List<SupplierIncome> incomes, String branch, int year, int month) {
+        String insertQuery = "INSERT INTO incomes_reports (Year, Month, Branch, SupplierID, SupplierName, Incomes) VALUES (?, ?, ?, ?, ?, ?)";
+        int count = 0;  // To keep track of inserted rows
+
+        try (PreparedStatement stmt = dbConn.prepareStatement(insertQuery)) {
+            for (SupplierIncome income : incomes) {
+                stmt.setInt(1, year);
+                stmt.setInt(2, month);
+                stmt.setString(3, branch);
+                stmt.setInt(4, income.getSupplierID());
+                stmt.setString(5, income.getSupplierName());
+                stmt.setInt(6, income.getIncome());
+                stmt.addBatch();  
+                count++;
+            }
+            int[] updateCounts = stmt.executeBatch();  
+            System.out.println(count + " rows inserted successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error inserting data: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Inserts customer and user data into the database from CSV files as an import simulation.
      * 
