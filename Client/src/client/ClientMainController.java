@@ -8,6 +8,7 @@ import java.util.List;
 import entities.BranchManager;
 import entities.Customer;
 import entities.Order;
+import entities.Supplier;
 import entities.User;
 import enums.Branch;
 import enums.ClientRequest;
@@ -113,6 +114,18 @@ public class ClientMainController {
 				userList);
 		ClientMainController.accept(request);
 	}
+	public static void requestReportData(List<String> ReportInfo) {
+		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.FETCH_REPORT_DATA,
+				ReportInfo);
+		ClientMainController.accept(request);
+	}
+	public static void requestQuarterReportData(List<String> ReportInfo) {
+		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.FETCH_QUARTER_REPORT_DATA,
+				ReportInfo);
+		ClientMainController.accept(request);
+	}
+	
+	
 
 //    /**
 //     * Requests all restaurants available for a given customer from the server.
@@ -152,22 +165,10 @@ public class ClientMainController {
 	}
 
     
-    public static void requestOrdersData(int supplierID) {
-    	ClientRequestDataContainer request=new ClientRequestDataContainer(ClientRequest.GET_ORDERS_DATA, supplierID);
+    public static void requestOrderData(int supplierID) {
+    	ClientRequestDataContainer request=new ClientRequestDataContainer(ClientRequest.GET_ORDER_DATA, supplierID);
     	ClientMainController.accept(request);
     }
-    
-    public static void requestSuppleriUpdateOrderStatus(int[] orderInfo) {
-		
-		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.SUPPLIER_UPDATE_ORDER_STATUS, orderInfo);
-		ClientMainController.accept(request);
-	}
-    
-    public static void requestSupplerRefreshAwaitingOrders(Integer supplierID) {
-		
-		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.SUPPLIER_REFRESH_AWAITING_ORDERS, supplierID);
-		ClientMainController.accept(request);
-	}
 	
 	public static void requestAddItemData(Item item) {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.ADD_ITEM_DATA, item);
@@ -199,5 +200,24 @@ public class ClientMainController {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.UPDATE_ITEM, item);
 		ClientMainController.accept(request);
 	}
+	
+    public static void requestSupplierItems(Supplier supplier) {
+        ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.GET_SUPPLIER_ITEMS, supplier);
+        ClientMainController.accept(request);
+    }
+    
+    public static void requestAllRelevantCitys(Supplier supplier) {
+        ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.GET_RELEVANT_CITIES, supplier);
+        ClientMainController.accept(request);
+    }
 
+    public static void updateOrderAndItems(List<Object> list) {
+        ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.UPDATE_ORDER_AND_ITEMS, list);
+        ClientMainController.accept(request);
+    }
+    
+    public static void updateCustomerWallet(List<Object> list) {
+        ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.UPDATE_CUSTOMER_WALLET, list);
+        ClientMainController.accept(request);
+    }
 }
