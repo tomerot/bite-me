@@ -13,23 +13,23 @@ public class Order implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private List<ItemInOrder> itemsList;
     private int orderID; //orderid
+    private String customerID;
     private String recipient; //recipient
     private String recipientPhone; //recipientPhone
+    private String recipientEmail;
     private SupplyMethod supplyOption; //supplyOption 
     private Supplier supplier; // can get id,city,address
-    private Customer customer; 
+    private Customer customer;
+    private String city;
+    private String address;
     private Branch branchName;
     private String requestedDate; //requested date?
     private String requestedTime; //requested time?
     private OrderType type;
     private float totalPrice;
-    private String approvalTimer; //approval time?
+    private String approvalTime; //approval time?
     private String arrivalTime; //arrival time?
     private String status;
-	private String city;
-    private String address;
-    private String approvalDate;
-    private String arrivalDate;
     
     public Order(List<ItemInOrder> itemsList, int orderID,String recipient,String recipientPhone,SupplyMethod supplyOption, Supplier supplier, Customer customer, Branch branchName, String requestedDate,
             String requestedTime, OrderType type, float totalPrice, String approvalTimer, String arrivalTime, String status) {
@@ -45,53 +45,46 @@ public class Order implements Serializable{
     	this.requestedTime = requestedTime;
     	this.type = type;
     	this.totalPrice = totalPrice;
-    	this.approvalTimer = approvalTimer;
+    	this.approvalTime = approvalTimer;
     	this.arrivalTime = arrivalTime;
     	this.status = status;
     }
     
-    public Order(List<ItemInOrder> itemsList, int orderID,String recipient,String recipientPhone,SupplyMethod supplyOption, Supplier supplier, Customer customer, Branch branchName, String requestedDate,
-            String requestedTime, OrderType type, float totalPrice, String approvalTimer, String arrivalTime, String status, String city, String address) {
-    	this.itemsList=itemsList;
+    //Sagi Constructor
+    public Order(int orderID,String customerID, String recipient,String recipientPhone,String recipientEmail, String city,String address,SupplyMethod supplyOption, OrderType type,
+    		String requestedDate, String requestedTime, String approvalTimer, String arrivalTime, float totalPrice, String status) {
     	this.orderID = orderID;
+    	this.customerID = customerID;
     	this.recipient = recipient;
     	this.recipientPhone = recipientPhone;
-    	this.supplyOption = supplyOption;
-    	this.supplier = supplier;
-    	this.customer = customer;
-    	this.branchName = branchName;
-    	this.requestedDate = requestedDate;
-    	this.requestedTime = requestedTime;
-    	this.type = type;
-    	this.totalPrice = totalPrice;
-    	this.approvalTimer = approvalTimer;
-    	this.arrivalTime = arrivalTime;
-    	this.status = status;
+    	this.recipientEmail = recipientEmail;
     	this.city = city;
     	this.address = address;
+    	this.supplyOption = supplyOption;
+    	this.type = type;
+    	this.requestedDate = requestedDate;
+    	this.requestedTime = requestedTime;
+    	this.totalPrice = totalPrice;
+    	this.approvalTime = approvalTimer;
+    	this.arrivalTime = arrivalTime;
+    	this.status = status;
     }
     
-    public Order(List<ItemInOrder> itemsList, int orderID,String recipient,String recipientPhone,SupplyMethod supplyOption, Supplier supplier, Customer customer, Branch branchName, String requestedDate,
-            String requestedTime, OrderType type, float totalPrice, String approvalTimer, String arrivalTime, String status, String city, String address, String approvalDate, String arrivalDate) {
-    	this.itemsList=itemsList;
-    	this.orderID = orderID;
-    	this.recipient = recipient;
-    	this.recipientPhone = recipientPhone;
-    	this.supplyOption = supplyOption;
-    	this.supplier = supplier;
-    	this.customer = customer;
-    	this.branchName = branchName;
-    	this.requestedDate = requestedDate;
-    	this.requestedTime = requestedTime;
-    	this.type = type;
-    	this.totalPrice = totalPrice;
-    	this.approvalTimer = approvalTimer;
-    	this.arrivalTime = arrivalTime;
-    	this.status = status;
-    	this.city = city;
-    	this.address = address;
-    	this.approvalDate = approvalDate;
-    	this.arrivalDate = arrivalDate;
+    public String getCustomerID() {
+    	return customerID;
+    }
+    
+    public void setCustomerID(String customerID) {
+    	this.customerID = customerID;
+    }
+    
+    
+    public String getRecipientEmail() {
+    	return recipientEmail;
+    }
+    
+    public void setRecipientEmail(String recipientEmail) {
+    	this.recipientEmail = recipientEmail;
     }
    
 	public List<ItemInOrder> getItemsList() {
@@ -190,12 +183,12 @@ public class Order implements Serializable{
 		this.totalPrice = totalPrice;
 	}
 
-	public String getApprovalTimer() {
-		return approvalTimer;
+	public String getApprovalTime() {
+		return approvalTime;
 	}
 
-	public void setApprovalTimer(String approvalTimer) {
-		this.approvalTimer = approvalTimer;
+	public void setApprovalTime(String approvalTime) {
+		this.approvalTime = approvalTime;
 	}
 
 	public String getArrivalTime() {
@@ -213,37 +206,21 @@ public class Order implements Serializable{
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
-    public String getCity() {
+	
+	public String getCity() {
 		return city;
 	}
-
+	
 	public void setCity(String city) {
 		this.city = city;
 	}
-
+	
 	public String getAddress() {
 		return address;
 	}
-
+	
 	public void setAddress(String address) {
 		this.address = address;
-	}
-
-	public String getApprovalDate() {
-		return approvalDate;
-	}
-
-	public void setApprovalDate(String approvalDate) {
-		this.approvalDate = approvalDate;
-	}
-
-	public String getArrivalDate() {
-		return arrivalDate;
-	}
-
-	public void setArrivalDate(String arrivalDate) {
-		this.arrivalDate = arrivalDate;
 	}
     
 }
