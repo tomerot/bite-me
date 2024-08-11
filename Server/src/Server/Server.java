@@ -19,9 +19,11 @@ import db.DBController;
 import db.QueryControl;
 import db.ReportGenerator;
 import entities.Item;
+import entities.ItemInOrder;
 import entities.BranchManager;
 import entities.Customer;
 import entities.Order;
+import entities.Supplier;
 import entities.SupplierIncome;
 import entities.User;
 import enums.Branch;
@@ -179,15 +181,6 @@ public class Server extends AbstractServer {
 			}
 			break;}
 			
-//		case FETCH_BRANCH_RESTAURANTS:
-//			customer = (Customer) data.getMessage();
-//			try {
-//				handleRestaurantsData(customer,client);
-//			} catch (SQLException e) {
-//				e.printStackTrace();
-//			}
-//			break;
-			
 		case FETCH_BRANCH_RESTAURANTS:{
 			Branch branchName = (Branch) data.getMessage();
 			try {
@@ -224,11 +217,70 @@ public class Server extends AbstractServer {
 				e.printStackTrace();
 			}
 			break;
+		    
+        case GET_SUPPLIER_ITEMS:
+            Supplier supplier = (Supplier) data.getMessage();
+            try {
+                handleImportSupplierItems(supplier,client);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            break;
+
+        case GET_RELEVANT_CITIES:
+            Supplier supplier1 = (Supplier) data.getMessage();
+            try {
+                handleImportRelevantCities(supplier1,client);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            break;
+            
+        case UPDATE_ORDER_AND_ITEMS:
+        	List<Object> receivedList = (List<Object>) data.getMessage();
+        	Order receivedOrder = (Order) receivedList.get(0);
+        	Map<ItemInOrder, Integer> receivedCart = (Map<ItemInOrder, Integer>) receivedList.get(1);
+        	try {
+				handleUpdateOrderAndItem(receivedOrder, receivedCart, client);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+        	break;
+        	
+        case UPDATE_CUSTOMER_WALLET:
+        	List<Object> listOW = (List<Object>) data.getMessage();
+        	Order requestedOrder = (Order) listOW.get(0);
+        	float walletUsedAmount = (Float) listOW.get(1);
+        	try {
+				handleUpdateCustomerWallet(requestedOrder,walletUsedAmount,client);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+        	break;
+        	
+        		
 		default:
 		    return;
-
 	}
 }
+	
+	private void handleUpdateCustomerWallet(Order order,Float walletUsedAmount ,ConnectionToClient client) throws SQLException {
+		QueryControl.orderQueries.updateCustomerWalletBalance(dbConn, order, walletUsedAmount);
+		try {
+			client.sendToClient(new ServerResponseDataContainer());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void handleUpdateOrderAndItem(Order order,Map<ItemInOrder, Integer> receivedCart ,ConnectionToClient client) throws SQLException {
+		ServerResponseDataContainer response =QueryControl.orderQueries.updateOrderAndItems(dbConn, order, receivedCart);
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	private void handleUpdateItemRequest(Item item, ConnectionToClient client) {
 		ServerResponseDataContainer response = QueryControl.userQueries.UpdateItemInfo(dbConn, item);
@@ -530,10 +582,24 @@ public class Server extends AbstractServer {
 	    }
 	}
 	
+    private void handleImportSupplierItems(Supplier supplier, ConnectionToClient client) throws SQLException{
+        ServerResponseDataContainer response = QueryControl.orderQueries.importSupplierItems(dbConn, supplier);
+        try {
+            client.sendToClient(response);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 	
 	
-	
-	
+	private void handleImportRelevantCities(Supplier supplier, ConnectionToClient client) throws SQLException {
+		ServerResponseDataContainer response = QueryControl.orderQueries.FetchRelevantCities(dbConn, supplier);
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	
 	

@@ -283,7 +283,7 @@ public class UserQuery {
 					String homeBranch = rs.getString("HomeBranch");
 					String credit = rs.getString("Credit");
 					String cvv = rs.getString("CVV");
-					Date validDate = rs.getDate("validDate");
+					//Date validDate = rs.getDate("validDate");
 					float walletBalance = rs.getFloat("WalletBalance");
 					// Can get also companyID and Credit Card
 
@@ -293,31 +293,31 @@ public class UserQuery {
 					case "North":
 						if (type.equals("Private"))
 							customer = new Customer(user.getUserName(), id, CustomerType.PRIVATE, companyId, firstName, 
-									lastName, email, phone, Branch.NORTH, credit, cvv, validDate, walletBalance, 
+									lastName, email, phone, Branch.NORTH, credit, cvv, null, walletBalance, 
 									user.getisLoggedIn(), user.getRegistered(), user.getPassword());
 						else
 							customer = new Customer(user.getUserName(), id, CustomerType.BUSINESS, companyId, firstName, 
-									lastName, email, phone, Branch.NORTH, credit, cvv, validDate, walletBalance, 
+									lastName, email, phone, Branch.NORTH, credit, cvv, null, walletBalance, 
 									user.getisLoggedIn(), user.getRegistered(), user.getPassword());
 						break;
 					case "Center":
 						if (type.equals("Private"))
 							customer = new Customer(user.getUserName(), id, CustomerType.PRIVATE, companyId, firstName, 
-									lastName, email, phone, Branch.CENTER, credit, cvv, validDate, walletBalance, 
+									lastName, email, phone, Branch.CENTER, credit, cvv, null, walletBalance, 
 									user.getisLoggedIn(), user.getRegistered(), user.getPassword());
 						else
 							customer = new Customer(user.getUserName(), id, CustomerType.BUSINESS, companyId, firstName, 
-									lastName, email, phone, Branch.CENTER, credit, cvv, validDate, walletBalance, 
+									lastName, email, phone, Branch.CENTER, credit, cvv, null, walletBalance, 
 									user.getisLoggedIn(), user.getRegistered(), user.getPassword());
 						break;
 					case "South":
 						if (type.equals("Private"))
 							customer = new Customer(user.getUserName(), id, CustomerType.PRIVATE, companyId, firstName, 
-									lastName, email, phone, Branch.SOUTH, credit, cvv, validDate, walletBalance, 
+									lastName, email, phone, Branch.SOUTH, credit, cvv, null, walletBalance, 
 									user.getisLoggedIn(), user.getRegistered(), user.getPassword());
 						else
 							customer = new Customer(user.getUserName(), id, CustomerType.BUSINESS, companyId, firstName, 
-									lastName, email, phone, Branch.SOUTH, credit, cvv, validDate, walletBalance, 
+									lastName, email, phone, Branch.SOUTH, credit, cvv, null, walletBalance, 
 									user.getisLoggedIn(), user.getRegistered(), user.getPassword());
 						break;
 					default:

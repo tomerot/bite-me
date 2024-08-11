@@ -26,6 +26,10 @@ public class Order implements Serializable{
     private String approvalTimer; //approval time?
     private String arrivalTime; //arrival time?
     private String status;
+	private String city;
+    private String address;
+    private String approvalDate;
+    private String arrivalDate;
     
     public Order(List<ItemInOrder> itemsList, int orderID,String recipient,String recipientPhone,SupplyMethod supplyOption, Supplier supplier, Customer customer, Branch branchName, String requestedDate,
             String requestedTime, OrderType type, float totalPrice, String approvalTimer, String arrivalTime, String status) {
@@ -46,6 +50,49 @@ public class Order implements Serializable{
     	this.status = status;
     }
     
+    public Order(List<ItemInOrder> itemsList, int orderID,String recipient,String recipientPhone,SupplyMethod supplyOption, Supplier supplier, Customer customer, Branch branchName, String requestedDate,
+            String requestedTime, OrderType type, float totalPrice, String approvalTimer, String arrivalTime, String status, String city, String address) {
+    	this.itemsList=itemsList;
+    	this.orderID = orderID;
+    	this.recipient = recipient;
+    	this.recipientPhone = recipientPhone;
+    	this.supplyOption = supplyOption;
+    	this.supplier = supplier;
+    	this.customer = customer;
+    	this.branchName = branchName;
+    	this.requestedDate = requestedDate;
+    	this.requestedTime = requestedTime;
+    	this.type = type;
+    	this.totalPrice = totalPrice;
+    	this.approvalTimer = approvalTimer;
+    	this.arrivalTime = arrivalTime;
+    	this.status = status;
+    	this.city = city;
+    	this.address = address;
+    }
+    
+    public Order(List<ItemInOrder> itemsList, int orderID,String recipient,String recipientPhone,SupplyMethod supplyOption, Supplier supplier, Customer customer, Branch branchName, String requestedDate,
+            String requestedTime, OrderType type, float totalPrice, String approvalTimer, String arrivalTime, String status, String city, String address, String approvalDate, String arrivalDate) {
+    	this.itemsList=itemsList;
+    	this.orderID = orderID;
+    	this.recipient = recipient;
+    	this.recipientPhone = recipientPhone;
+    	this.supplyOption = supplyOption;
+    	this.supplier = supplier;
+    	this.customer = customer;
+    	this.branchName = branchName;
+    	this.requestedDate = requestedDate;
+    	this.requestedTime = requestedTime;
+    	this.type = type;
+    	this.totalPrice = totalPrice;
+    	this.approvalTimer = approvalTimer;
+    	this.arrivalTime = arrivalTime;
+    	this.status = status;
+    	this.city = city;
+    	this.address = address;
+    	this.approvalDate = approvalDate;
+    	this.arrivalDate = arrivalDate;
+    }
    
 	public List<ItemInOrder> getItemsList() {
 		return itemsList;
@@ -167,5 +214,36 @@ public class Order implements Serializable{
 		this.status = status;
 	}
 
+    public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getApprovalDate() {
+		return approvalDate;
+	}
+
+	public void setApprovalDate(String approvalDate) {
+		this.approvalDate = approvalDate;
+	}
+
+	public String getArrivalDate() {
+		return arrivalDate;
+	}
+
+	public void setArrivalDate(String arrivalDate) {
+		this.arrivalDate = arrivalDate;
+	}
     
 }

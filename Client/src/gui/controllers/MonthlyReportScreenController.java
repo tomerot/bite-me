@@ -95,6 +95,18 @@ public class MonthlyReportScreenController {
 
     public String getReportType() { return report; }
 	
+    /**
+     * Navigates to the next page of the monthly report.
+     * 
+     * @param event the action event triggered by clicking the next page button
+     * @throws Exception if an error occurs during the page transition
+     */
+//	public void displayNextPage(ActionEvent event) throws Exception {
+//		ScreenLoader screenLoader = new ScreenLoader();
+//		AnchorPane nextDash = screenLoader.loadOnDashboard(wholeScreen, "/gui/view/MonthlyReportScreen2.fxml", Screen.MONTHLY_REPORT_SCREEN_TWO, this);
+//		dashboard.getChildren().clear();
+//		dashboard.getChildren().add(nextDash);
+//	}
     public String getYear() { return year; }
     
     public String getMonth() { return month; }
