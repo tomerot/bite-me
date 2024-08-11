@@ -10,19 +10,15 @@ public class ItemInOrder extends Item {
 	private String size=null;
 	private String donenessDegree=null;
 	private String restrictions=null;
+	private int quantity;
 	
-	public ItemInOrder(int itemID, int supplierID, String name, Category type, String description,
-					   boolean customSize, boolean customDonenessDegree, boolean customRestrictions, 
-					   String size, String donenessDegree,String restrictions, float price) {
-		super(itemID, supplierID, name, type, description, customSize, customDonenessDegree, customRestrictions, price);
-		if(customSize)
-			this.size=size;
-		if(customDonenessDegree)
-			this.donenessDegree=donenessDegree;
-		if(customRestrictions)
-			this.restrictions=restrictions;
+	public ItemInOrder(int itemID, String name, String size, String donenessDegree,String restrictions,int quantity, float price) {
+		super(itemID,0, name, null ,null, false, false, false, price); // null/false -> we don't need those fields.
+		this.size=size;
+		this.donenessDegree=donenessDegree;
+		this.restrictions=restrictions;
+		this.quantity = quantity;
 	}
-	
 	public ItemInOrder(Item item) {
 		super(item.getItemID(), item.getSupplierID(), item.getName(), item.getType(), item.getDescription(),
 			  item.getCustomSize(), item.getCustomDonenessDegree(), item.getCustomRestrictions(), item.getPrice());
@@ -56,4 +52,12 @@ public class ItemInOrder extends Item {
     //restrictions getter and setter
     public String getRestrictions() { return restrictions; }
     public void setRestrictions(String restrictions) { this.restrictions = restrictions; }
+
+	public int getQuantity() {
+		return quantity;
+	}
+	
+	public void setQuantity(int quantity) {
+		 this.quantity = quantity;
+	}
 }

@@ -16,8 +16,13 @@ import containers.ClientRequestDataContainer;
 import containers.ServerResponseDataContainer;
 import db.DBConnectionDetails;
 import db.DBController;
+import db.EmployeeQuery;
 import db.QueryControl;
+<<<<<<< HEAD
+import db.SupplierQuery;
+=======
 import db.ReportGenerator;
+>>>>>>> staging
 import entities.Item;
 import entities.ItemInOrder;
 import entities.BranchManager;
@@ -114,9 +119,23 @@ public class Server extends AbstractServer {
 				e.printStackTrace();
 			}
 			break;
-		case GET_ORDER_DATA:{
+		case GET_ORDERS_DATA:{
 			Integer supplierID=(Integer)data.getMessage();
 			handleGetOrdersData(supplierID,client);
+			break;
+		}
+		
+		case SUPPLIER_UPDATE_ORDER_STATUS:{
+			System.out.println("Server got supplier update order status");
+			int[] orderInfo = (int[])data.getMessage();
+			handleSupplierUpdateOrderStatus(orderInfo, client);
+			break;
+		}
+			
+		case SUPPLIER_REFRESH_AWAITING_ORDERS: {
+			System.out.println("Server got supplier refresh");
+			Integer supplierID = (Integer)data.getMessage();
+			handleSupplierRefreshAwaitingOrders(supplierID, client);
 			break;
 		}
 			
@@ -264,6 +283,12 @@ public class Server extends AbstractServer {
 	}
 }
 	
+	/**
+	 * Handles a request to update an item's information.
+	 *
+	 * @param item the Item object containing the updated information
+	 * @param client the client that requested the update
+	 */
 	private void handleUpdateCustomerWallet(Order order,Float walletUsedAmount ,ConnectionToClient client) throws SQLException {
 		QueryControl.orderQueries.updateCustomerWalletBalance(dbConn, order, walletUsedAmount);
 		try {
@@ -283,25 +308,37 @@ public class Server extends AbstractServer {
 	}
 	
 	private void handleUpdateItemRequest(Item item, ConnectionToClient client) {
-		ServerResponseDataContainer response = QueryControl.userQueries.UpdateItemInfo(dbConn, item);
-		try {
+		ServerResponseDataContainer response = QueryControl.employeeQuery.UpdateItemInfo(dbConn, item);
+		try {  
 			client.sendToClient(response);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
+	/**
+	 * Handles a request to fetch the full list of items for a given supplier.
+	 *
+	 * @param supplierID the ID of the supplier for whom to fetch the items
+	 * @param client the client that requested the data
+	 */
 	private void handleGetFullItemsListRequest(Integer supplierID, ConnectionToClient client) {
-		ServerResponseDataContainer response = QueryControl.userQueries.FetchFullItemsListInfo(dbConn, supplierID);
-		try {
+		ServerResponseDataContainer response = QueryControl.employeeQuery.FetchFullItemsListInfo(dbConn, supplierID);
+		try {             //.FetchFullItemsListInfo(dbConn, supplierID);
 			client.sendToClient(response);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
+	/**
+	 * Handles a request to fetch a list of items for a given supplier.
+	 *
+	 * @param supplierID the ID of the supplier for whom to fetch the items
+	 * @param client the client that requested the data
+	 */
 	private void handleGetItemsListRequest(Integer supplierID, ConnectionToClient client) {
-		ServerResponseDataContainer response = QueryControl.userQueries.FetchItemsListInfo(dbConn, supplierID);
+		ServerResponseDataContainer response = QueryControl.employeeQuery.FetchItemsListInfo(dbConn, supplierID);
 		try {
 			client.sendToClient(response);
 		} catch (IOException e) {
@@ -309,8 +346,14 @@ public class Server extends AbstractServer {
 		}
 	}
 	
+	/**
+	 * Handles a request to add a new item to the database.
+	 *
+	 * @param item the Item object containing the data of the item to be added
+	 * @param client the client that requested the update
+	 */
 	private void handleAddItemData(Item item, ConnectionToClient client) {
-		ServerResponseDataContainer response = QueryControl.userQueries.AddItemInfo(dbConn, item);
+		ServerResponseDataContainer response = QueryControl.employeeQuery.AddItemInfo(dbConn, item);
 		try {
 			client.sendToClient(response);
 		} catch (IOException e) {
@@ -318,8 +361,14 @@ public class Server extends AbstractServer {
 		}
 	}
 	
+	/**
+	 * Handles a request to remove an item from the database.
+	 *
+	 * @param itemData a Map containing the data of the item to be removed, with item name as the key and supplier ID as the value
+	 * @param client the client that requested the update
+	 */
 	private void handleRemoveItemData(Map<String,Integer> itemData, ConnectionToClient client) {
-		ServerResponseDataContainer response = QueryControl.userQueries.RemoveItemInfo(dbConn, itemData);
+		ServerResponseDataContainer response = QueryControl.employeeQuery.RemoveItemInfo(dbConn, itemData);
 		try {
 			client.sendToClient(response);
 		} catch (IOException e) {
@@ -327,14 +376,49 @@ public class Server extends AbstractServer {
 		}
 	}
 	
+	/**
+	 * Handles a request to fetch orders data for a given supplier.
+	 *
+	 * @param supplierID the ID of the supplier for whom to fetch the orders
+	 * @param client the client that requested the data
+	 */
 	public void handleGetOrdersData(Integer supplierID, ConnectionToClient client){
-		ServerResponseDataContainer response=QueryControl.userQueries.getOrdersData(dbConn, supplierID);
+		ServerResponseDataContainer response = QueryControl.supplierQuery.getOrdersData(dbConn, supplierID);
 		try {
 			client.sendToClient(response);
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
-		
+	}
+	
+	/**
+	 * Handles a request to update the status of an order.
+	 *
+	 * @param orderInfo an array of integers where the first element is the order ID and the second element is the status flag
+	 * @param client the client that requested the update
+	 */
+	public void handleSupplierUpdateOrderStatus(int[] orderInfo, ConnectionToClient client){
+		ServerResponseDataContainer response = QueryControl.supplierQuery.UpdateOrderStatus(dbConn, orderInfo);
+		try {   
+			client.sendToClient(response);
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Handles a request to refresh awaiting orders for a given supplier.
+	 *
+	 * @param supplierID the ID of the supplier for whom to refresh awaiting orders
+	 * @param client the client that requested the data
+	 */
+	public void handleSupplierRefreshAwaitingOrders(int supplierID, ConnectionToClient client){
+		ServerResponseDataContainer response = QueryControl.supplierQuery.RefreshAwaitingOrders(dbConn, supplierID);
+		try {
+			client.sendToClient(response);
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static ServerResponseDataContainer fetchDataForReport(LocalDate startOfLastMonth, LocalDate endOfLastMonth, String branch) {
@@ -379,6 +463,7 @@ public class Server extends AbstractServer {
 	private void handleSpecificUserData(User user, ConnectionToClient client) {
 		UserType type = user.getUserType();
 		ServerResponseDataContainer response = null;
+		System.out.println(type.toString());
 		switch (type) {
 		case MANAGER:
 			response = QueryControl.userQueries.importManagerInfo(dbConn, user);
@@ -601,27 +686,7 @@ public class Server extends AbstractServer {
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
-			FROM HERE WE DONT TOUCH!
-	 * 
-	 * 
-	 * 
-	 * 
-	*/
-	
-	
+
 	
 	
     /**
