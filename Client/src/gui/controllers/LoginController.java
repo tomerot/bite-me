@@ -89,21 +89,18 @@ public class LoginController {
 						userData.setisLoggedIn(1);
 						ClientMainController.requestUpdateIsLoggedIn(userData);
 						ClientMainController.requestUserSpecificData(userData);
-						System.out.println("after91");
 						ServerResponseDataContainer entityResponse = ClientConsole.responseFromServer;
-						System.out.println(entityResponse.getResponse());
 						switch(entityResponse.getResponse()) {
 							case CEO_FOUND:
 								Ceo ceo = (Ceo) entityResponse.getMessage();
 								displayWindow(event, "CEO Home Page", "CeoScreen", ceo);
 								break;
-							case MANAGER_FOUND:  
+							case MANAGER_FOUND:
 								BranchManager manager = (BranchManager) entityResponse.getMessage();
 								displayWindow(event, "Branch Manager Home Page", "BranchManagerScreen", manager);
 								break;
 							case SUPPLIER_FOUND:
 								Supplier supplier = (Supplier) entityResponse.getMessage();
-								System.out.println("Im here1");
 								displayWindow(event, "Supplier Home Page", "SupplierScreen", supplier);
 								break;
 							case EMPLOYEE_FOUND:
@@ -180,17 +177,18 @@ public class LoginController {
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(false);
 		primaryStage.setOnCloseRequest(closeEvent ->{
-				user.setisLoggedIn(0);
-				
-			ClientMainController.requestUpdateIsLoggedIn(user);
-			try {
-				this.getExitBtn(event);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
+			user.setisLoggedIn(0);
+            ClientMainController.requestUpdateIsLoggedIn(user);
+            try {
+                this.getExitBtn(event);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+        });
 		primaryStage.show();
+		
 	}
 	
 	

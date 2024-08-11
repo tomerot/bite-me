@@ -1,5 +1,7 @@
 package entities;
 
+import java.util.Objects;
+
 /**
  * This class represents an item in an order with additional customization options.
  * It extends the {@link Item} class and includes attributes for size, doneness degree, and restrictions.
@@ -10,25 +12,34 @@ public class ItemInOrder extends Item {
 	private String restrictions=null;
 	private int quantity;
 	
-	/*
-	public ItemInOrder(int itemID, String name, Category type, float price, boolean customSize, boolean customDonenessDegree, boolean customRestrictions, String size, String donenessDegree,String restrictions) {
-		super(itemID, name, type, customSize, customDonenessDegree, customRestrictions, price);
-		if(customSize)
-			this.size=size;
-		if(customDonenessDegree)
-			this.donenessDegree=donenessDegree;
-		if(customRestrictions)
-			this.restrictions=restrictions;
-	}
-	*/
-	
-	//sagi constructor
 	public ItemInOrder(int itemID, String name, String size, String donenessDegree,String restrictions,int quantity, float price) {
 		super(itemID,0, name, null ,null, false, false, false, price); // null/false -> we don't need those fields.
 		this.size=size;
 		this.donenessDegree=donenessDegree;
 		this.restrictions=restrictions;
 		this.quantity = quantity;
+	}
+	public ItemInOrder(Item item) {
+		super(item.getItemID(), item.getSupplierID(), item.getName(), item.getType(), item.getDescription(),
+			  item.getCustomSize(), item.getCustomDonenessDegree(), item.getCustomRestrictions(), item.getPrice());
+		this.size = "None";
+		this.donenessDegree = "None";
+		this.restrictions = "None";
+	}
+	
+	public boolean equals(Object that) {
+		if(this == that) return true;
+		if((that == null) || !(that instanceof ItemInOrder)) return false;
+		ItemInOrder other = (ItemInOrder) that;
+		return this.getItemID() == other.getItemID() &&
+			   this.getSize().equals(other.getSize()) &&
+			   this.getDonenessDegree().equals(other.getDonenessDegree()) &&
+			   this.getRestrictions().equals(other.getRestrictions());
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(getItemID(), size, donenessDegree, restrictions);
 	}
 	
     //size getter and setter

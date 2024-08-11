@@ -27,9 +27,11 @@ public class Order implements Serializable{
     private String requestedTime; //requested time?
     private OrderType type;
     private float totalPrice;
-    private String approvalTime; //approval time?
-    private String arrivalTime; //arrival time?
+    private String approvalTimer; //approval time?
+    private String arrivalTimer; //arrival time?
     private String status;
+    private String approvalDate;
+    private String arrivalDate;
     
     public Order(List<ItemInOrder> itemsList, int orderID,String recipient,String recipientPhone,SupplyMethod supplyOption, Supplier supplier, Customer customer, Branch branchName, String requestedDate,
             String requestedTime, OrderType type, float totalPrice, String approvalTimer, String arrivalTime, String status) {
@@ -45,12 +47,11 @@ public class Order implements Serializable{
     	this.requestedTime = requestedTime;
     	this.type = type;
     	this.totalPrice = totalPrice;
-    	this.approvalTime = approvalTimer;
-    	this.arrivalTime = arrivalTime;
+    	this.approvalTimer = approvalTimer;
+    	this.arrivalTimer = arrivalTime;
     	this.status = status;
     }
     
-    //Sagi Constructor
     public Order(int orderID,String customerID, String recipient,String recipientPhone,String recipientEmail, String city,String address,SupplyMethod supplyOption, OrderType type,
     		String requestedDate, String requestedTime, String approvalTimer, String arrivalTime, float totalPrice, String status) {
     	this.orderID = orderID;
@@ -65,8 +66,8 @@ public class Order implements Serializable{
     	this.requestedDate = requestedDate;
     	this.requestedTime = requestedTime;
     	this.totalPrice = totalPrice;
-    	this.approvalTime = approvalTimer;
-    	this.arrivalTime = arrivalTime;
+    	this.approvalTimer = approvalTimer;
+    	this.arrivalTimer = arrivalTime;
     	this.status = status;
     }
     
@@ -85,6 +86,49 @@ public class Order implements Serializable{
     
     public void setRecipientEmail(String recipientEmail) {
     	this.recipientEmail = recipientEmail;
+    }
+    public Order(List<ItemInOrder> itemsList, int orderID,String recipient,String recipientPhone,SupplyMethod supplyOption, Supplier supplier, Customer customer, Branch branchName, String requestedDate,
+            String requestedTime, OrderType type, float totalPrice, String approvalTimer, String arrivalTime, String status, String city, String address) {
+    	this.itemsList=itemsList;
+    	this.orderID = orderID;
+    	this.recipient = recipient;
+    	this.recipientPhone = recipientPhone;
+    	this.supplyOption = supplyOption;
+    	this.supplier = supplier;
+    	this.customer = customer;
+    	this.branchName = branchName;
+    	this.requestedDate = requestedDate;
+    	this.requestedTime = requestedTime;
+    	this.type = type;
+    	this.totalPrice = totalPrice;
+    	this.approvalTimer = approvalTimer;
+    	this.arrivalTimer = arrivalTime;
+    	this.status = status;
+    	this.city = city;
+    	this.address = address;
+    }
+    
+    public Order(List<ItemInOrder> itemsList, int orderID,String recipient,String recipientPhone,SupplyMethod supplyOption, Supplier supplier, Customer customer, Branch branchName, String requestedDate,
+            String requestedTime, OrderType type, float totalPrice, String approvalTimer, String arrivalTime, String status, String city, String address, String approvalDate, String arrivalDate) {
+    	this.itemsList=itemsList;
+    	this.orderID = orderID;
+    	this.recipient = recipient;
+    	this.recipientPhone = recipientPhone;
+    	this.supplyOption = supplyOption;
+    	this.supplier = supplier;
+    	this.customer = customer;
+    	this.branchName = branchName;
+    	this.requestedDate = requestedDate;
+    	this.requestedTime = requestedTime;
+    	this.type = type;
+    	this.totalPrice = totalPrice;
+    	this.approvalTimer = approvalTimer;
+    	this.arrivalTimer = arrivalTime;
+    	this.status = status;
+    	this.city = city;
+    	this.address = address;
+    	this.approvalDate = approvalDate;
+    	this.arrivalDate = arrivalDate;
     }
    
 	public List<ItemInOrder> getItemsList() {
@@ -184,19 +228,19 @@ public class Order implements Serializable{
 	}
 
 	public String getApprovalTime() {
-		return approvalTime;
+		return approvalTimer;
 	}
 
 	public void setApprovalTime(String approvalTime) {
-		this.approvalTime = approvalTime;
+		this.approvalTimer = approvalTime;
 	}
 
 	public String getArrivalTime() {
-		return arrivalTime;
+		return arrivalTimer;
 	}
 
 	public void setArrivalTime(String arrivalTime) {
-		this.arrivalTime = arrivalTime;
+		this.arrivalTimer = arrivalTime;
 	}
 
 	public String getStatus() {
@@ -221,6 +265,22 @@ public class Order implements Serializable{
 	
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getApprovalDate() {
+		return approvalDate;
+	}
+
+	public void setApprovalDate(String approvalDate) {
+		this.approvalDate = approvalDate;
+	}
+
+	public String getArrivalDate() {
+		return arrivalDate;
+	}
+
+	public void setArrivalDate(String arrivalDate) {
+		this.arrivalDate = arrivalDate;
 	}
     
 }

@@ -15,6 +15,10 @@
 	<classpathentry kind="lib" path="JavaFXLib/javafx.swing.jar"/>
 	<classpathentry kind="lib" path="JavaFXLib/javafx.web.jar"/>
 	<classpathentry kind="lib" path="JavaFXLib/javafx-swt.jar"/>
+<<<<<<< HEAD
 	<classpathentry kind="lib" path="mysql-connector-java-8.0.13.jar"/>
+=======
+	<classpathentry kind="lib" path="/BiteMe_G7/Server/mysql-connector-java-8.0.13.jar"/>
+>>>>>>> staging
 	<classpathentry kind="output" path="bin"/>
 </classpath>

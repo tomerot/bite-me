@@ -20,6 +20,8 @@ import entities.Order;
 import entities.OrderType;
 import entities.Customer;
 import entities.Supplier;
+import entities.SupplierIncome;
+import entities.SupplierQuarterReportData;
 import entities.User;
 import enums.Branch;
 import enums.CustomerType;
@@ -284,7 +286,7 @@ public class UserQuery {
 					String homeBranch = rs.getString("HomeBranch");
 					String credit = rs.getString("Credit");
 					String cvv = rs.getString("CVV");
-					Date validDate = rs.getDate("validDate");
+					//Date validDate = rs.getDate("validDate");
 					float walletBalance = rs.getFloat("WalletBalance");
 					// Can get also companyID and Credit Card
 
@@ -294,31 +296,31 @@ public class UserQuery {
 					case "North":
 						if (type.equals("Private"))
 							customer = new Customer(user.getUserName(), id, CustomerType.PRIVATE, companyId, firstName, 
-									lastName, email, phone, Branch.NORTH, credit, cvv, validDate, walletBalance, 
+									lastName, email, phone, Branch.NORTH, credit, cvv, null, walletBalance, 
 									user.getisLoggedIn(), user.getRegistered(), user.getPassword());
 						else
 							customer = new Customer(user.getUserName(), id, CustomerType.BUSINESS, companyId, firstName, 
-									lastName, email, phone, Branch.NORTH, credit, cvv, validDate, walletBalance, 
+									lastName, email, phone, Branch.NORTH, credit, cvv, null, walletBalance, 
 									user.getisLoggedIn(), user.getRegistered(), user.getPassword());
 						break;
 					case "Center":
 						if (type.equals("Private"))
 							customer = new Customer(user.getUserName(), id, CustomerType.PRIVATE, companyId, firstName, 
-									lastName, email, phone, Branch.CENTER, credit, cvv, validDate, walletBalance, 
+									lastName, email, phone, Branch.CENTER, credit, cvv, null, walletBalance, 
 									user.getisLoggedIn(), user.getRegistered(), user.getPassword());
 						else
 							customer = new Customer(user.getUserName(), id, CustomerType.BUSINESS, companyId, firstName, 
-									lastName, email, phone, Branch.CENTER, credit, cvv, validDate, walletBalance, 
+									lastName, email, phone, Branch.CENTER, credit, cvv, null, walletBalance, 
 									user.getisLoggedIn(), user.getRegistered(), user.getPassword());
 						break;
 					case "South":
 						if (type.equals("Private"))
 							customer = new Customer(user.getUserName(), id, CustomerType.PRIVATE, companyId, firstName, 
-									lastName, email, phone, Branch.SOUTH, credit, cvv, validDate, walletBalance, 
+									lastName, email, phone, Branch.SOUTH, credit, cvv, null, walletBalance, 
 									user.getisLoggedIn(), user.getRegistered(), user.getPassword());
 						else
 							customer = new Customer(user.getUserName(), id, CustomerType.BUSINESS, companyId, firstName, 
-									lastName, email, phone, Branch.SOUTH, credit, cvv, validDate, walletBalance, 
+									lastName, email, phone, Branch.SOUTH, credit, cvv, null, walletBalance, 
 									user.getisLoggedIn(), user.getRegistered(), user.getPassword());
 						break;
 					default:
@@ -337,7 +339,6 @@ public class UserQuery {
 		}
 		return response;
 	}
-
     /**
      * Updates user data in the database.
      * 
@@ -347,7 +348,7 @@ public class UserQuery {
      */
 	public void updateUserData(Connection dbConn, User user) throws Exception {
 		int affectedRows;
-		String query = "UPDATE users SET username=? ,password=? ,isLoggedIn=? ,Type=? ,Registered=? WHERE username = ?";
+		String query = "UPDATE users SET username=? AND password=? AND isLoggedIn=? AND Type=? AND Registered=? WHERE username = ?";
 		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
 			stmt.setString(1, user.getUserName());
 			stmt.setString(2, user.getPassword());
@@ -479,5 +480,217 @@ public class UserQuery {
 			e1.printStackTrace();
 		}
 	}
+
+	//add item to database
+		public ServerResponseDataContainer AddItemInfo(Connection dbConn, Item item) {
+			// we distinguish between two items according to (name, supplierID), if there is  an item with these exact fields we don't permit to add it to the database.
+
+			ServerResponseDataContainer response = new ServerResponseDataContainer();
+			String query = "SELECT id FROM items WHERE Name = ? and SupplierID = ?";
+
+			try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+				stmt.setString(1, item.getName());
+				stmt.setInt(2, item.getSupplierID());
+
+				try (ResultSet rs = stmt.executeQuery()) {
+					if (rs.next()) {
+						// There is already existing item like this in the database, we cannot add it.
+						response.setMessage("This item alread exists in the database");
+						response.setResponse(ServerResponse.ADD_FAIL);
+					} else {
+						// the item does not exist in the database, we can add it. id field we don't insert, the database defines it automatically.
+						String insertQuery = "INSERT into items (SupplierID, Name, Category, Description, CustomSize, CustomDoneness, CustomRestrictions, Price)"
+								+ "VALUES(?,?,?,?,?,?,?,?);";
+
+						 int size = item.getCustomSize() ? 1 : 0;
+		                 int doneness = item.getCustomDonenessDegree() ? 1 : 0;
+		                 int restrictions = item.getCustomRestrictions() ? 1 : 0;
+
+						try (PreparedStatement insertStm = dbConn.prepareStatement(insertQuery)) {
+							insertStm.setInt(1, item.getSupplierID());
+							insertStm.setString(2, item.getName());
+							insertStm.setString(3, item.getType().toString());
+							insertStm.setString(4, item.getDescription());
+							insertStm.setInt(5, size);
+							insertStm.setInt(6, doneness);
+							insertStm.setInt(7, restrictions);
+							insertStm.setFloat(8, item.getPrice());
+
+							
+							int res = insertStm.executeUpdate();
+							System.out.println("second Query passed");
+							if(res>0) {
+								response.setMessage("The item was added successuflly!");
+								response.setResponse(ServerResponse.ADD_SUCCESS);
+							}
+							
+							else {
+								response.setMessage("failed to add item because error in db");
+								response.setResponse(ServerResponse.ADD_FAIL);
+							}
+
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+			return response;
+		}
+		
+		
+		public ServerResponseDataContainer FetchItemsListInfo(Connection dbConn, int supplierID) {
+			System.out.println("stam");
+			String query = "SELECT Name, Category FROM items WHERE SupplierID = ?";
+			ServerResponseDataContainer response = new ServerResponseDataContainer();
+			Map<String,String> map = new HashMap<>();
+
+			try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+				stmt.setInt(1, supplierID);
+
+				try (ResultSet rs = stmt.executeQuery()) {
+					System.out.println("before while");
+					while(rs.next()) {
+						map.put(rs.getString("Name"), rs.getString("Category"));
+						System.out.println("in while");
+					}
+
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			System.out.println(map);
+			response.setMessage(map);
+			response.setResponse(null);
+			return response;
+		}
+		
+		// here we get all the items *instances* that belongs to certain supplier.
+		public ServerResponseDataContainer FetchFullItemsListInfo(Connection dbConn, int supplierID) {
+			System.out.println("Thanks God... We are going to bring the items full list");
+			String query = "SELECT * FROM items WHERE SupplierID = ?;";
+			ServerResponseDataContainer response = new ServerResponseDataContainer();
+			Map<String,Item> itemsMap = new HashMap<>();
+
+			try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+				stmt.setInt(1, supplierID);
+
+				try (ResultSet rs = stmt.executeQuery()) {
+					while(rs.next()) {
+						//create item instance and put it in the map
+						int itemID = rs.getInt("ID");
+						int SupplierID = rs.getInt("SupplierID");
+						String itemName = rs.getString("Name");
+						String categoryName = rs.getString("Category");
+						Category category;
+						switch(categoryName) {
+						case "Main Course":
+							category = Category.MAINCOURSE;
+							break;
+						case "First Course":
+							category = Category.FIRSTCOURSE;
+							break;
+						case "Salad":
+							category = Category.SALAD;
+							break;
+						case "Dessert":
+							category = Category.DESSERT;
+							break;
+						case "Beverage":
+							category = Category.BEVERAGE;
+							break;
+						default:
+							category = null;
+					}
+						String description = rs.getString("Description");
+						boolean customSize = rs.getInt("CustomSize") == 1 ? true : false;
+						boolean customDoneness = rs.getInt("CustomDoneness") == 1 ? true : false; 
+						boolean customRestrictions = rs.getInt("CustomRestrictions") == 1 ? true : false; 
+						int price  = rs.getInt("Price");
+						
+						Item item = new Item(itemID, SupplierID, itemName, category, description, customSize, customDoneness, customRestrictions, price);
+						itemsMap.put(itemName, item);
+					}
+
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			response.setMessage(itemsMap);
+			response.setResponse(null);
+			return response;
+		}
+		
+		public ServerResponseDataContainer RemoveItemInfo(Connection dbConn, Map<String,Integer> itemData) {
+			String query = "DELETE FROM items WHERE Name = ? AND SupplierID = ?;";
+			ServerResponseDataContainer response = new ServerResponseDataContainer();
+
+			// get the data from the map  (we know that this map has exactly one entry.)
+		    String itemName = itemData.keySet().iterator().next();
+	        int supplierID = itemData.get(itemName);
+	        
+			try (PreparedStatement stmt = dbConn.prepareStatement(query)) {			
+				stmt.setString(1, itemName);
+				stmt.setInt(2, supplierID);
+
+				 int isRowAffected = stmt.executeUpdate(); //returns how many rows were deleted.
+				 
+				 if(isRowAffected == 1) {
+					response.setMessage("The item was deleted successfully");
+					response.setResponse(ServerResponse.DELETE_ITEM_SUCCESS);
+				 }
+				 else {
+					 response.setMessage("failed to delete item because error in db");
+					 response.setResponse(ServerResponse.DELETE_ITEM_FAIL);
+				 }
+				
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			return response;
+		}
+		
+		public ServerResponseDataContainer UpdateItemInfo(Connection dbConn, Item item) {
+			String query = "UPDATE items SET Description = ?, CustomSize = ?, CustomDoneness = ?, CustomRestrictions = ?, Price = ? WHERE ID = ?;";
+			ServerResponseDataContainer response = new ServerResponseDataContainer();
+	        
+			int CustomSize = item.getCustomSize() ? 1:0;
+			int CustomDoneness = item.getCustomDonenessDegree() ? 1:0;
+			int CustomRestrictions = item.getCustomRestrictions() ? 1:0;
+			
+			try (PreparedStatement stmt = dbConn.prepareStatement(query)) {			
+				stmt.setString(1, item.getDescription());
+				stmt.setInt(2, CustomSize);
+				stmt.setInt(3, CustomDoneness);
+				stmt.setInt(4, CustomRestrictions);
+				stmt.setFloat(5, item.getPrice());
+				stmt.setInt(6, item.getItemID());
+
+				 int isRowAffected = stmt.executeUpdate(); //returns how many rows were updated.
+				 
+				 if(isRowAffected == 1) {
+					response.setMessage("The item was updated successfully");
+					response.setResponse(ServerResponse.UPDATE_ITEM_SUCCESS);
+				 }
+				 else {
+					 response.setMessage("failed to update item because error in db");
+					 response.setResponse(ServerResponse.UPDATE_ITEM_FAIL);
+				 }
+				
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			return response;
+		}
 
 }
