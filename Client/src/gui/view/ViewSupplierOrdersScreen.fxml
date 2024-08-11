@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="dashboard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="950.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+            <Label layoutX="67.0" layoutY="65.0" prefHeight="52.0" prefWidth="396.0" text="Awaiting orders ID">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <Label layoutX="67.0" layoutY="455.0" prefHeight="53.0" prefWidth="374.0" text="Approved orders ID">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <Button fx:id="btnApprove" layoutX="752.0" layoutY="242.0" mnemonicParsing="false" onAction="#onApproveClicked" prefHeight="46.0" prefWidth="98.0" text="approve">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnUpdateReady" layoutX="752.0" layoutY="604.0" mnemonicParsing="false" onAction="#onUpdateReadyClicked" prefHeight="61.0" prefWidth="200.0" text="update ready order">
+         <font>
+            <Font size="18.0" />
+         </font></Button>
+      <ListView fx:id="awaitingOrdersList" layoutX="67.0" layoutY="121.0" prefHeight="285.0" prefWidth="245.0" />
+      <ListView fx:id="approvedOrdersList" layoutX="67.0" layoutY="513.0" prefHeight="273.0" prefWidth="245.0" />
+      <TextArea fx:id="awaitingOrderTextArea" layoutX="400.0" layoutY="122.0" prefHeight="285.0" prefWidth="259.0" />
+      <TextArea fx:id="approvedOrderTextArea" layoutX="407.0" layoutY="513.0" prefHeight="273.0" prefWidth="259.0" />
+      <Label layoutX="400.0" layoutY="74.0" text="Awaiting Order Info">
+         <font>
+            <Font size="23.0" />
+         </font>
+      </Label>
+      <Label layoutX="406.0" layoutY="466.0" text="Approved Order Info">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnRefresh" layoutX="752.0" layoutY="421.0" mnemonicParsing="false" onAction="#onRefreshClicked" prefHeight="53.0" prefWidth="111.0" text="Refresh">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Label fx:id="resultMessage" layoutX="200.0" layoutY="816.0" prefHeight="126.0" prefWidth="459.0" />
+   </children>
+</AnchorPane>

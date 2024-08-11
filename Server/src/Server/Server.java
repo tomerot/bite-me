@@ -114,12 +114,24 @@ public class Server extends AbstractServer {
 				e.printStackTrace();
 			}
 			break;
-		case GET_ORDER_DATA:{
+		case GET_ORDERS_DATA:{
 			Integer supplierID=(Integer)data.getMessage();
 			handleGetOrdersData(supplierID,client);
 			break;
 		}
+		case SUPPLIER_UPDATE_ORDER_STATUS:{
+			System.out.println("Server got supplier update order status");
+			int[] orderInfo = (int[])data.getMessage();
+			handleSupplierUpdateOrderStatus(orderInfo, client);
+			break;
+		}
 			
+		case SUPPLIER_REFRESH_AWAITING_ORDERS: {
+			System.out.println("Server got supplier refresh");
+			Integer supplierID = (Integer)data.getMessage();
+			handleSupplierRefreshAwaitingOrders(supplierID, client);
+			break;
+		}
 		case ADD_ITEM_DATA:
 			Item item = (Item) data.getMessage();
 			handleAddItemData(item, client);
@@ -283,7 +295,7 @@ public class Server extends AbstractServer {
 	}
 	
 	private void handleUpdateItemRequest(Item item, ConnectionToClient client) {
-		ServerResponseDataContainer response = QueryControl.userQueries.UpdateItemInfo(dbConn, item);
+		ServerResponseDataContainer response = QueryControl.employeeQuery.UpdateItemInfo(dbConn, item);
 		try {
 			client.sendToClient(response);
 		} catch (IOException e) {
@@ -292,7 +304,7 @@ public class Server extends AbstractServer {
 	}
 	
 	private void handleGetFullItemsListRequest(Integer supplierID, ConnectionToClient client) {
-		ServerResponseDataContainer response = QueryControl.userQueries.FetchFullItemsListInfo(dbConn, supplierID);
+		ServerResponseDataContainer response = QueryControl.employeeQuery.FetchFullItemsListInfo(dbConn, supplierID);
 		try {
 			client.sendToClient(response);
 		} catch (IOException e) {
@@ -301,7 +313,7 @@ public class Server extends AbstractServer {
 	}
 	
 	private void handleGetItemsListRequest(Integer supplierID, ConnectionToClient client) {
-		ServerResponseDataContainer response = QueryControl.userQueries.FetchItemsListInfo(dbConn, supplierID);
+		ServerResponseDataContainer response = QueryControl.employeeQuery.FetchItemsListInfo(dbConn, supplierID);
 		try {
 			client.sendToClient(response);
 		} catch (IOException e) {
@@ -310,7 +322,7 @@ public class Server extends AbstractServer {
 	}
 	
 	private void handleAddItemData(Item item, ConnectionToClient client) {
-		ServerResponseDataContainer response = QueryControl.userQueries.AddItemInfo(dbConn, item);
+		ServerResponseDataContainer response = QueryControl.employeeQuery.AddItemInfo(dbConn, item);
 		try {
 			client.sendToClient(response);
 		} catch (IOException e) {
@@ -319,7 +331,7 @@ public class Server extends AbstractServer {
 	}
 	
 	private void handleRemoveItemData(Map<String,Integer> itemData, ConnectionToClient client) {
-		ServerResponseDataContainer response = QueryControl.userQueries.RemoveItemInfo(dbConn, itemData);
+		ServerResponseDataContainer response = QueryControl.employeeQuery.RemoveItemInfo(dbConn, itemData);
 		try {
 			client.sendToClient(response);
 		} catch (IOException e) {
@@ -600,7 +612,35 @@ public class Server extends AbstractServer {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * Handles a request to update the status of an order.
+	 *
+	 * @param orderInfo an array of integers where the first element is the order ID and the second element is the status flag
+	 * @param client the client that requested the update
+	 */
+	public void handleSupplierUpdateOrderStatus(int[] orderInfo, ConnectionToClient client){
+		ServerResponseDataContainer response = QueryControl.supplierQuery.UpdateOrderStatus(dbConn, orderInfo);
+		try {   
+			client.sendToClient(response);
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
+	/**
+	 * Handles a request to refresh awaiting orders for a given supplier.
+	 *
+	 * @param supplierID the ID of the supplier for whom to refresh awaiting orders
+	 * @param client the client that requested the data
+	 */
+	public void handleSupplierRefreshAwaitingOrders(int supplierID, ConnectionToClient client){
+		ServerResponseDataContainer response = QueryControl.supplierQuery.RefreshAwaitingOrders(dbConn, supplierID);
+		try {
+			client.sendToClient(response);
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	
 	

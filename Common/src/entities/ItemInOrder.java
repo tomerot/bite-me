@@ -10,6 +10,7 @@ public class ItemInOrder extends Item {
 	private String size=null;
 	private String donenessDegree=null;
 	private String restrictions=null;
+	private int quantity;
 	
 	public ItemInOrder(int itemID, int supplierID, String name, Category type, String description,
 					   boolean customSize, boolean customDonenessDegree, boolean customRestrictions, 
@@ -30,7 +31,14 @@ public class ItemInOrder extends Item {
 		this.donenessDegree = "None";
 		this.restrictions = "None";
 	}
-	
+	//sagi
+	public ItemInOrder(int itemID, String name, String size, String donenessDegree,String restrictions,int quantity, float price) {
+		super(itemID,0, name, null ,null, false, false, false, price); // null/false -> we don't need those fields.
+		this.size=size;
+		this.donenessDegree=donenessDegree;
+		this.restrictions=restrictions;
+		this.quantity = quantity;
+	}
 	public boolean equals(Object that) {
 		if(this == that) return true;
 		if((that == null) || !(that instanceof ItemInOrder)) return false;
@@ -56,4 +64,11 @@ public class ItemInOrder extends Item {
     //restrictions getter and setter
     public String getRestrictions() { return restrictions; }
     public void setRestrictions(String restrictions) { this.restrictions = restrictions; }
+	public int getQuantity() {
+		return quantity;
+	}
+	
+	public void setQuantity(int quantity) {
+		 this.quantity = quantity;
+	}
 }
