@@ -9,17 +9,22 @@ import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.util.Map;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import containers.ClientRequestDataContainer;
 import containers.ServerResponseDataContainer;
 import db.DBConnectionDetails;
 import db.DBController;
 import db.QueryControl;
-import db.SupplierQuery;
+import db.ReportGenerator;
 import entities.Item;
+import entities.ItemInOrder;
 import entities.BranchManager;
 import entities.Customer;
 import entities.Order;
+import entities.Supplier;
+import entities.SupplierIncome;
 import entities.User;
 import enums.Branch;
 import enums.ClientRequest;
@@ -44,7 +49,9 @@ public class Server extends AbstractServer {
 	// Use Singleton DesignPattern -> only 1 server may be running in our system.
 	private static Server server = null;
 	private ServerPortController serverController;
-	private Connection dbConn;
+	private static Connection dbConn;
+	private ReportGenerator reportGenerator;
+    private Thread reportThread;
 
 	
     /**
@@ -107,23 +114,9 @@ public class Server extends AbstractServer {
 				e.printStackTrace();
 			}
 			break;
-		case GET_ORDERS_DATA:{
+		case GET_ORDER_DATA:{
 			Integer supplierID=(Integer)data.getMessage();
 			handleGetOrdersData(supplierID,client);
-			break;
-		}
-		
-		case SUPPLIER_UPDATE_ORDER_STATUS:{
-			System.out.println("Server got supplier update order status");
-			int[] orderInfo = (int[])data.getMessage();
-			handleSupplierUpdateOrderStatus(orderInfo, client);
-			break;
-		}
-			
-		case SUPPLIER_REFRESH_AWAITING_ORDERS: {
-			System.out.println("Server got supplier refresh");
-			Integer supplierID = (Integer)data.getMessage();
-			handleSupplierRefreshAwaitingOrders(supplierID, client);
 			break;
 		}
 			
@@ -171,15 +164,22 @@ public class Server extends AbstractServer {
 				e.printStackTrace();
 			}
 			break;
-			
-//		case FETCH_BRANCH_RESTAURANTS:
-//			customer = (Customer) data.getMessage();
-//			try {
-//				handleRestaurantsData(customer,client);
-//			} catch (SQLException e) {
-//				e.printStackTrace();
-//			}
-//			break;
+		case FETCH_REPORT_DATA:{
+			List<String> reportInfo = (List<String>) data.getMessage();
+			try {
+				handleReportInfo(reportInfo, client);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;}
+		case FETCH_QUARTER_REPORT_DATA:{
+			List<String> reportInfo = (List<String>) data.getMessage();
+			try {
+				handleQuarterReportInfo(reportInfo, client);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;}
 			
 		case FETCH_BRANCH_RESTAURANTS:{
 			Branch branchName = (Branch) data.getMessage();
@@ -217,11 +217,70 @@ public class Server extends AbstractServer {
 				e.printStackTrace();
 			}
 			break;
+		    
+        case GET_SUPPLIER_ITEMS:
+            Supplier supplier = (Supplier) data.getMessage();
+            try {
+                handleImportSupplierItems(supplier,client);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            break;
+
+        case GET_RELEVANT_CITIES:
+            Supplier supplier1 = (Supplier) data.getMessage();
+            try {
+                handleImportRelevantCities(supplier1,client);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            break;
+            
+        case UPDATE_ORDER_AND_ITEMS:
+        	List<Object> receivedList = (List<Object>) data.getMessage();
+        	Order receivedOrder = (Order) receivedList.get(0);
+        	Map<ItemInOrder, Integer> receivedCart = (Map<ItemInOrder, Integer>) receivedList.get(1);
+        	try {
+				handleUpdateOrderAndItem(receivedOrder, receivedCart, client);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+        	break;
+        	
+        case UPDATE_CUSTOMER_WALLET:
+        	List<Object> listOW = (List<Object>) data.getMessage();
+        	Order requestedOrder = (Order) listOW.get(0);
+        	float walletUsedAmount = (Float) listOW.get(1);
+        	try {
+				handleUpdateCustomerWallet(requestedOrder,walletUsedAmount,client);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+        	break;
+        	
+        		
 		default:
 		    return;
-
 	}
 }
+	
+	private void handleUpdateCustomerWallet(Order order,Float walletUsedAmount ,ConnectionToClient client) throws SQLException {
+		QueryControl.orderQueries.updateCustomerWalletBalance(dbConn, order, walletUsedAmount);
+		try {
+			client.sendToClient(new ServerResponseDataContainer());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void handleUpdateOrderAndItem(Order order,Map<ItemInOrder, Integer> receivedCart ,ConnectionToClient client) throws SQLException {
+		ServerResponseDataContainer response =QueryControl.orderQueries.updateOrderAndItems(dbConn, order, receivedCart);
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	private void handleUpdateItemRequest(Item item, ConnectionToClient client) {
 		ServerResponseDataContainer response = QueryControl.userQueries.UpdateItemInfo(dbConn, item);
@@ -269,31 +328,46 @@ public class Server extends AbstractServer {
 	}
 	
 	public void handleGetOrdersData(Integer supplierID, ConnectionToClient client){
-		ServerResponseDataContainer response = SupplierQuery.getOrdersData(dbConn, supplierID);
+		ServerResponseDataContainer response=QueryControl.userQueries.getOrdersData(dbConn, supplierID);
 		try {
 			client.sendToClient(response);
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
+		
 	}
 	
-	public void handleSupplierUpdateOrderStatus(int[] orderInfo, ConnectionToClient client){
-		ServerResponseDataContainer response = SupplierQuery.UpdateOrderStatus(dbConn, orderInfo);
-		try {
-			client.sendToClient(response);
-		}catch(IOException e) {
-			e.printStackTrace();
-		}
+	public static ServerResponseDataContainer fetchDataForReport(LocalDate startOfLastMonth, LocalDate endOfLastMonth, String branch) {
+	    ServerResponseDataContainer response = QueryControl.serverQueries.fetchOrdersReportData(dbConn, startOfLastMonth, endOfLastMonth, branch);
+	    return response;
 	}
 	
-	public void handleSupplierRefreshAwaitingOrders(int supplierID, ConnectionToClient client){
-		ServerResponseDataContainer response = SupplierQuery.RefreshAwaitingOrders(dbConn, supplierID);
-		try {
-			client.sendToClient(response);
-		}catch(IOException e) {
-			e.printStackTrace();
-		}
+	public static void insertDataForReport(HashMap<String, Integer> data, String branch, int year, int month) {
+	    QueryControl.serverQueries.insertOrdersReportData(dbConn, data, branch, year, month);
 	}
+	
+	public static ServerResponseDataContainer fetchDataForPerformanceReport(LocalDate startOfLastMonth, LocalDate endOfLastMonth, String branch) {
+	    ServerResponseDataContainer response = QueryControl.serverQueries.fetchPerformanceReportData(dbConn, startOfLastMonth, endOfLastMonth, branch);
+	    return response;
+	}
+	
+	public static void insertDataForPerformanceReport(HashMap<String, Integer> data, String branch, int year, int month) throws SQLException {
+	    QueryControl.serverQueries.insertPerformanceReport(dbConn, data, branch, year, month);
+	}
+
+	public static ServerResponseDataContainer fetchDataForIncomeReport(LocalDate startOfLastMonth, LocalDate endOfLastMonth, String branch) {
+	    ServerResponseDataContainer response = QueryControl.serverQueries.fetchIncomeReportData(dbConn, startOfLastMonth, endOfLastMonth, branch);
+	    return response;
+	}
+	public static void insertDataForIncomeReport(List<SupplierIncome> data, String branch, int year, int month) throws SQLException {
+	    QueryControl.serverQueries.insertIncomeReport(dbConn, data, branch, year, month);
+	}
+
+	public static void importCustomerSimulation() throws SQLException {
+		  QueryControl.serverQueries.insertCustomersList(dbConn);
+
+	}
+
 
 
     /**
@@ -328,6 +402,7 @@ public class Server extends AbstractServer {
 			e.printStackTrace();
 		}
 	}
+	
 	
     /**
      * Handles the request to update user data in the database.
@@ -370,7 +445,7 @@ public class Server extends AbstractServer {
      * @throws SQLException if an error occurs while fetching the customer data
      */
 	private void handleCustomersData(BranchManager manager, ConnectionToClient client) throws SQLException {
-		ServerResponseDataContainer response = QueryControl.userQueries.importCustomerList(dbConn, manager);
+		ServerResponseDataContainer response = QueryControl.managersQuery.importCustomerList(dbConn, manager);
 		try {
 			client.sendToClient(response);
 		} catch (IOException e) {
@@ -401,14 +476,29 @@ public class Server extends AbstractServer {
      * @throws Exception if an error occurs while updating the customer registration data
      */
 	private void handleUpdateCustomersRegister(List<String> userList, ConnectionToClient client) throws Exception {
-		QueryControl.userQueries.updateUsersRegister(dbConn, userList);
+		QueryControl.managersQuery.updateUsersRegister(dbConn, userList);
 		try {
 			client.sendToClient(new ServerResponseDataContainer());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
+	private void handleReportInfo(List<String> reportInfo, ConnectionToClient client) throws Exception {
+		ServerResponseDataContainer response = QueryControl.managersQuery.importReportData(dbConn, reportInfo);
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	private void handleQuarterReportInfo(List<String> reportInfo, ConnectionToClient client) throws Exception {
+		ServerResponseDataContainer response = QueryControl.managersQuery.importQuarterReportData(dbConn, reportInfo);
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 //    /**
 //     * Handles the request to fetch restaurant data based on a customer's request - Same Branch as supplier.
 //     * 
@@ -492,7 +582,25 @@ public class Server extends AbstractServer {
 	    }
 	}
 	
-
+    private void handleImportSupplierItems(Supplier supplier, ConnectionToClient client) throws SQLException{
+        ServerResponseDataContainer response = QueryControl.orderQueries.importSupplierItems(dbConn, supplier);
+        try {
+            client.sendToClient(response);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+	
+	
+	private void handleImportRelevantCities(Supplier supplier, ConnectionToClient client) throws SQLException {
+		ServerResponseDataContainer response = QueryControl.orderQueries.FetchRelevantCities(dbConn, supplier);
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
 	
 	
@@ -544,6 +652,7 @@ public class Server extends AbstractServer {
 
 		try {
 			server.listen();
+			server.startReportGenerator();
 			return true;
 			// update connection in server gui.
 		} catch (Exception ex) {
@@ -552,6 +661,19 @@ public class Server extends AbstractServer {
 			return false;
 		}
 	}
+	
+    private void startReportGenerator() {
+        reportGenerator = new ReportGenerator();
+        reportThread = new Thread(reportGenerator);
+        reportThread.start();
+    }
+
+    private void stopReportGenerator() {
+        if (reportGenerator != null) {
+            reportGenerator.stop();
+            reportThread.interrupt(); // Interrupt the sleep to stop immediately
+        }
+    }
 
 	// send client message with his IP,host,status
 	private void handleClientConnection(ConnectionToClient client) {
@@ -631,6 +753,7 @@ public class Server extends AbstractServer {
 		try {
 			server.stopListening();
 			server.close();
+			server.stopReportGenerator();
 			server = null;
 		} catch (IOException ex) {
 			System.out.println("Error while closing server");

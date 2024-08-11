@@ -83,15 +83,6 @@ public class EditItemScreenController implements Initializable{
 		ClientMainController.requestFullItemsList(employee.getSupplierId());
 		ServerResponseDataContainer response = ClientConsole.responseFromServer;
 		itemsMap = (Map<String, Item>) response.getMessage();
-		
-		
-		// listener to ListView for item selection
-		listOfItems.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-	        if (newValue != null) {
-	            Item selectedItem = itemsMap.get(newValue);
-	            populateFieldsWithItemDetails(selectedItem);
-	        }
-	    });
 	}
 	
 	
@@ -176,17 +167,5 @@ public class EditItemScreenController implements Initializable{
 		}		
 		else 
 			resultMessage.setText("Nothing changed");
-	}
-	
-	//will show on the text field the details of an item
-	private void populateFieldsWithItemDetails(Item item) {
-	    if (item != null) {
-	        priceField.setText(String.valueOf(item.getPrice()));
-	        descriptionField.setText(item.getDescription());
-	        sizeField.setSelected(item.getCustomSize());
-	        donenessField.setSelected(item.getCustomDonenessDegree());
-	        restrictionsField.setSelected(item.getCustomRestrictions());
-	        categoryField.setValue(item.getType());
-	    }
 	}
 }

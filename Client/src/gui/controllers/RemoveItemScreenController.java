@@ -83,6 +83,7 @@ public class RemoveItemScreenController implements Initializable {
 	
 	@FXML
 	private void onCategoryClicked(ActionEvent event) throws Exception{
+		System.out.println("IN");
 		Category category = categoryField.getSelectionModel().getSelectedItem();
 		String categoryName = category.toString();
 		ObservableList<String> itemsInCategory = FXCollections.observableArrayList();

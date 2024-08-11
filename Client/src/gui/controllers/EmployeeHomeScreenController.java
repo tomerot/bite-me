@@ -51,7 +51,6 @@ public class EmployeeHomeScreenController {
     
     
     private User user;
-    
 	private static AuthorizedEmployee employee;
     
 	public void setUser(User user) {
@@ -59,7 +58,6 @@ public class EmployeeHomeScreenController {
         this.employee=(AuthorizedEmployee)user;
         UpdateLabel((AuthorizedEmployee)user);
     }
-	
 	public User getUser() {
 		return user;
 	}
