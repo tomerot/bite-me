@@ -20,6 +20,8 @@ import entities.Order;
 import entities.OrderType;
 import entities.Customer;
 import entities.Supplier;
+import entities.SupplierIncome;
+import entities.SupplierQuarterReportData;
 import entities.User;
 import enums.Branch;
 import enums.CustomerType;
@@ -334,7 +336,6 @@ public class UserQuery {
 		}
 		return response;
 	}
-
     /**
      * Updates user data in the database.
      * 
@@ -344,7 +345,7 @@ public class UserQuery {
      */
 	public void updateUserData(Connection dbConn, User user) throws Exception {
 		int affectedRows;
-		String query = "UPDATE users SET username=? ,password=? ,isLoggedIn=? ,Type=? ,Registered=? WHERE username = ?";
+		String query = "UPDATE users SET username=? AND password=? AND isLoggedIn=? AND Type=? AND Registered=? WHERE username = ?";
 		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
 			stmt.setString(1, user.getUserName());
 			stmt.setString(2, user.getPassword());
@@ -670,96 +671,4 @@ public class UserQuery {
 			}
 			return response;
 		}
-		
-	public ServerResponseDataContainer importCustomerList(Connection dbConn, BranchManager manager) throws SQLException {
-		ServerResponseDataContainer response = new ServerResponseDataContainer();
-		List<Customer> unRegisteredCustomers= new ArrayList<Customer>();
-		Customer customer = null;
-		String queryTest = "SELECT c.*, u.IsLoggedIn, u.Registered, u.Password  FROM customers AS c INNER JOIN users AS u ON c.Username = u.Username WHERE c.HomeBranch = ? AND u.Registered=0 AND u.Type='Customer'";
-		try (PreparedStatement stmt = dbConn.prepareStatement(queryTest)) {
-			stmt.setString(1, manager.getbranchType().toShortString());
-			try (ResultSet rs1 = stmt.executeQuery()){
-				while (rs1.next()) {
-					String username= rs1.getString("Username");
-					int id = rs1.getInt("ID");
-					String type = rs1.getString("Type");
-					int companyId = rs1.getInt("CompanyID");
-					String firstName = rs1.getString("FirstName");
-					String lastName = rs1.getString("LastName");
-					String email = rs1.getString("Email");
-					String phone = rs1.getString("Phone");
-					String homeBranch = rs1.getString("HomeBranch");
-					String credit = rs1.getString("Credit");
-					String cvv = rs1.getString("CVV");
-					Date validDate = rs1.getDate("validDate");
-					float walletBalance = rs1.getFloat("WalletBalance");
-					int isLoggedIn= rs1.getInt("IsLoggedIn");
-					int registered= rs1.getInt("Registered");
-					String password= rs1.getString("Password");
-					switch (homeBranch) {
-					case "North":
-						if (type.equals("Private"))
-							customer = new Customer(username, id, CustomerType.PRIVATE, companyId, firstName, 
-									lastName, email, phone, Branch.NORTH, credit, cvv, validDate, walletBalance, 
-									isLoggedIn, registered, password);
-						else
-							customer = new Customer(username, id, CustomerType.BUSINESS, companyId, firstName, 
-									lastName, email, phone, Branch.NORTH, credit, cvv, validDate, walletBalance, 
-									isLoggedIn, registered, password);
-						break;
-					case "Center":
-						if (type.equals("Private"))
-							customer = new Customer(username, id, CustomerType.PRIVATE, companyId, firstName, 
-									lastName, email, phone, Branch.CENTER, credit, cvv, validDate, walletBalance, 
-									isLoggedIn, registered, password);
-						else
-							customer = new Customer(username, id, CustomerType.BUSINESS, companyId, firstName, 
-									lastName, email, phone, Branch.CENTER, credit, cvv, validDate, walletBalance, 
-									isLoggedIn, registered, password);
-						break;
-					case "South":
-						if (type.equals("Private"))
-							customer = new Customer(username, id, CustomerType.PRIVATE, companyId, firstName, 
-									lastName, email, phone, Branch.SOUTH, credit, cvv, validDate, walletBalance, 
-									isLoggedIn, registered, password);
-						else
-							customer = new Customer(username, id, CustomerType.BUSINESS, companyId, firstName, 
-									lastName, email, phone, Branch.SOUTH, credit, cvv, validDate, walletBalance, 
-									isLoggedIn, registered, password);
-						break;
-					default:
-						break;
-					}
-					unRegisteredCustomers.add(customer);
-				}
-			}
-		}
-		response.setMessage(unRegisteredCustomers);
-		response.setResponse(ServerResponse.UNREGISTERED_CUSTOMERS_FOUND);
-		return response;
-	}
-	
-
-    /**
-     * Updates the registration status of a list of users.
-     * 
-     * @param dbConn the database connection to use
-     * @param userList a list of usernames of the users to be updated
-     * @throws Exception if the update fails
-     */
-	public void updateUsersRegister(Connection dbConn, List<String> userList) throws Exception {
-		int affectedRows=0;
-		String query = "UPDATE users SET Registered=1 WHERE username = ?";
-		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
-			for(String username : userList) {
-				stmt.setString(1, username);
-				affectedRows += stmt.executeUpdate();
-			}
-			if (affectedRows == 0)
-				throw new Exception("User update failed\n");
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
-	}
-
 }

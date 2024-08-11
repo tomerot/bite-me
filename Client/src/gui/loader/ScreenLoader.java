@@ -8,6 +8,9 @@ import gui.controllers.CeoHomeScreenController;
 import gui.controllers.CheckoutScreenController;
 import gui.controllers.ChooseRestaurantScreenController;
 import gui.controllers.CustomerHomeScreenController;
+import gui.controllers.MonthlyReportScreenController;
+import gui.controllers.MyOrdersScreenController;
+import gui.controllers.QuarterlyReportScreenController;
 import gui.controllers.EditItemScreenController;
 import gui.controllers.EmployeeHomeScreenController;
 import gui.controllers.MonthlyReportScreenController;
@@ -47,8 +50,17 @@ public class ScreenLoader {
 				MonthlyReportScreenController controller = new MonthlyReportScreenController(wholeScreen, currController);
 				loader.setController(controller);
 				loader.load();
+				controller.setScreen();
 				break;
 			}
+			case QUARTERLY_REPORT_SCREEN: {
+				QuarterlyReportScreenController controller = new QuarterlyReportScreenController(wholeScreen, currController);
+				loader.setController(controller);
+				loader.load();
+				controller.setScreen();
+				break;
+			}
+			
 			case REGISTRATION_SCREEN: {
 				RegistrationScreenController controller = new RegistrationScreenController(wholeScreen, currController);
 				loader.setController(controller);
