@@ -16,9 +16,7 @@ public class Item implements Serializable{
     private boolean customSize;
     private boolean customDonenessDegree;
     private boolean customRestrictions;
-    
-    public Item(int itemID,int supplierID ,String name, Category type, String description, boolean customSize, 
-    		    boolean customDonenessDegree, boolean customRestrictions, float price) {
+    public Item(int itemID,int supplierID ,String name, Category type,String description, boolean customSize, boolean customDonenessDegree, boolean customRestrictions, float price) {
     	this.itemID=itemID;
     	this.supplierID=supplierID;
     	this.name=name;
