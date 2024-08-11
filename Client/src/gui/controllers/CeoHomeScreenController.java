@@ -1,11 +1,6 @@
 package gui.controllers;
 
-import java.util.Stack;
-
-import client.ClientConsole;
 import client.ClientMainController;
-import containers.ServerResponseDataContainer;
-import entities.BranchManager;
 import entities.Ceo;
 import entities.User;
 import gui.loader.Screen;
@@ -76,10 +71,6 @@ public class CeoHomeScreenController {
 	    });
 	}
 	
-	public void displayQuarterlyReportScreen() {
-		
-	}
-	
     /**
      * Handles the logout action, updates the user's login status, and displays the login screen.
      * 
@@ -121,6 +112,22 @@ public class CeoHomeScreenController {
     	ScreenLoader screenLoader = new ScreenLoader();
     	String path = "/gui/view/MonthlyReportScreen.fxml";
     	AnchorPane nextDash = screenLoader.loadOnDashboard(screen, path, Screen.MONTHLY_REPORT_SCREEN, this);
+    	String css = getClass().getResource("/gui/view/MonthlyReportScreenGraph.css").toExternalForm();
+        nextDash.getStylesheets().add(css);
+    	dashboard.getChildren().clear(); //Clear current dashboard
+    	dashboard.getChildren().add(nextDash); //Assign the new dashboard
+	}
+	
+    /**
+     * Displays the Quarterly report screen on the dashboard.
+     * 
+     * @param event the action event triggered by the corresponding button
+     * @throws Exception if an error occurs while loading the monthly report screen
+     */
+	public void displayQuarterlyReportScreen(ActionEvent event) throws Exception {
+    	ScreenLoader screenLoader = new ScreenLoader();
+    	String path = "/gui/view/QuarterlyReportScreen.fxml";
+    	AnchorPane nextDash = screenLoader.loadOnDashboard(screen, path, Screen.QUARTERLY_REPORT_SCREEN, this);
     	dashboard.getChildren().clear(); //Clear current dashboard
     	dashboard.getChildren().add(nextDash); //Assign the new dashboard
 	}

@@ -175,6 +175,18 @@ public class LoginController {
 		Scene scene = new Scene(root);
 		primaryStage.setTitle(title);
 		primaryStage.setScene(scene);
+		primaryStage.setResizable(false);
+		primaryStage.setOnCloseRequest(closeEvent ->{
+			user.setisLoggedIn(0);
+			ClientMainController.requestUpdateIsLoggedIn(user);
+			try {
+				this.getExitBtn(event);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		});
 		primaryStage.show();
 		
 	}
