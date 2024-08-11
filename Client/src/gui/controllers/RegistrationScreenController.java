@@ -71,7 +71,9 @@ public class RegistrationScreenController {
     @FXML
     private TableColumn<CustomerWithSelection, String> cvv;
     @FXML
-    private TableColumn<CustomerWithSelection, Date> validDate;
+    private TableColumn<CustomerWithSelection, Integer> validYear;
+    @FXML
+    private TableColumn<CustomerWithSelection, Integer> validMonth;
     @FXML
     private TableColumn<CustomerWithSelection, Float> walletBallance;
     
@@ -197,7 +199,8 @@ public class RegistrationScreenController {
 		homeBranch.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustomer().getHomeBranch().toString()));
 		creditCardNumber.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustomer().getCredit()));
 		cvv.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustomer().getCvv()));
-		validDate.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getCustomer().getValidDate()));
+		validYear.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getCustomer().getValidYear()));
+		validMonth.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getCustomer().getValidMonth()));
 		walletBallance.setCellValueFactory(cellData -> new SimpleFloatProperty(cellData.getValue().getCustomer().getWalletBalance()).asObject());
 
         ClientMainController.requestUnregisteredCustomersData(prevManagerController.getBranchManager());

@@ -44,6 +44,8 @@ public class ServerPortController {
 	@FXML
 	private TextField dbPasswordField;
 	@FXML
+	private TextField csvFilePath;
+	@FXML
 	private Label lblServerStatus;
 	@FXML
 	private ListView lvConnectedClients;
@@ -113,6 +115,7 @@ public class ServerPortController {
 			connectBtn.setDisable(true);
 			disconnectBtn.setDisable(false);
 			importCustomerBtn.setVisible(true);
+			csvFilePath.setVisible(true);
 		} else {
 			updateServerStatus("Failed to start server.");
 		}
@@ -130,7 +133,7 @@ public class ServerPortController {
 	 */
 	public void importCustomerSimulation() {
 		try {
-			Server.importCustomerSimulation();
+			Server.importCustomerSimulation(csvFilePath.getText());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
