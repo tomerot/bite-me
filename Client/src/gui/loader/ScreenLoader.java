@@ -1,19 +1,27 @@
 package gui.loader;
 
 import java.io.IOException;
+
 import gui.controllers.AddItemScreenController;
 import gui.controllers.BranchManagerController;
 import gui.controllers.CeoHomeScreenController;
+import gui.controllers.CheckoutScreenController;
 import gui.controllers.ChooseRestaurantScreenController;
+import gui.controllers.CustomerHomeScreenController;
 import gui.controllers.MonthlyReportScreenController;
-import gui.controllers.MonthlyReportScreenController2;
 import gui.controllers.MyOrdersScreenController;
-import gui.controllers.NewOrderScreenController;
+import gui.controllers.QuarterlyReportScreenController;
 import gui.controllers.EditItemScreenController;
 import gui.controllers.EmployeeHomeScreenController;
-import gui.controllers.RemoveItemScreenController;
-import gui.controllers.SupplierScreenController;
+import gui.controllers.MonthlyReportScreenController;
+import gui.controllers.MyOrdersScreenController;
+import gui.controllers.OrderSummaryScreenController;
 import gui.controllers.RegistrationScreenController;
+import gui.controllers.RemoveItemScreenController;
+import gui.controllers.RestaurantMenuScreenController;
+import gui.controllers.SupplierScreenController;
+import gui.controllers.ThankYouScreenController;
+import gui.controllers.ViewSupplierOrdersScreenController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -31,7 +39,7 @@ public class ScreenLoader {
      *
      * @param wholeScreen , HBox - the object that contains the whole screen (the root in the FXML file)
      * @param path The path to the FXML file.
-     * @param toLoad The type of screen to load.
+     * @param toLoad The name of screen to load.
      * @param currController The current controller to pass to the new screen, in case it's needed to pass the current controller (for example for "Back")
      * @return The loaded AnchorPane.
      * @throws IOException If loading the FXML file fails.
@@ -43,14 +51,17 @@ public class ScreenLoader {
 				MonthlyReportScreenController controller = new MonthlyReportScreenController(wholeScreen, currController);
 				loader.setController(controller);
 				loader.load();
+				controller.setScreen();
 				break;
 			}
-			case MONTHLY_REPORT_SCREEN_TWO: {
-				MonthlyReportScreenController2 controller = new MonthlyReportScreenController2(wholeScreen, currController);
+			case QUARTERLY_REPORT_SCREEN: {
+				QuarterlyReportScreenController controller = new QuarterlyReportScreenController(wholeScreen, currController);
 				loader.setController(controller);
 				loader.load();
+				controller.setScreen();
 				break;
 			}
+			
 			case REGISTRATION_SCREEN: {
 				RegistrationScreenController controller = new RegistrationScreenController(wholeScreen, currController);
 				loader.setController(controller);
@@ -58,12 +69,28 @@ public class ScreenLoader {
 				controller.setupRegistrationTable();
 				break;
 			}
-			case NEW_ORDER_SCREEN:{
-				//NewOrderScreenController controller = new NewOrderScreenController(wholeScreen, currController);
+			case CHOOSE_RESTAURANT_SCREEN:{
 				ChooseRestaurantScreenController controller = new ChooseRestaurantScreenController(wholeScreen, currController);
 				loader.setController(controller);
 				loader.load();
-				controller.loadAllRestaurants();
+				break;
+			}
+			case RESTAURANT_MENU_SCREEN:{
+				RestaurantMenuScreenController controller = new RestaurantMenuScreenController(wholeScreen, currController);
+				loader.setController(controller);
+				loader.load();
+				break;
+			}
+			case CHECKOUT_SCREEN:{
+				CheckoutScreenController controller = new CheckoutScreenController(wholeScreen, currController);
+				loader.setController(controller);
+				loader.load();
+				break;
+			}
+			case ORDER_SUMMARY_SCREEN:{
+				OrderSummaryScreenController controller = new OrderSummaryScreenController(wholeScreen, currController);
+				loader.setController(controller);
+				loader.load();
 				break;
 			}
 			case MY_ORDERS_SCREEN:{
@@ -88,6 +115,18 @@ public class ScreenLoader {
 			}
 			case EDIT_ITEM_SCREEN:{
 				EditItemScreenController controller=new EditItemScreenController(wholeScreen, currController);
+				loader.setController(controller);
+				loader.load();
+				break;
+			}
+			case VIEW_SUPPLIER_ORDERS_SCREEN:{
+				ViewSupplierOrdersScreenController controller=new ViewSupplierOrdersScreenController(wholeScreen, currController);
+				loader.setController(controller);
+				loader.load();
+				break;
+			}
+			case THANK_YOU_SCREEN:{
+				ThankYouScreenController controller=new ThankYouScreenController(wholeScreen, currController);
 				loader.setController(controller);
 				loader.load();
 				break;
@@ -125,6 +164,8 @@ public class ScreenLoader {
 			case MANAGER_SCREEN:
 				loader.setController((BranchManagerController) prevController);
 				break;
+			case CUSTOMER_SCREEN:
+				loader.setController((CustomerHomeScreenController)prevController);
 			default:
 				break;
 		}
@@ -148,11 +189,19 @@ public class ScreenLoader {
 			case MONTHLY_REPORT_SCREEN:
 				loader.setController((MonthlyReportScreenController) prevController);
 				break;
+			case RESTAURANT_MENU_SCREEN:
+				loader.setController((RestaurantMenuScreenController) prevController);
+				break;
+				
+			case  CHECKOUT_SCREEN:
+				loader.setController((CheckoutScreenController) prevController);
+				break;
+				
 			default:
 				break;
 		}
-		loader.load();
-		dashboard = loader.getRoot();
+		AnchorPane dashboard = loader.load();
+		//dashboard = loader.getRoot();
 		return dashboard;
 	}
 }

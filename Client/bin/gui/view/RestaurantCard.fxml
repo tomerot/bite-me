@@ -6,11 +6,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 
-<AnchorPane fx:id="restaurantCard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="265.0" prefWidth="350.0" style="-fx-border-color: black; -fx-background-radius: 20;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="restaurantCard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="265.0" prefWidth="350.0" style="-fx-border-color: black; -fx-border-radius: 20;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox alignment="CENTER" prefHeight="255.0" prefWidth="350.0">
          <children>
-            <ImageView fitHeight="188.0" fitWidth="336.0" pickOnBounds="true" smooth="false" />
+            <ImageView fx:id="restaurantImage" fitHeight="188.0" fitWidth="336.0" pickOnBounds="true" smooth="false" />
             <VBox alignment="CENTER" prefHeight="36.0" prefWidth="350.0">
                <children>
                   <Line endX="198.2928924560547" startX="-100.0" stroke="#a8a8a8" />

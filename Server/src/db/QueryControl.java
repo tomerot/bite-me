@@ -8,4 +8,8 @@ public class QueryControl {
 	 */
 	public static UserQuery userQueries = new UserQuery();
 	public static OrderQuery orderQueries = new OrderQuery();
+	public static ServerUtilsQueries serverQueries = new ServerUtilsQueries();
+	public static ManagersQuery managersQuery = new ManagersQuery();
+	public static EmployeeQuery employeeQuery=new EmployeeQuery();
+	public static SupplierQuery supplierQuery=new SupplierQuery();
 }

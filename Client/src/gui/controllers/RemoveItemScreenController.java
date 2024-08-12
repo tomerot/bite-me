@@ -23,6 +23,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 
+
+/**
+ * Controller for the remove item screen in the GUI.
+ * This controller manages the interactions for removing items from a restaurant's menu.
+ */
 public class RemoveItemScreenController implements Initializable {
 
 	private AuthorizedEmployee employee;
@@ -46,7 +51,27 @@ public class RemoveItemScreenController implements Initializable {
 
 	ObservableList<Category> categoryList;
 
-	// creating list of Categories
+	
+	private EmployeeHomeScreenController prevController;
+	private HBox wholeScreen;
+
+	
+	/**
+    * Constructs an instance of the RemoveItemScreenController.
+    *
+    * @param wholeScreen the HBox representing the whole screen
+    * @param prevController the previous main controller (EmployeeHomeScreenController)
+    */
+	public RemoveItemScreenController(HBox wholeScreen, Object prevController) {
+		this.prevController = (EmployeeHomeScreenController) prevController;
+		this.wholeScreen = wholeScreen;
+	}
+	
+	
+	
+	/**
+     * Sets up the category combo box with predefined categories.
+     */
 	private void setCategoryComboBox() {
 		ArrayList<Category> al = new ArrayList<Category>();
 		al.add(Category.SALAD);
@@ -60,14 +85,16 @@ public class RemoveItemScreenController implements Initializable {
 		categoryField.setItems(categoryList);
 	}
 
-	private EmployeeHomeScreenController prevController;
-	private HBox wholeScreen;
-
-	public RemoveItemScreenController(HBox wholeScreen, Object prevController) {
-		this.prevController = (EmployeeHomeScreenController) prevController;
-		this.wholeScreen = wholeScreen;
-	}
 	
+	
+	/**
+     * Initializes the controller class.
+     * This method is called after the FXML file has been loaded.
+     * It sets up the category combo box and populates the item list.
+     *
+     * @param location  the location used to resolve relative paths for the root object, or null
+     * @param resources the resources used to localize the root object, or null
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -81,9 +108,16 @@ public class RemoveItemScreenController implements Initializable {
 		System.out.println(itemsMap);
 	}
 	
+	
+	/**
+     * Handles the event when a category is selected from the combo box.
+     * Updates the list of items based on the selected category.
+     *
+     * @param event the action event
+     * @throws Exception if updating the list fails
+     */
 	@FXML
 	private void onCategoryClicked(ActionEvent event) throws Exception{
-		System.out.println("IN");
 		Category category = categoryField.getSelectionModel().getSelectedItem();
 		String categoryName = category.toString();
 		ObservableList<String> itemsInCategory = FXCollections.observableArrayList();
@@ -97,6 +131,14 @@ public class RemoveItemScreenController implements Initializable {
         listOfItems.setItems(itemsInCategory);        
 	}
 	
+	
+	/**
+     * Handles the event when the remove button is clicked.
+     * Removes the selected item from the list and database.
+     *
+     * @param event the action event
+     * @throws Exception if removing the item fails
+     */
 	@FXML
 	private void onRemoveClicked(ActionEvent event) throws Exception{
 		 resultMessage.setStyle("-fx-text-fill: red;");

@@ -71,7 +71,9 @@ public class RegistrationScreenController {
     @FXML
     private TableColumn<CustomerWithSelection, String> cvv;
     @FXML
-    private TableColumn<CustomerWithSelection, Date> validDate;
+    private TableColumn<CustomerWithSelection, Integer> validYear;
+    @FXML
+    private TableColumn<CustomerWithSelection, Integer> validMonth;
     @FXML
     private TableColumn<CustomerWithSelection, Float> walletBallance;
     
@@ -82,7 +84,7 @@ public class RegistrationScreenController {
      * Constructs a new RegistrationScreenController.
      * 
      * @param wholeScreen the HBox container for the current screen
-     * @param prevController the previous controller, expected to be an instance of BranchManagerController
+     * @param prevManagerController the previous controller, expected to be an instance of BranchManagerController
      */
 	public RegistrationScreenController(HBox wholeScreen , Object prevController) {
 		this.prevManagerController=(BranchManagerController)prevController;
@@ -102,7 +104,9 @@ public class RegistrationScreenController {
     }
 	
     /**
-     * Represents a customer with a selection checkbox.
+     * A class representing a Customer with a selection state.
+     * This class is used to wrap a Customer object with an additional property
+     * that indicates whether the customer is selected or not.
      */
 	private class CustomerWithSelection {
 		private final Customer customer;
@@ -122,9 +126,10 @@ public class RegistrationScreenController {
 		}
 	}
 	
-    /**
-     * Custom table cell with a checkbox for selection.
-     */
+	/**
+	 * A custom TableCell that contains a CheckBox for selecting a CustomerWithSelection.
+	 * The CheckBox is bound to the selection state of the CustomerWithSelection object.
+	 */
 	private class CheckBoxTableCell extends TableCell<CustomerWithSelection, Boolean> {
 	    private final CheckBox checkBox;
 
@@ -139,7 +144,14 @@ public class RegistrationScreenController {
 	            }
 	        });
 	    }
-
+	    /**
+	     * Updates the content of this TableCell based on the given item.
+	     * If the item is not empty or null, the CheckBox is displayed and its
+	     * selection state is updated accordingly.
+	     *
+	     * @param item  the new value for the CheckBox
+	     * @param empty whether this cell represents an empty row
+	     */
 	    @Override
 	    protected void updateItem(Boolean item, boolean empty) {
 	        super.updateItem(item, empty);
@@ -187,7 +199,8 @@ public class RegistrationScreenController {
 		homeBranch.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustomer().getHomeBranch().toString()));
 		creditCardNumber.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustomer().getCredit()));
 		cvv.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustomer().getCvv()));
-		validDate.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getCustomer().getValidDate()));
+		validYear.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getCustomer().getValidYear()));
+		validMonth.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getCustomer().getValidMonth()));
 		walletBallance.setCellValueFactory(cellData -> new SimpleFloatProperty(cellData.getValue().getCustomer().getWalletBalance()).asObject());
 
         ClientMainController.requestUnregisteredCustomersData(prevManagerController.getBranchManager());

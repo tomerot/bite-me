@@ -1,6 +1,7 @@
-	package gui.controllers;
+package gui.controllers;
 	
-	import java.io.IOException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import client.ClientConsole;
@@ -9,25 +10,30 @@ import containers.ServerResponseDataContainer;
 import entities.Customer;
 import entities.Supplier;
 import enums.Branch;
+import gui.loader.Screen;
+import gui.loader.ScreenLoader;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.TilePane;
-import javafx.scene.layout.VBox;
 	
 	/**
 	 * Controller for the new order screen in the customer interface.
 	 * Handles displaying a list of restaurants (suppliers) and navigating to the next page.
+	 * @author Tomer Rotman
 	 */
 	public class ChooseRestaurantScreenController {
 	
 		private CustomerHomeScreenController prevController;
 		private HBox wholeScreen;
+		private Customer customer;
+		private Supplier preferredSupplier;
 	
 		@FXML
 		private AnchorPane dashboard;
@@ -38,60 +44,90 @@ import javafx.scene.layout.VBox;
 		@FXML
 		private GridPane gridPane;
 		
-		private List<Supplier> northSuppliers;
-		private List<Supplier> centerSuppliers;
-		private List<Supplier> southSuppliers;
-	
+		@FXML
+		private Button northBtn;
+		
+		@FXML
+		private Button centerBtn;
+		
+		@FXML
+		private Button southBtn;
+		
+		private List<Supplier> northSuppliers = new ArrayList<>();
+		private List<Supplier> centerSuppliers = new ArrayList<>();
+		private List<Supplier> southSuppliers = new ArrayList<>();
+		
 		public ChooseRestaurantScreenController(HBox wholeScreen, Object prevController) {
 			this.prevController = (CustomerHomeScreenController) prevController;
 			this.wholeScreen = wholeScreen;
+			customer = ((CustomerHomeScreenController) prevController).getCustomer();
 		}
-	
-//	    /**
-//	     * Loads and displays all available restaurants (suppliers) in a TilePane.
-//	     * Requests the list of suppliers from the server and populates the TilePane with supplier information.
-//	     */
-//		public void loadAllRestaurants() {
-//			Customer customer = prevCustomerController.getCustomer();
-//			ClientMainController.requestRestaurantsByBranch(customer);
-//			ServerResponseDataContainer response = ClientConsole.responseFromServer;
-//			List<Supplier> suppliersList = (List<Supplier>) response.getMessage();
-//	        tilePane.setHgap(10); // Horizontal gap between items
-//	        tilePane.setVgap(10); // Vertical gap between items
-//	        tilePane.setPrefColumns(3); // Number of columns
-//			for (Supplier supplier : suppliersList) {
-//				VBox vbox = createSupplierVBox(supplier);
-//				tilePane.getChildren().add(vbox);
-//			}
-//		}
 		
-	    /**
-	     * Loads and displays all available restaurants (suppliers) in a TilePane.
-	     * Requests the list of suppliers from the server and populates the TilePane with supplier information.
+		public void initialize() {
+		    //Simulate button click based on customer home branch
+		    switch(customer.getHomeBranch()) {
+		        case NORTH:
+		            northBtn.fire();
+		            break;
+		        case CENTER:
+		            centerBtn.fire();
+		            break;
+		        case SOUTH:
+		            southBtn.fire();
+		            break;
+		    }
+		}
+		
+		public Supplier getPreferredSupplier() {
+			return preferredSupplier;
+		}
+		
+		public Customer getCustomer() {
+			return customer;
+		}
+		
+		public void pressNorth(ActionEvent event) {
+			loadAllRestaurants(Branch.NORTH, northSuppliers);
+		}
+		
+		public void pressCenter(ActionEvent event) {
+			loadAllRestaurants(Branch.CENTER, centerSuppliers);
+		}
+		
+		public void pressSouth(ActionEvent event) {
+			loadAllRestaurants(Branch.SOUTH, southSuppliers);
+		}
+		
+		/**
+	     * Loads and displays all available restaurants (suppliers) in a GridPane.
+	     * Requests the list of restaurants of a given branch from the server and populates the GridPane with restaurants buttons.
+	     * @param branchName the branch to load it's restaurants
+	     * @param suppliers the list of restaurants to insert to the GridPane
 	     */
-		public void loadAllRestaurants() {
-			Customer customer = prevController.getCustomer();
-			ClientMainController.requestRestaurantsByBranch(customer.getHomeBranch());
-			ServerResponseDataContainer response = ClientConsole.responseFromServer;
-			switch(customer.getHomeBranch()) {
-				case NORTH:
-					northSuppliers = (List<Supplier>) response.getMessage();
-					break;
-				case CENTER:
-					centerSuppliers = (List<Supplier>) response.getMessage();
-				case SOUTH:
-					southSuppliers = (List<Supplier>) response.getMessage();
+		public void loadAllRestaurants(Branch branchName, List<Supplier> suppliers) {
+			gridPane.getChildren().clear();
+			if(suppliers.isEmpty()) { //No need to create query if suppliers already fetched
+				ClientMainController.requestRestaurantsByBranch(branchName);
+				ServerResponseDataContainer response = ClientConsole.responseFromServer;
+				suppliers.addAll((ArrayList<Supplier>) response.getMessage());
 			}
 			
-			for (Supplier supplier : centerSuppliers) {
+			for (Supplier supplier : suppliers) {
 				AnchorPane card = createRestaurantCard(supplier);
-				gridPane.add(card, gridPane.getChildren().size() % 2, gridPane.getChildren().size() / 2); // Add to gridPane
+				gridPane.add(card, gridPane.getChildren().size() % 3, gridPane.getChildren().size() / 3); // Add to gridPane
 			}
 			
-			gridPane.setHgap(20); // Adjust the horizontal gap as needed
-		    gridPane.setVgap(30); // Adjust the vertical gap as needed
+			gridPane.setHgap(10); //Need to be fixed somehow
+		    gridPane.setVgap(30);
+			
 		}
 		
+		/**
+	     * Creates an AnchorPane button for a single restaurant
+	     * 
+	     * @param supplier the restaurant to display
+	     * @return an AnchorPane containing supplier's picture, city and address
+	     */
 		private AnchorPane createRestaurantCard(Supplier supplier) {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/view/RestaurantCard.fxml"));
 			AnchorPane card = null;
@@ -101,44 +137,49 @@ import javafx.scene.layout.VBox;
 	            e.printStackTrace();
 	        }
 
+	        //Labels adjustments
 	        Label restaurantNameLabel = (Label) card.lookup("#restaurantName");
+	        Label restaurantAddressLabel = (Label) card.lookup("#restaurantAddress");
 	        restaurantNameLabel.setText(supplier.getName());
+	        restaurantAddressLabel.setText(supplier.getCity() + " | " + supplier.getAddress());
+	        
+	        //Image adjustments
+	        ImageView restaurantImage = (ImageView) card.lookup("#restaurantImage");
+	        String imgPath = "/gui/resource/" + supplier.getSupplierID() + ".png";
+	        try {
+	        	Image image = new Image(imgPath);
+	        	restaurantImage.setImage(image);
+	        } catch(IllegalArgumentException e) { //Image not found
+	        	Image no_image = new Image("gui/resource/No_image.png");
+	        	restaurantImage.setImage(no_image);
+	        }
 	        
 	        card.setOnMouseClicked(event -> {
-	        	moveToNextPage(supplier);
+	        		try {
+						displayRestaurantMenuScreen(supplier);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 	        });
 	        
 	        return card;
 		}
 	
-	    /**
-	     * Creates an AnchorPane for displaying a single restaurant
-	     * 
-	     * @param supplier the restaurant to display
-	     * @return an AnchorPane containing supplier information
-	     */
-//		private VBox createSupplierVBox(Supplier supplier) {
-//			VBox vbox = new VBox();
-//			vbox.setPadding(new Insets(35));
-//			vbox.setStyle("-fx-border-color: black; -fx-border-width: 1px;");
-//	
-//			Label nameLabel = new Label(supplier.getName());
-//			nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-//	
-//			vbox.getChildren().add(nameLabel);
-//	
-//			vbox.setOnMouseClicked(event -> {
-//				// Handle click event, move to the next page
-//				moveToNextPage(supplier);
-//			});
-//	
-//			return vbox;
-//		}
-	
-		//when clicking - need to save what he clicked on, move on to next page (this is just to test for now)
-		private void moveToNextPage(Supplier supplier) {
-			// Implement your logic to move to the next page
-			System.out.println("Clicked on supplier: " + supplier.getName());
+		private void displayRestaurantMenuScreen(Supplier supplier) throws Exception {
+			preferredSupplier = supplier; //The supplier that the customer has chosen
+			ScreenLoader screenLoader = new ScreenLoader();
+	    	String path = "/gui/view/RestaurantMenuScreen.fxml";
+	    	AnchorPane nextDash = screenLoader.loadOnDashboard(wholeScreen, path, Screen.RESTAURANT_MENU_SCREEN, this);
+	    	dashboard.getChildren().clear(); //Clear current dashboard
+	    	dashboard.getChildren().add(nextDash); //Assign the new dashboard
+		}
+		
+		public void pressBack(ActionEvent event) throws IOException {
+			ScreenLoader screenLoader = new ScreenLoader();
+			String path = "/gui/view/CustomerHomeScreen.fxml";
+			HBox prevWholeScreen = screenLoader.loadPreviousScreen(path, Screen.CUSTOMER_SCREEN, prevController);
+			wholeScreen.getChildren().clear();
+			wholeScreen.getChildren().add(prevWholeScreen);
 		}
 		
 	}

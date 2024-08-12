@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="dashboard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="950.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button fx:id="backBtn" layoutX="550.0" layoutY="885.0" mnemonicParsing="false" onAction="#goBack" prefHeight="43.0" prefWidth="100.0" text="Back" />
+      <Text layoutX="413.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Quarterly Report Screen" wrappingWidth="388.9999999999999">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Text>
+      <Label fx:id="headlineLabel" alignment="CENTER" layoutY="229.0" prefHeight="43.0" prefWidth="1200.0" textAlignment="CENTER">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
+      <Button fx:id="incomeGraph" layoutX="619.0" layoutY="826.0" mnemonicParsing="false" onAction="#displayIncomeMain" prefHeight="43.0" prefWidth="100.0" text="Income Graph" />
+      <Button fx:id="ordersGraph" layoutX="482.0" layoutY="826.0" mnemonicParsing="false" onAction="#displayOrdersMain" prefHeight="43.0" prefWidth="100.0" text="Orders Graph" />
+      <Button fx:id="clearSelection" layoutX="989.0" layoutY="174.0" mnemonicParsing="false" onAction="#clearAllSelection" prefHeight="35.0" prefWidth="150.0" text="Clear Selection">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font></Button>
+      <Button fx:id="displayReport" layoutX="989.0" layoutY="128.0" mnemonicParsing="false" onAction="#displayReport" prefHeight="35.0" prefWidth="150.0" text="Display Reports">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font></Button>
+      <Button fx:id="mini1IncomeGraph" layoutX="332.0" layoutY="737.0" mnemonicParsing="false" onAction="#displayIncomeMini1" prefHeight="43.0" prefWidth="100.0" text="Income Graph" />
+      <Button fx:id="mini1OrderGraph" layoutX="195.0" layoutY="737.0" mnemonicParsing="false" onAction="#displayOrdersMini1" prefHeight="43.0" prefWidth="100.0" text="Orders Graph" />
+      <Button fx:id="mini2IncomeGraph" layoutX="913.0" layoutY="737.0" mnemonicParsing="false" onAction="#displayIncomeMini2" prefHeight="43.0" prefWidth="100.0" text="Income Graph" />
+      <Button fx:id="mini2OrderGraph" layoutX="776.0" layoutY="737.0" mnemonicParsing="false" onAction="#displayOrdersMini2" prefHeight="43.0" prefWidth="100.0" text="Orders Graph" />
+      <ScrollPane fx:id="mainHistogramOrdersScroll" hbarPolicy="ALWAYS" layoutX="26.0" layoutY="278.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="1155.0" vbarPolicy="NEVER">
+         <content>
+            <BarChart fx:id="mainHistogramOrders" animated="false" prefHeight="529.0" prefWidth="1041.0" style="-fx-legend-visible: false;">
+               <xAxis>
+                  <CategoryAxis fx:id="mainHistogramOrdersX" side="BOTTOM" />
+               </xAxis>
+               <yAxis>
+                  <NumberAxis fx:id="mainHistogramOrdersY" side="LEFT" />
+               </yAxis>
+            </BarChart>
+         </content>
+      </ScrollPane>
+      <ScrollPane fx:id="mainHistogramIncomeScroll" hbarPolicy="ALWAYS" layoutX="26.0" layoutY="278.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="1155.0" vbarPolicy="NEVER">
+         <content>
+            <BarChart fx:id="mainHistogramIncome" animated="false" prefHeight="529.0" prefWidth="1146.0" style="-fx-legend-visible: false;">
+               <xAxis>
+                  <CategoryAxis fx:id="mainHistogramIncomeX" side="BOTTOM" />
+               </xAxis>
+               <yAxis>
+                  <NumberAxis fx:id="mainHistogramIncomeY" side="LEFT" />
+               </yAxis>
+            </BarChart>
+         </content>
+      </ScrollPane>
+      <ScrollPane fx:id="miniHistogram1IncomeScroll" hbarPolicy="ALWAYS" layoutX="26.0" layoutY="278.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="452.0" prefWidth="573.0" vbarPolicy="NEVER">
+         <content>
+            <BarChart fx:id="miniHistogram1Income" animated="false" prefHeight="422.0" prefWidth="564.0" style="-fx-legend-visible: false;">
+              <xAxis>
+                <CategoryAxis fx:id="miniHistogram1X" side="BOTTOM" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis fx:id="miniHistogram1Y" side="LEFT" />
+              </yAxis>
+            </BarChart>
+         </content>
+      </ScrollPane>
+      <ScrollPane fx:id="miniHistogram1OrdersScroll" hbarPolicy="ALWAYS" layoutX="27.0" layoutY="279.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="452.0" prefWidth="573.0" vbarPolicy="NEVER">
+         <content>
+            <BarChart fx:id="miniHistogram1Orders" animated="false" prefHeight="422.0" prefWidth="564.0" style="-fx-legend-visible: false;">
+               <xAxis>
+                  <CategoryAxis fx:id="miniHistogram1X1" side="BOTTOM" />
+               </xAxis>
+               <yAxis>
+                  <NumberAxis fx:id="miniHistogram1Y1" side="LEFT" />
+               </yAxis>
+            </BarChart>
+         </content>
+      </ScrollPane>
+      <ScrollPane fx:id="miniHistogram2IncomeScroll" hbarPolicy="ALWAYS" layoutX="608.0" layoutY="279.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="452.0" prefWidth="573.0" vbarPolicy="NEVER">
+         <content>
+            <BarChart fx:id="miniHistogram2Income" animated="false" prefHeight="422.0" prefWidth="564.0" style="-fx-legend-visible: false;">
+               <xAxis>
+                  <CategoryAxis fx:id="miniHistogram2X" side="BOTTOM" />
+               </xAxis>
+               <yAxis>
+                  <NumberAxis fx:id="miniHistogram2Y" side="LEFT" />
+               </yAxis>
+            </BarChart>
+         </content>
+      </ScrollPane>
+      <ScrollPane fx:id="miniHistogram2OrdersScroll" hbarPolicy="ALWAYS" layoutX="608.0" layoutY="279.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="452.0" prefWidth="573.0" vbarPolicy="NEVER">
+         <content>
+            <BarChart fx:id="miniHistogram2Orders" animated="false" prefHeight="422.0" prefWidth="564.0" style="-fx-legend-visible: false;">
+               <xAxis>
+                  <CategoryAxis fx:id="miniHistogram2X1" side="BOTTOM" />
+               </xAxis>
+               <yAxis>
+                  <NumberAxis fx:id="miniHistogram2Y1" side="LEFT" />
+               </yAxis>
+            </BarChart>
+         </content>
+      </ScrollPane>
+      <Pane layoutX="76.0" layoutY="112.0" prefHeight="48.0" prefWidth="890.0" style="-fx-background-color: #8cabbf; -fx-background-radius: 15;">
+         <children>
+            <Text layoutX="210.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select a branch:" wrappingWidth="99.99999999999989">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+            <Text layoutX="451.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select quarter:" wrappingWidth="93.99999999999989">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+            <Text layoutX="683.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select year:" wrappingWidth="72.99999999999989">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+            <ComboBox fx:id="branchSelect" layoutX="310.0" layoutY="11.0" onAction="#setBranchSelection" prefHeight="25.0" prefWidth="108.0" />
+            <ComboBox fx:id="quarterSelect" layoutX="545.0" layoutY="12.0" onAction="#setQuarterSelection" prefHeight="25.0" prefWidth="118.0" />
+            <ComboBox fx:id="yearSelect" layoutX="756.0" layoutY="12.0" onAction="#setYearSelection" prefHeight="25.0" prefWidth="118.0" />
+            <Text layoutX="20.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Display Report 1." wrappingWidth="132.0">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <Pane layoutX="76.0" layoutY="176.0" prefHeight="48.0" prefWidth="890.0" style="-fx-background-color: #8cabbf; -fx-background-radius: 15;">
+         <children>
+            <Text layoutX="20.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Display Report 2." wrappingWidth="132.0">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Text>
+            <Text layoutX="210.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select a branch:" wrappingWidth="99.99999999999989">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+            <ComboBox fx:id="branchSelect2" layoutX="310.0" layoutY="12.0" onAction="#setBranch2Selection" prefHeight="25.0" prefWidth="108.0" />
+            <Text layoutX="452.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select quarter:" wrappingWidth="93.99999999999989">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+            <ComboBox fx:id="quarterSelect2" layoutX="544.0" layoutY="12.0" onAction="#setQuarter2Selection" prefHeight="25.0" prefWidth="118.0" />
+            <Text layoutX="682.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select year:" wrappingWidth="72.99999999999989">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+            <ComboBox fx:id="yearSelect2" layoutX="756.0" layoutY="12.0" onAction="#setYear2Selection" prefHeight="25.0" prefWidth="118.0" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

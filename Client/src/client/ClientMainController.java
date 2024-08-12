@@ -4,10 +4,13 @@ import java.util.Map;
 
 import containers.ClientRequestDataContainer;
 import entities.Item;
+
+import java.util.ArrayList;
 import java.util.List;
 import entities.BranchManager;
 import entities.Customer;
 import entities.Order;
+import entities.Supplier;
 import entities.User;
 import enums.Branch;
 import enums.ClientRequest;
@@ -113,16 +116,16 @@ public class ClientMainController {
 				userList);
 		ClientMainController.accept(request);
 	}
-
-//    /**
-//     * Requests all restaurants available for a given customer from the server.
-//     *
-//     * @param customer the customer for whom restaurant data is requested
-//     */
-//	public static void requestAllRestaurants(Customer customer) {
-//		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.FETCH_RESTAURANTS,customer);
-//		ClientMainController.accept(request);
-//	}
+	public static void requestReportData(List<String> ReportInfo) {
+		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.FETCH_REPORT_DATA,
+				ReportInfo);
+		ClientMainController.accept(request);
+	}
+	public static void requestQuarterReportData(List<String> ReportInfo) {
+		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.FETCH_QUARTER_REPORT_DATA,
+				ReportInfo);
+		ClientMainController.accept(request);
+	}
 	
 	/**
      * Requests all specific branch restaurants
@@ -151,42 +154,120 @@ public class ClientMainController {
 		ClientMainController.accept(request);
 	}
 
-    
+	/**
+     * Sends a request to get the orders data for the specified supplier.
+     *
+     * @param supplierID the ID of the supplier whose orders data is requested
+     */
     public static void requestOrderData(int supplierID) {
-    	ClientRequestDataContainer request=new ClientRequestDataContainer(ClientRequest.GET_ORDER_DATA, supplierID);
+    	ClientRequestDataContainer request=new ClientRequestDataContainer(ClientRequest.GET_ORDERS_DATA, supplierID);
     	ClientMainController.accept(request);
     }
-	
+    /**
+     * Sends a request to add a new item.
+     *
+     * @param item the item to be added
+     */
 	public static void requestAddItemData(Item item) {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.ADD_ITEM_DATA, item);
 		ClientMainController.accept(request);
 	}
-	
+	/**
+     * Sends a request to get the list of items for the specified supplier.
+     *
+     * @param supplierID the ID of the supplier whose items list is requested
+     */
 	public static void requestItemsList(int supplierID) {
 		
 		Integer suppID = supplierID;
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.GET_ITEMS_LIST, suppID);
 		ClientMainController.accept(request);
 	}
-	
+	/**
+     * Sends a request to get the full list of items for the specified supplier.
+     *
+     * @param supplierID the ID of the supplier whose full items list is requested
+     */
 	public static void requestFullItemsList(int supplierID) {
 		
 		Integer suppID = supplierID;
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.GET_FULL_ITEMS_LIST, suppID);
 		ClientMainController.accept(request);
 	}
-	
+	  /**
+     * Sends a request to remove an item.
+     *
+     * @param itemData a map containing item data, including item identifiers and quantities
+     */
 	public static void requestRemoveItem(Map<String,Integer> itemData) {
 		
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.REMOVE_ITEM, itemData);
 		ClientMainController.accept(request);
 	}
-	
+	  /**
+     * Sends a request to update an existing item.
+     *
+     * @param item the item with updated information
+     */
 	public static void requestUpdateItem(Item item) {
 		
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.UPDATE_ITEM, item);
 		ClientMainController.accept(request);
 	}
+	
+    public static void requestSupplierItems(Supplier supplier) {
+        ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.GET_SUPPLIER_ITEMS, supplier);
+        ClientMainController.accept(request);
+    }
     
+    public static void requestAllRelevantCitys(Supplier supplier) {
+        ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.GET_RELEVANT_CITIES, supplier);
+        ClientMainController.accept(request);
+    }
 
+    public static void updateOrderAndItems(List<Object> list) {
+        ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.UPDATE_ORDER_AND_ITEMS, list);
+        ClientMainController.accept(request);
+    }
+    
+    public static void updateCustomerWallet(List<Object> list) {
+        ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.UPDATE_CUSTOMER_WALLET, list);
+        ClientMainController.accept(request);
+    }
+    
+	/**
+     * Sends a request to get the orders data for the specified supplier.
+     *
+     * @param supplierID the ID of the supplier whose orders data is requested
+     */
+    public static void requestOrdersData(int supplierID) {
+    	ClientRequestDataContainer request=new ClientRequestDataContainer(ClientRequest.GET_ORDERS_DATA, supplierID);
+    	ClientMainController.accept(request);
+    }
+    /**
+     * Sends a request to update the status of an order.
+     *
+     * @param orderInfo an array containing the order ID and the status transition code
+     */
+    public static void requestSupplierUpdateOrderStatus(int[] orderInfo) {
+		
+		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.SUPPLIER_UPDATE_ORDER_STATUS, orderInfo);
+		ClientMainController.accept(request);
+	}
+    public static void requestSupplierRefreshAwaitingOrders(Integer supplierID) {
+		
+ 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.SUPPLIER_REFRESH_AWAITING_ORDERS, supplierID);
+ 		ClientMainController.accept(request);
+ 	}
+    
+	public static void customerLogout() {
+		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.CUSTOMER_LOGOUT, null);
+		ClientMainController.accept(request);
+	}
+	
+	public static void sendApproveReadyOrderToClient(ArrayList<Object> data) {
+		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.SEND_CUSTOMER_MSG, data);
+		ClientMainController.accept(request);
+	}
+	
 }

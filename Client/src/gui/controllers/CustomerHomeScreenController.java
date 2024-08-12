@@ -70,6 +70,7 @@ public class CustomerHomeScreenController {
 	    });
 	}
 	
+	
     /**
      * Logs out the current user and transitions to the login screen.
      * 
@@ -79,6 +80,7 @@ public class CustomerHomeScreenController {
     public void logOut(ActionEvent event) throws Exception{
 		user.setisLoggedIn(0);
 		ClientMainController.requestUpdateIsLoggedIn(user);
+		ClientMainController.customerLogout();
 		displayLogin(event);
     }
     
@@ -103,21 +105,19 @@ public class CustomerHomeScreenController {
 	}
 	
     /**
-     * Displays the new order screen.
-     * Loads and shows the new order screen within the current dashboard.
+     * Displays the restaurant options screen.
+     * Loads and shows the restaurant options screen within the current dashboard.
      * 
-     * @param event the action event triggered by the button to display the new order screen
-     * @throws Exception if an error occurs while loading the new order screen
+     * @param event the action event triggered by the button to display the screen
+     * @throws Exception if an error occurs while loading the screen
      */
-	public void displayNewOrderScreen(ActionEvent event) throws Exception {
+	public void displayChooseRestaurantScreen(ActionEvent event) throws Exception {
     	ScreenLoader screenLoader = new ScreenLoader();
-    	//String path = "/gui/view/NewOrderScreen.fxml";
     	String path = "/gui/view/ChooseRestaurantScreen.fxml";
-    	AnchorPane nextDash = screenLoader.loadOnDashboard(screen, path, Screen.NEW_ORDER_SCREEN, this);
+    	AnchorPane nextDash = screenLoader.loadOnDashboard(screen, path, Screen.CHOOSE_RESTAURANT_SCREEN, this);
     	dashboard.getChildren().clear(); //Clear current dashboard
     	dashboard.getChildren().add(nextDash); //Assign the new dashboard
 	}
-	
 	
 	public void displayMyOrderScreen(ActionEvent event) throws Exception{
     	ScreenLoader screenLoader = new ScreenLoader();
