@@ -115,6 +115,7 @@ public class Order implements Serializable{
     	this.status = status;
     }
    
+    
 	public List<ItemInOrder> getItemsList() {
 		return itemsList;
 	}

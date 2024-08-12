@@ -4,6 +4,8 @@ import java.util.Map;
 
 import containers.ClientRequestDataContainer;
 import entities.Item;
+
+import java.util.ArrayList;
 import java.util.List;
 import entities.BranchManager;
 import entities.Customer;
@@ -257,4 +259,15 @@ public class ClientMainController {
  		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.SUPPLIER_REFRESH_AWAITING_ORDERS, supplierID);
  		ClientMainController.accept(request);
  	}
+    
+	public static void customerLogout() {
+		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.CUSTOMER_LOGOUT, null);
+		ClientMainController.accept(request);
+	}
+	
+	public static void sendApproveReadyOrderToClient(ArrayList<Object> data) {
+		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.SEND_CUSTOMER_MSG, data);
+		ClientMainController.accept(request);
+	}
+	
 }

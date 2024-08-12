@@ -4,10 +4,11 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="dashboard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="950.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="dashboard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="950.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
             <Label layoutX="67.0" layoutY="65.0" prefHeight="52.0" prefWidth="396.0" text="Awaiting orders ID">
                <font>
@@ -48,5 +49,11 @@
          </font>
       </Button>
       <Label fx:id="resultMessage" layoutX="200.0" layoutY="816.0" prefHeight="126.0" prefWidth="459.0" />
+      <TextField fx:id="arrivalTimeField" layoutX="875.0" layoutY="715.0" prefHeight="34.0" prefWidth="170.0" />
+      <Label layoutX="686.0" layoutY="718.0" text="Estimated arrival time:">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

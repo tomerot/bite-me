@@ -70,6 +70,7 @@ public class CustomerHomeScreenController {
 	    });
 	}
 	
+	
     /**
      * Logs out the current user and transitions to the login screen.
      * 
@@ -79,6 +80,7 @@ public class CustomerHomeScreenController {
     public void logOut(ActionEvent event) throws Exception{
 		user.setisLoggedIn(0);
 		ClientMainController.requestUpdateIsLoggedIn(user);
+		ClientMainController.customerLogout();
 		displayLogin(event);
     }
     
