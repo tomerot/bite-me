@@ -317,7 +317,6 @@ public class Server extends AbstractServer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println(clientMap.toString());
 	}
 	
 	private void handleUpdateCustomerWallet(Order order,Float walletUsedAmount ,ConnectionToClient client) throws SQLException {
@@ -449,7 +448,6 @@ public class Server extends AbstractServer {
 			response = QueryControl.userQueries.importCustomerInfo(dbConn, user);
 			Customer customer = (Customer) response.getMessage();
 			clientMap.put(customer.getId(), client);
-			System.out.println(clientMap.toString());
 			break;
 		default:
 			break;

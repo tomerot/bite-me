@@ -113,5 +113,10 @@
          <font>
             <Font name="System Bold Italic" size="13.0" />
          </font></Label>
+      <Label fx:id="preOrderStatusLbl" layoutX="95.0" layoutY="662.0" prefHeight="87.0" prefWidth="246.0" textFill="RED">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

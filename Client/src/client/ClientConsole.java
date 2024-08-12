@@ -102,7 +102,7 @@ public class ClientConsole extends AbstractClient {
 		if(ServerResponse.MSG_TO_DISPLAY_FOR_CUSTOEMR.equals(response.getResponse())){
 			Platform.runLater(() -> {
 	            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-	            alert.setTitle("Order Simulation");
+	            alert.setTitle("Order Status Notification Simulation");
 	            alert.setHeaderText("New Order Status!");
 	            alert.setContentText((String) response.getMessage());
 	            alert.showAndWait();

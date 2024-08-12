@@ -53,9 +53,9 @@ public class CheckoutScreenController {
 	private Order order;
 	private float walletAmount;
 	private int peopleInOrder;
+	private float totalDeliveryPrice;
 	
 	private float itemsPrice;
-	private float totalPriceDeliveryIcnluded;
 	private float customerWalletBalance;
 	private float totalPriceNoWallet;
 	private String orderType;
@@ -123,6 +123,9 @@ public class CheckoutScreenController {
     
     @FXML
     private Label orderTypeLbl;
+    
+    @FXML
+    private Label preOrderStatusLbl;
 
     @FXML
     private ChoiceBox<String> CityChoise;
@@ -141,7 +144,7 @@ public class CheckoutScreenController {
 		this.customer = this.prevController.getCustomer();
 		this.supplier = this.prevController.getSupplier();
 		this.itemsPrice = this.prevController.getTotalPrice();
-
+		
 		// get all relevant cities for delivery for correct supplier
 		ClientMainController.requestAllRelevantCitys(supplier);
 		ServerResponseDataContainer response = ClientConsole.responseFromServer;
@@ -155,178 +158,225 @@ public class CheckoutScreenController {
 	 */
 	@FXML
 	private void initialize() {
-		// ADD LIST WITH ITEMS
-		// Get the current wallet balance for the customer and display it in the wallet
-		// balance label
-		supplyTimeField.setText("00:00:00");
-		orderType = "Regular";
-		orderTypeLbl.setVisible(false);
-		orderTypeLbl.setText("Order Type: " + orderType);
-		float walletBalance = customer.getWalletBalance();
-		customerWalletBalance = walletBalance;
-		walletBalanceLbl.setText(String.format("%.2f₪", walletBalance));
-		itemsPriceLbl.setText(String.format("%.2f₪", itemsPrice));
-		
-
-		// Populate the city choice dropdown with the list of relevant delivery cities
-		ObservableList<String> citiesObservableList = FXCollections.observableArrayList(relevantDeliveryCities);
-		CityChoise.setItems(citiesObservableList);
-
-		// Initialize the date picker with today's date and set date restrictions
-		initializeDatePicker();
-
-		// Create a ToggleGroup for the delivery type radio buttons
-		deliveryTypeGroup = new ToggleGroup();
-		basicRadioBtn.setToggleGroup(deliveryTypeGroup);
-		SharedRadioBtn.setToggleGroup(deliveryTypeGroup);
-		RobotRadioBtn.setToggleGroup(deliveryTypeGroup);
-		takeAwayRadioBtn.setToggleGroup(deliveryTypeGroup);
-
-		// Disable the Robot radio button initially as it may not be available for
-		// selection
-		RobotRadioBtn.setDisable(true);
-
-		// Set the default selection to 'Private'
-		takeAwayRadioBtn.setSelected(true);
-
-		// Set the initial state of the amount field to disabled
-		amountField.setDisable(true);
-
-		// Set the default city value in the city choice dropdown based on the
-		// supplier's city
-		CityChoise.setValue(supplier.getCity());
-		CityChoise.setDisable(true);
-
-		// Initialize the wallet field with "0" and ensure it is not selected by default
-		WalletField.setText("0");
-		WalletRadioBtn.setSelected(false);
-		WalletField.setDisable(true);
-
-		// Add a listener to the walletRadioBtn
-		WalletRadioBtn.selectedProperty().addListener((observable, oldValue, newValue) -> {
-			// Enable WalletField if walletRadioBtn is selected, otherwise disable it
-			if (newValue) {
-				WalletField.setText("0");
-				WalletField.setDisable(false); // Enable WalletField
-				validateWalletField(); // Validate the wallet field
-				updatePriceLabels(); // Update price labels based on the new wallet value
-			} else {
-				WalletField.setText("0");
-				WalletField.setDisable(true); // Disable WalletField
-				WalletField.setStyle("-fx-border-color: green; -fx-border-width: 2px;"); // Reset style to green
-				validateWalletField(); // Validate the wallet field
-			}
-		});
-
-		// Add a listener to the Shared radio button to enable the amount field when
-		// selected
-		SharedRadioBtn.selectedProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue) {
-				amountField.setDisable(false); // Enable amountField
-				amountField.setText("1"); // Set default value for amountField as "1"
-				CityChoise.setDisable(false); // Enable city choice dropdown
-				validateAmountField(); // Validate the amount field
-				validateWalletField(); // Validate the wallet field
-				updatePriceLabels(); // Update price labels based on the new amount
-				orderTypeLbl.setVisible(true);
-			}
-		});
-
-		// Add a listener to the Private radio button to set amount field to 1 and
-		// disable it
-		basicRadioBtn.selectedProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue) {
-				amountField.setText("1"); // Set amount field to 1
-				amountField.setDisable(true); // Disable amount field
-				amountField.setStyle("-fx-border-color: green; -fx-border-width: 2px;"); // Reset style to green
-				CityChoise.setDisable(false); // Enable city choice dropdown
-				updatePriceLabels(); // Update price labels
-				validateWalletField(); // Validate the wallet field
-				orderTypeLbl.setVisible(true);
-			}
-		});
-
-		// Add a listener to the Takeaway radio button to set default values for address
-		// and city fields
-		takeAwayRadioBtn.selectedProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue) {
-				amountField.setText("1"); // Set default value for amountField as "1"
-				amountField.setDisable(true); // Disable amount field
-				amountField.setStyle("-fx-border-color: green; -fx-border-width: 2px;"); // Reset style to green
-				addressField.setText(supplier.getAddress()); // Set address field based on supplier
-				addressField.setDisable(true); // Disable address field
-				CityChoise.setValue(supplier.getCity()); // Set city choice dropdown based on supplier
-				CityChoise.setDisable(true); // Disable city choice dropdown
-				updatePriceLabels();// Update price labels
-				validateWalletField(); // Validate the wallet field
-				orderTypeLbl.setVisible(false);
-
-			} else {
-				addressField.setDisable(false); // Enable address field if not selected
-				updatePriceLabels(); // Update price labels
-				validateWalletField(); // Validate the wallet field
-			}
-		});
-
-		// Add a listener to the amount field to update price labels when its text
-		// changes
-		amountField.textProperty().addListener((obs, oldValue, newValue) -> {
-			updatePriceLabels(); // Update price labels
-			validateWalletField();
-			//validateSupplyTime(); // Validate supply time
-			checkSupplyTime(datePicker.getValue(), supplyTimeField.getText());
-			orderTypeLbl.setText("Order Type: " + orderType);
-		});
-
-		// Add a listener to the wallet field to update price labels when its text
-		// changes
-		WalletField.textProperty().addListener((obs, oldValue, newValue) -> {
-			updatePriceLabels(); // Update price labels
-		});
-		
-		// Add a listener to the DatePicker to validate the supply time when the date
-		// changes
-		datePicker.valueProperty().addListener(new ChangeListener<LocalDate>() {
-			@Override
-			public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldDate, LocalDate newDate) {
-				String timeText = supplyTimeField.getText();
-				if (isValidTimeFormat(timeText)) {
-					validateSupplyTime(); // Validate supply time
-					checkSupplyTime(datePicker.getValue(), supplyTimeField.getText());
-					orderTypeLbl.setText("Order Type: " + orderType);
-					updatePriceLabels();
-				}
-				else {
-					supplyTimeField.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
-		            orderTypeLbl.setText("Invalid time format, please correct.");
-				}
-			}
-		});
+		 setupInitialUI();
+		 setupListeners();
+		 configureAvailableRadioButtons();
+		 addValidationListeners();
+	}
 	
-		supplyTimeField.textProperty().addListener(new ChangeListener<String>() {
-		    @Override
-		    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-		        if (isValidTimeFormat(newValue)) {
-		            validateSupplyTime(); // Validate supply time
-		            checkSupplyTime(datePicker.getValue(), supplyTimeField.getText());
-		            orderTypeLbl.setText("Order Type: " + orderType);
-		            updatePriceLabels();
-		        } else {
-		            // Set the border to red to indicate invalid format
-		            supplyTimeField.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
-		            orderTypeLbl.setText("Invalid Supply time");
-		            updatePriceLabels();
-		        }
-		    }
-		});
-
-
-		// Configure available radio buttons based on the current state
-		configureAvailableRadioButtons();
-		// Add validation listeners to ensure input fields are correctly validated
-		addValidationListeners();
+	
+	private void setupInitialUI() {
+	    // Set default values and states for UI components
+	    supplyTimeField.setText("00:00:00");
+	    orderType = "Regular";
+	    orderTypeLbl.setVisible(false);
+	    orderTypeLbl.setText("Order Type: " + orderType);
+	    
+	    // Display wallet balance and item price
+	    updateWalletAndPriceLabels();
+	    
+	    // Populate city dropdown
+	    populateCityDropdown();
+	    
+	    // Initialize date picker
+	    initializeDatePicker();
+	    
+	    // Configure radio buttons
+	    setupRadioButtons();
+	    
+	    // Initialize wallet field
+	    setupWalletField();
+	}
+	
+	
+	private void updateWalletAndPriceLabels() {
+	    float walletBalance = customer.getWalletBalance();
+	    customerWalletBalance = walletBalance;
+	    walletBalanceLbl.setText(String.format("%.2f₪", walletBalance));
+	    itemsPriceLbl.setText(String.format("%.2f₪", itemsPrice));
 	}
 
+	/**
+	 * Populates the city dropdown with relevant delivery cities.
+	 */
+	private void populateCityDropdown() {
+	    ObservableList<String> citiesObservableList = FXCollections.observableArrayList(relevantDeliveryCities);
+	    CityChoise.setItems(citiesObservableList);
+	    CityChoise.setValue(supplier.getCity());
+	    CityChoise.setDisable(true);
+	}
+
+	/**
+	 * Sets up the radio buttons and their associated ToggleGroup.
+	 */
+	private void setupRadioButtons() {
+	    deliveryTypeGroup = new ToggleGroup();
+	    basicRadioBtn.setToggleGroup(deliveryTypeGroup);
+	    SharedRadioBtn.setToggleGroup(deliveryTypeGroup);
+	    RobotRadioBtn.setToggleGroup(deliveryTypeGroup);
+	    takeAwayRadioBtn.setToggleGroup(deliveryTypeGroup);
+	    
+	    RobotRadioBtn.setDisable(true);
+	    takeAwayRadioBtn.setSelected(true);
+	}
+
+	/**
+	 * Sets up the wallet field and its listeners.
+	 */
+	private void setupWalletField() {
+	    WalletField.setText("0");
+	    WalletRadioBtn.setSelected(false);
+	    WalletField.setDisable(true);
+	}
+
+	/**
+	 * Sets up the listeners for various UI components.
+	 */
+	private void setupListeners() {
+	    setupWalletRadioButtonListener();
+	    setupSharedRadioButtonListener();
+	    setupBasicRadioButtonListener();
+	    setupTakeAwayRadioButtonListener();
+	    setupAmountFieldListener();
+	    setupWalletFieldListener();
+	    setupDatePickerListener();
+	    setupSupplyTimeFieldListener();
+	}
+
+	/**
+	 * Sets up listener for the wallet radio button.
+	 */
+	private void setupWalletRadioButtonListener() {
+	    WalletRadioBtn.selectedProperty().addListener((observable, oldValue, newValue) -> {
+	        if (newValue) {
+	            WalletField.setText("0");
+	            WalletField.setDisable(false);
+	            validateWalletField();
+	            updatePriceLabels();
+	        } else {
+	            WalletField.setText("0");
+	            WalletField.setDisable(true);
+	            WalletField.setStyle("-fx-border-color: green; -fx-border-width: 2px;");
+	            validateWalletField();
+	        }
+	    });
+	}
+
+	/**
+	 * Sets up listener for the shared radio button.
+	 */
+	private void setupSharedRadioButtonListener() {
+	    SharedRadioBtn.selectedProperty().addListener((observable, oldValue, newValue) -> {
+	        if (newValue) {
+	            amountField.setDisable(false);
+	            amountField.setText("1");
+	            CityChoise.setDisable(false);
+	            validateAmountField();
+	            validateWalletField();
+	            updatePriceLabels();
+	            orderTypeLbl.setVisible(true);
+	        }
+	    });
+	}
+
+	/**
+	 * Sets up listener for the basic radio button.
+	 */
+	private void setupBasicRadioButtonListener() {
+	    basicRadioBtn.selectedProperty().addListener((observable, oldValue, newValue) -> {
+	        if (newValue) {
+	            amountField.setText("1");
+	            amountField.setDisable(true);
+	            amountField.setStyle("-fx-border-color: green; -fx-border-width: 2px;");
+	            CityChoise.setDisable(false);
+	            updatePriceLabels();
+	            validateWalletField();
+	            orderTypeLbl.setVisible(true);
+	        }
+	    });
+	}
+
+	/**
+	 * Sets up listener for the takeaway radio button.
+	 */
+	private void setupTakeAwayRadioButtonListener() {
+	    takeAwayRadioBtn.selectedProperty().addListener((observable, oldValue, newValue) -> {
+	        if (newValue) {
+	            amountField.setText("1");
+	            amountField.setDisable(true);
+	            amountField.setStyle("-fx-border-color: green; -fx-border-width: 2px;");
+	            addressField.setText(supplier.getAddress());
+	            addressField.setDisable(true);
+	            CityChoise.setValue(supplier.getCity());
+	            CityChoise.setDisable(true);
+	            updatePriceLabels();
+	            validateWalletField();
+	            orderTypeLbl.setVisible(false);
+	        } else {
+	            addressField.setDisable(false);
+	            updatePriceLabels();
+	            validateWalletField();
+	        }
+	    });
+	}
+
+	/**
+	 * Sets up listener for the amount field.
+	 */
+	private void setupAmountFieldListener() {
+	    amountField.textProperty().addListener((obs, oldValue, newValue) -> {
+	        updatePriceLabels();
+	        validateWalletField();
+	        checkSupplyTime(datePicker.getValue(), supplyTimeField.getText());
+	        orderTypeLbl.setText("Order Type: " + orderType);
+	    });
+	}
+
+	/**
+	 * Sets up listener for the wallet field.
+	 */
+	private void setupWalletFieldListener() {
+	    WalletField.textProperty().addListener((obs, oldValue, newValue) -> {
+	        updatePriceLabels();
+	    });
+	}
+
+	/**
+	 * Sets up listener for the date picker.
+	 */
+	private void setupDatePickerListener() {
+	    datePicker.valueProperty().addListener((observable, oldDate, newDate) -> {
+	        String timeText = supplyTimeField.getText();
+	        if (isValidTimeFormat(timeText)) {
+	            validateSupplyTime();
+	            checkSupplyTime(datePicker.getValue(), supplyTimeField.getText());
+	            orderTypeLbl.setText("Order Type: " + orderType);
+	            updatePriceLabels();
+	        } else {
+	            supplyTimeField.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+	            orderTypeLbl.setText("Invalid time format, please correct.");
+	        }
+	    });
+	}
+
+	/**
+	 * Sets up listener for the supply time field.
+	 */
+	private void setupSupplyTimeFieldListener() {
+	    supplyTimeField.textProperty().addListener((observable, oldValue, newValue) -> {
+	        if (isValidTimeFormat(newValue)) {
+	            validateSupplyTime();
+	            checkSupplyTime(datePicker.getValue(), supplyTimeField.getText());
+	            orderTypeLbl.setText("Order Type: " + orderType);
+	            updatePriceLabels();
+	        } else {
+	            supplyTimeField.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+	            orderTypeLbl.setText("Invalid Supply time");
+	            updatePriceLabels();
+	        }
+	    });
+	}
+	
 	/**
 	 * Handles the action to proceed to the summary page. This method performs all necessary
 	 * validations for the fields and ensures that all data is correctly entered before moving on.
@@ -373,12 +423,6 @@ public class CheckoutScreenController {
 		    
 	    //display summary
 	    OrderSummaryScreen();
-	    
-	    //CALL SERVER UPDATE ORDER AND ITEMS_IN_ORDER
-//	    List<Object> list = new ArrayList<>();
-//	    list.add(order);
-//	    list.add(cart);
-//	    ClientMainController.updateOrderAndItems(list);
 	}
 
 	/**
@@ -491,7 +535,6 @@ public class CheckoutScreenController {
 		} else {
 			amountField.setDisable(false);
 		}
-
 		// Check if TakeAway is selected and update city/address fields
 		if (takeAwayRadioBtn.isSelected()) {
 			addressField.setText(supplier.getAddress());
@@ -652,6 +695,7 @@ public class CheckoutScreenController {
 	 * and {@code totalPriceLbl} with the calculated delivery and total prices.
 	 */
 	private void updatePriceLabels() {
+		preOrderStatusLbl.setText("");
 	    float deliveryPrice = 0;
 	    float totalPrice;
 	    int amount = 1;
@@ -665,9 +709,6 @@ public class CheckoutScreenController {
 	    // Determine the delivery price based on the selected radio button
 	    if (basicRadioBtn.isSelected()) {
 	        deliveryPrice = 25; 
-	        if (orderType.equals("PreOrder")) {
-	        	deliveryPrice = (float) (deliveryPrice - (deliveryPrice*0.1));
-	        }
 	    } 
 	    else if (SharedRadioBtn.isSelected()) {
 	        try {
@@ -677,40 +718,37 @@ public class CheckoutScreenController {
 	        
 	        if (amount == 1) {
 	        	deliveryPrice = 25;
-		        if (orderType.equals("PreOrder")) {
-		        	deliveryPrice = (float) (deliveryPrice - (deliveryPrice * 0.1));
-		        }
-	        }
-	        
+	        }  
 	        else if (amount == 2) {
 	        	deliveryPrice = 40;
-		        if (orderType.equals("PreOrder")) {
-		        	deliveryPrice = (float) (deliveryPrice - (deliveryPrice * 0.1));
-		        }
 	        }
-	        
 	        else {
 	        	deliveryPrice = amount * 15;
-		        if (orderType.equals("PreOrder")) {
-		        	deliveryPrice = (float) (deliveryPrice - (deliveryPrice * 0.1));
-		        }
 	        }       
 	    } 
 	    
 	    else if (takeAwayRadioBtn.isSelected()) {
 	        deliveryPrice = 0;
-	    }
-	    
+	    } 
 	    else if(RobotRadioBtn.isSelected()) {
 	    	deliveryPrice = 0;
 	    }
-
-	    // Update the deliveryPriceLbl and totalPriceLbl
-	    deliveryPriceLbl.setText(String.format("%.2f₪", deliveryPrice));
+	    
 	    totalPriceNoWallet = itemsPrice + deliveryPrice;
-	    totalPrice = itemsPrice + deliveryPrice - walletF;
+
+	    // Apply the 10% discount if it's a pre-order
+	    if (orderType.equals("PreOrder") && !takeAwayRadioBtn.isSelected()) {
+	        totalPriceNoWallet *= 0.9; // Apply 10% discount
+	        double temp = (itemsPrice + deliveryPrice) * 0.9 ;
+	        preOrderStatusLbl.setText(String.format("PreOrder Detected, applied 10%% discount \n (%.2f₪ + %.2f₪) * 0.9 = %.2f₪ ", itemsPrice, deliveryPrice, temp));
+	    }
+	    
+	    
+	    totalPrice = totalPriceNoWallet - walletF;
+	    this.totalDeliveryPrice = deliveryPrice;
+	    deliveryPriceLbl.setText(String.format("%.2f₪", deliveryPrice));
+	    //totalPrice = itemsPrice + deliveryPrice - walletF;
 	    totalPriceLbl.setText(String.format("%.2f₪ - %.2f₪ = %.2f₪ ",totalPriceNoWallet, walletF, totalPrice));
-	    this.totalPriceDeliveryIcnluded = totalPrice;
 	}
 	
 	/**
@@ -856,6 +894,12 @@ public class CheckoutScreenController {
     
 	
 	//Few Getters
+	public float getItemsPrice() {
+		return itemsPrice;
+	}
+	public float getTotalDeliveryPrice() {
+		return totalDeliveryPrice;
+	}
 	public int getPeopleInOrder() {
 		return peopleInOrder;
 	}

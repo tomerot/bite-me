@@ -17,6 +17,7 @@ import entities.Customer;
 import entities.ItemInOrder;
 import entities.Order;
 import entities.Supplier;
+import entities.SupplyMethod;
 import gui.loader.Screen;
 import gui.loader.ScreenLoader;
 import javafx.event.ActionEvent;
@@ -38,6 +39,8 @@ public class OrderSummaryScreenController {
 	private float walletUsedAmount;
 	private int peopleInOrder;
 	private int orderID;
+	private float deliveryPrice;
+	private float itemsPrice;
 	
 	
 	private HBox wholeScreen;
@@ -78,7 +81,7 @@ public class OrderSummaryScreenController {
     private Label orderTypeLbl;
 
     @FXML
-    private Label refundWalletLbl;
+    private Label priceInfoLbl;
 
     @FXML
     private Label totalPriceLbl;
@@ -93,6 +96,8 @@ public class OrderSummaryScreenController {
 		this.order = this.prevController.getOrder();
 		this.walletUsedAmount = this.prevController.getWalletAmount();
 		this.peopleInOrder = this.prevController.getPeopleInOrder();
+		this.deliveryPrice = this.prevController.getTotalDeliveryPrice();
+		this.itemsPrice = this.prevController.getItemsPrice();
 	}
 	
 	
@@ -103,12 +108,20 @@ public class OrderSummaryScreenController {
 		phoneLbl.setText(order.getRecipientPhone());
 		cityLbl.setText(order.getCity());
 		addressLbl.setText(order.getAddress());
-		supplyMethodLbl.setText(String.format("%s,  participents: %d",order.getSupplyOption(),peopleInOrder));
+		supplyMethodLbl.setText(String.format("%s, participents: %d",order.getSupplyOption(),peopleInOrder));
 		requestedDateLbl.setText(order.getRequestedDate());
 		requestedTimeLbl.setText(order.getRequestedTime());
 		orderTypeLbl.setText(order.getType().toString());
-		refundWalletLbl.setText(String.format("%.2f₪", walletUsedAmount));
+		priceInfoLbl.setText(String.format("items: %.2f₪, delivery: %.2f₪, ,\n%.2f₪ is gonna be used from wallet",itemsPrice,deliveryPrice,walletUsedAmount));
 		totalPriceLbl.setText(String.format("%.2f₪", order.getTotalPrice()));
+		
+		if ("PreOrder".equals(order.getType().toString())) {
+			orderTypeLbl.setText(String.format("%s, (10%% discount)", order.getType().toString()));
+			totalPriceLbl.setText(String.format("(%.2f₪ + %.2f₪) * 0.9 =  %.2f₪", itemsPrice, deliveryPrice, order.getTotalPrice()));
+		}
+		if (!order.getSupplyOption().equals(SupplyMethod.SHARED)) {
+			supplyMethodLbl.setText(String.format("%s",order.getSupplyOption()));
+		}	
 	}
 	
 	

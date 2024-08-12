@@ -293,7 +293,7 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 		}
 		
 		String customerIDString = selectedOrder.getCustomerID();
-	    String msg = "Email: " + selectedOrder.getRecipientEmail() + "\nPhone: " + selectedOrder.getRecipientPhone() + "\nYour order was approved!";
+	    String msg = "Email: " + selectedOrder.getRecipientEmail() + "\nPhone: " + selectedOrder.getRecipientPhone() + "\norder was approved!";
 	    sendOrderStatusUpdate(customerIDString, msg, "Order Approved Simulation", "Order Approved");
 	}
 	
@@ -324,20 +324,11 @@ public class ViewSupplierOrdersScreenController implements Initializable{
      */
 	@FXML
 	private void onUpdateReadyClicked(ActionEvent event) throws Exception {
-		Integer selectedOrderID = approvedOrdersList.getSelectionModel().getSelectedItem();
+		boolean isTakeAway = false;
+		String msg;
 		String timeInput = arrivalTimeField.getText().trim();
-		if (!isValidTimeFormat(timeInput)) {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Invalid Time Format");
-			alert.setHeaderText(null);
-			alert.setContentText("Please enter a valid time in HH:mm format.");
-			alert.showAndWait();
-
-			arrivalTimeField.clear();
-			arrivalTimeField.requestFocus();
-			return;
-		}
-
+		Integer selectedOrderID = approvedOrdersList.getSelectionModel().getSelectedItem();
+		
 		// Check if any order is selected
 		if (selectedOrderID == null) {
 			resultMessage.setText("No item selected.");
@@ -350,6 +341,7 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 		for (Order specificOrder : approvedOrdersMap.keySet()) { // iterate on the keys of the map
 			if (specificOrder.getOrderID() == selectedOrderID) {
 				if (specificOrder.getSupplyOption().toString().equals("TakeAway")) {
+					isTakeAway = true;
 					orderInfo[2] = 1; // indicates takeaway
 					break;
 				} else {
@@ -358,6 +350,21 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 				}
 			}
 		}
+		
+		if (!isTakeAway) {
+			if (!isValidTimeFormat(timeInput)) {
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setTitle("Invalid Time Format");
+				alert.setHeaderText(null);
+				alert.setContentText("Please enter a valid time in HH:mm format.");
+				alert.showAndWait();
+
+				arrivalTimeField.clear();
+				arrivalTimeField.requestFocus();
+				return;
+			}
+		}
+		
 
 		ClientMainController.requestSupplierUpdateOrderStatus(orderInfo);
 		ServerResponseDataContainer response = ClientConsole.responseFromServer;
@@ -383,9 +390,14 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 		}
 		
 		String customerIDString = selectedOrder.getCustomerID();
-	    String msg = "Email: " + selectedOrder.getRecipientEmail() + "\nPhone: " + selectedOrder.getRecipientPhone()
-	               + "\nYour order is on the way!\nEstimated arrival time: " + timeInput;
-	    
+		if (isTakeAway) {
+			msg = "Email: " + selectedOrder.getRecipientEmail() + "\nPhone: " + selectedOrder.getRecipientPhone()
+            + "\nYour order is on the way!";
+		}
+		else {
+		    msg = "Email: " + selectedOrder.getRecipientEmail() + "\nPhone: " + selectedOrder.getRecipientPhone()
+            + "\nYour order is on the way!\nEstimated arrival time: " + timeInput;
+		}
 	    sendOrderStatusUpdate(customerIDString, msg, "Order Ready Simulation", "Order is Ready and on the way");
 	}
 	
@@ -413,7 +425,7 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("Order Simulation");
 		alert.setHeaderText("Simulation");
-		alert.setContentText("there was a probem");
+		alert.setContentText("there was a problem");
 		alert.showAndWait();
 	}
 	
