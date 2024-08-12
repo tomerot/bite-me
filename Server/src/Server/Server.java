@@ -52,6 +52,7 @@ public class Server extends AbstractServer {
 	private static Connection dbConn;
 	private ReportGenerator reportGenerator;
     private Thread reportThread;
+    private Map<Integer, ConnectionToClient> clientMap = new HashMap<>();
 
 	
     /**
@@ -120,14 +121,12 @@ public class Server extends AbstractServer {
 			break;
 		}
 		case SUPPLIER_UPDATE_ORDER_STATUS:{
-			System.out.println("Server got supplier update order status");
 			int[] orderInfo = (int[])data.getMessage();
 			handleSupplierUpdateOrderStatus(orderInfo, client);
 			break;
 		}
 			
 		case SUPPLIER_REFRESH_AWAITING_ORDERS: {
-			System.out.println("Server got supplier refresh");
 			Integer supplierID = (Integer)data.getMessage();
 			handleSupplierRefreshAwaitingOrders(supplierID, client);
 			break;
@@ -154,7 +153,6 @@ public class Server extends AbstractServer {
 			break;
 			
 		case UPDATE_ITEM:
-			System.out.println("Server got message  from client to get update item");
 			Item updatedItem = (Item)data.getMessage();
 			handleUpdateItemRequest(updatedItem, client);
 			break;
@@ -270,11 +268,56 @@ public class Server extends AbstractServer {
 			}
         	break;
         	
-        		
+        case CUSTOMER_LOGOUT:
+        	customerLogoutRemoveFromMap(client);
+        	break;		
+        	
+        case SEND_CUSTOMER_MSG:
+        	List<Object> listIdMsg = (List<Object>) data.getMessage();
+        	int customerID = (int) listIdMsg.get(0);
+        	String relevantMSG = (String) listIdMsg.get(1);
+        	sendToSpecificClient(customerID,relevantMSG);
+        	ServerResponseDataContainer response = new ServerResponseDataContainer();
+        	response.setResponse(ServerResponse.MSG_WAS_SENT);
+        	try {
+				client.sendToClient(response);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+        	break;
+        	
 		default:
 		    return;
 	}
 }
+	
+	
+	public void sendToSpecificClient(int customerID, String msg) {
+	    ConnectionToClient client = clientMap.get(customerID);
+	    ServerResponseDataContainer response = new ServerResponseDataContainer();
+	    response.setMessage(msg);
+	    response.setResponse(ServerResponse.MSG_TO_DISPLAY_FOR_CUSTOEMR);
+	    if (client != null && client.isAlive()) {
+	        try {
+	            client.sendToClient(response);
+	        } catch (IOException e) {
+	            System.out.println("Error sending message to client: " + e.getMessage());
+	        }
+	    } else {
+	        System.out.println("Client with ID " + customerID + " not found or not connected.");
+	    }
+	}
+	
+	private void customerLogoutRemoveFromMap(ConnectionToClient client) {
+		ServerResponseDataContainer response = new ServerResponseDataContainer();
+		response.setResponse(ServerResponse.CUSTOMER_LOGGED_OUT);
+		removeClientByConnection(client);
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	private void handleUpdateCustomerWallet(Order order,Float walletUsedAmount ,ConnectionToClient client) throws SQLException {
 		QueryControl.orderQueries.updateCustomerWalletBalance(dbConn, order, walletUsedAmount);
@@ -400,10 +443,11 @@ public class Server extends AbstractServer {
 			break;
 		case EMPLOYEE:
 			response = QueryControl.userQueries.importEmployeeInfo(dbConn, user);
-			System.out.println(response.getResponse());
 			break;
 		case CUSTOMER:
 			response = QueryControl.userQueries.importCustomerInfo(dbConn, user);
+			Customer customer = (Customer) response.getMessage();
+			clientMap.put(customer.getId(), client);
 			break;
 		default:
 			break;
@@ -783,7 +827,20 @@ public class Server extends AbstractServer {
 
 		String clientInfo = "IP:" + clientIP + " HOST:" + clientHostName;
 		serverController.removeConnectedClient(clientInfo);
+		
 	}
+	
+    public void removeClientByConnection(ConnectionToClient client) {
+        // Iterate through the map entries
+        for (Map.Entry<Integer, ConnectionToClient> entry : clientMap.entrySet()) {
+            // Check if the value matches the client to remove
+            if (entry.getValue().equals(client)) {
+                // Remove the entry
+                clientMap.remove(entry.getKey());
+                break; // Exit the loop after removing the entry
+            }
+        }
+    }
 
 	// stop server from listening and close him
 	public static void stopServer() {

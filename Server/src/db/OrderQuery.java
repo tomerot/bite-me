@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -182,8 +183,13 @@ public class OrderQuery {
      * @throws SQLException if a database access error occurs
      */
 	public void updateOrderStatusTime(Connection dbConn, Order order) throws SQLException {
+		boolean late;
 		String query = "UPDATE orders SET ArrivalTime = ? ,ArrivalDate = ? ,status = ? WHERE OrderID = ?";
-		boolean late = isLateByTimeDiffAndStatus(order.getType(),order.getApprovalTimer(), order.getApprovalDate());
+		if (order.getType() == OrderType.REGULAR) {
+	        late = isLateByTimeDiffAndStatus(order.getType(), order.getApprovalTime(), order.getApprovalDate());
+	    } else {
+	        late = isLateByTimeDiffAndStatus(order.getType(), order.getRequestedTime(), order.getRequestedDate());
+	    }
 		String status;
 		String currTime = getCurrTime();
 		String currDate = getTodayDate();
@@ -515,27 +521,52 @@ public class OrderQuery {
      * @param approvalTime the approval time of the order
      * @return true if the order is late, false otherwise
      */
-	private boolean isLateByTimeDiffAndStatus(OrderType type , String approvalTime , String approvalDateStr) {
-	    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // Adjust the pattern to match your date format
-	    LocalDate approvalDate = LocalDate.parse(approvalDateStr, dateFormatter);
-	    
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-		LocalTime givenTime = LocalTime.parse(approvalTime, formatter);
-		LocalTime currentTime = LocalTime.now();
-		LocalDate currentDate = LocalDate.now();
-		
-		Duration duration = Duration.between(givenTime, currentTime);
-		long totalMinutes = duration.toMinutes();
-	    if (type.toString().equals("Regular")) {
-	        if (totalMinutes > 60 || approvalDate.isBefore(currentDate)) {
-	            return true;
-	        }
-	    } else if (type.toString().equals("PreOrder")) {
-	        if (totalMinutes > 20 || approvalDate.isBefore(currentDate)) {
-	            return true;
-	        }
+//	private boolean isLateByTimeDiffAndStatus(OrderType type , String approvalTime , String approvalDateStr) {
+//	    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // Adjust the pattern to match your date format
+//	    LocalDate approvalDate = LocalDate.parse(approvalDateStr, dateFormatter);
+//	    
+//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+//		LocalTime givenTime = LocalTime.parse(approvalTime, formatter);
+//		
+//		LocalTime currentTime = LocalTime.now();
+//		LocalDate currentDate = LocalDate.now();
+//		
+//		Duration duration = Duration.between(givenTime, currentTime);
+//		long totalMinutes = duration.toMinutes();
+//	    if (type.toString().equals("Regular")) {
+//	        if (totalMinutes > 60 || approvalDate.isBefore(currentDate)) {
+//	            return true;
+//	        }
+//	    } else if (type.toString().equals("PreOrder")) {
+//	        if (totalMinutes > 20 || approvalDate.isBefore(currentDate)) {
+//	            return true;
+//	        }
+//	    }
+//	    return false;
+//	}
+	
+	private boolean isLateByTimeDiffAndStatus(OrderType type, String requestedOrApprovalTime, String requestedOrApprovalDateStr) {
+	    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	    LocalDate requestedOrApprovalDate = LocalDate.parse(requestedOrApprovalDateStr, dateFormatter);
+
+	    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+	    LocalTime requestedOrApprovalLocalTime = LocalTime.parse(requestedOrApprovalTime, timeFormatter);
+
+	    LocalDateTime requestedOrApprovalDateTime = LocalDateTime.of(requestedOrApprovalDate, requestedOrApprovalLocalTime);
+	    LocalDateTime currentDateTime = LocalDateTime.now();
+
+	    Duration duration = Duration.between(requestedOrApprovalDateTime, currentDateTime);
+	    long minutesDifference = duration.toMinutes();
+
+	    if (type == OrderType.REGULAR) {
+	        // For Regular orders, check if it's more than 60 minutes late from the approval time
+	        return minutesDifference > 60 || requestedOrApprovalDate.isBefore(currentDateTime.toLocalDate());
+	    } else if (type == OrderType.PRE_ORDER) {
+	        // For PreOrder orders, check if it's more than 20 minutes late from the requested time
+	        return minutesDifference > 20 || requestedOrApprovalDate.isBefore(currentDateTime.toLocalDate());
 	    }
-	    return false;
+
+	    return false; // Default case, should not reach here if all order types are covered
 	}
 	
 	

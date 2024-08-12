@@ -11,7 +11,10 @@ import java.io.IOException;
 import containers.ClientRequestDataContainer;
 import containers.ServerResponseDataContainer;
 import enums.ClientRequest;
+import enums.ServerResponse;
 import gui.controllers.ClientConnectFormController;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
 import ocsf.client.AbstractClient;
 
 //class for handling the client's connection to the server, sending requests, and processing responses.
@@ -94,6 +97,17 @@ public class ClientConsole extends AbstractClient {
 	protected void handleMessageFromServer(Object msg) {
 		awaitResponse = false;
 		responseFromServer = (ServerResponseDataContainer) msg;
+		
+		ServerResponseDataContainer response = ClientConsole.responseFromServer;
+		if(ServerResponse.MSG_TO_DISPLAY_FOR_CUSTOEMR.equals(response.getResponse())){
+			Platform.runLater(() -> {
+	            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+	            alert.setTitle("Order Status Notification Simulation");
+	            alert.setHeaderText("New Order Status!");
+	            alert.setContentText((String) response.getMessage());
+	            alert.showAndWait();
+	        });
+		}
 	}
 
 	/**

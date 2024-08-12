@@ -25,10 +25,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Accordion;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
@@ -46,6 +48,7 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 	private SupplierScreenController prevController;
 	private HBox wholeScreen;
 	private Supplier supplier;
+	private Order selectedOrder;
 	
 	
 	@FXML
@@ -71,6 +74,9 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 	
 	@FXML
 	private Label resultMessage;
+	
+    @FXML
+    private TextField arrivalTimeField;
 	
 	private Map<Order, ArrayList<ItemInOrder>> awaitingOrdersMap = new HashMap<>(); // key is the order object , value is the items list of the order.	
 	private Map<Order, ArrayList<ItemInOrder>> approvedOrdersMap = new HashMap<>(); // key is the order object , value is the items list of the order.
@@ -125,9 +131,7 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 		ClientMainController.requestOrdersData(supplier.getSupplierID());
 		ServerResponseDataContainer response = ClientConsole.responseFromServer;
 		
-		System.out.println("Type of response message: " + response.getMessage().getClass());
 		Map<Order, ArrayList<ItemInOrder>> ordersMap =  (Map<Order, ArrayList<ItemInOrder>>) response.getMessage();
-		System.out.println("in controller: " + ordersMap);
 		
 		//let's divide the orders to awaiting and approved
 		initMaps(ordersMap);
@@ -151,7 +155,6 @@ public class ViewSupplierOrdersScreenController implements Initializable{
      * @param textArea the TextArea to display order details
      */
 	private void setupSelectionListener(ListView<Integer> listView, Map<Order, ArrayList<ItemInOrder>> ordersMap, TextArea textArea) {
-		System.out.println("In setup selection listener");
 			listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {  // When the user selects an OrderID in the ListView, the listener is triggered.
 				if(listView.getItems().isEmpty())
 					// Clear the TextArea if the ListView is empty
@@ -160,6 +163,7 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 				else if (newValue != null) {
 					for (Order order : ordersMap.keySet()) {
 						if (order.getOrderID() == newValue) {
+							selectedOrder = order;
 							displayOrderDetails(order, ordersMap.get(order), textArea);
 							break;
 						}
@@ -176,7 +180,6 @@ public class ViewSupplierOrdersScreenController implements Initializable{
      * @param textArea the TextArea to display the details
      */
 	private void displayOrderDetails(Order order, ArrayList<ItemInOrder> items, TextArea textArea) {
-		System.out.println("inside Display Order details");
         StringBuilder details = new StringBuilder();
         details.append("Order ID: ").append(order.getOrderID()).append("\n")
         	   .append("Customer ID: ").append(order.getCustomerID()).append("\n")
@@ -237,8 +240,6 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 		   		approvedOrdersMap.put(order, ordersMap.get(order)); 
 		}
 		
-		System.out.println("awaiting map: " + awaitingOrdersMap);
-		System.out.println("approved map: " + approvedOrdersMap);
 	}
 	
 	
@@ -259,7 +260,7 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 		}
 
 		 // Update the database status to 'Approved' and set the approval time
-	    int[] orderInfo = {selectedOrderID, 0}; // 0 indicates transition from Awaiting to Approved
+	    int[] orderInfo = {selectedOrderID, 0 , 0}; // 0 indicates transition from Awaiting to Approved
 		ClientMainController.requestSupplierUpdateOrderStatus(orderInfo);
 		ServerResponseDataContainer response = ClientConsole.responseFromServer;
 		
@@ -271,7 +272,6 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 
 					order.setApprovalTime(response.getMessage().toString());
 					order.setStatus("Approved");
-					System.out.println("updated order:" + order.getApprovalTime() + order.getStatus());
 					
 					//update maps
 					approvedOrdersMap.put(order, awaitingOrdersMap.get(order)); //add to approved map
@@ -291,6 +291,10 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 			resultMessage.setText("failed to update order because error in db");	
 			resultMessage.setStyle("-fx-text-fill: red;");
 		}
+		
+		String customerIDString = selectedOrder.getCustomerID();
+	    String msg = "Email: " + selectedOrder.getRecipientEmail() + "\nPhone: " + selectedOrder.getRecipientPhone() + "\norder was approved!";
+	    sendOrderStatusUpdate(customerIDString, msg, "Order Approved Simulation", "Order Approved");
 	}
 	
 	/**
@@ -304,7 +308,6 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 		ClientMainController.requestSupplierRefreshAwaitingOrders(supplier.getSupplierID());
 		ServerResponseDataContainer response = ClientConsole.responseFromServer;
 		awaitingOrdersMap = (Map<Order, ArrayList<ItemInOrder>>) response.getMessage();
-		System.out.println("After refresh, awaiting orders: " + awaitingOrdersMap);
 		
 		//update the awaiting list view
 		initListView( awaitingOrdersList, awaitingOrdersMap);
@@ -320,39 +323,147 @@ public class ViewSupplierOrdersScreenController implements Initializable{
      * @throws Exception if updating the order status fails
      */
 	@FXML
-	private void onUpdateReadyClicked(ActionEvent event) throws Exception{
+	private void onUpdateReadyClicked(ActionEvent event) throws Exception {
+		boolean isTakeAway = false;
+		String msg;
+		String timeInput = arrivalTimeField.getText().trim();
 		Integer selectedOrderID = approvedOrdersList.getSelectionModel().getSelectedItem();
 		
 		// Check if any order is selected
-		if(selectedOrderID == null) {
-			resultMessage.setText("No item selected.");	
-        	return;
+		if (selectedOrderID == null) {
+			resultMessage.setText("No item selected.");
+			return;
 		}
-		
-		 // Update the database status to 'Ready'.
-	    int[] orderInfo = {selectedOrderID, 1}; // 1 indicates transition from 'Approved' to 'Ready'
-		ClientMainController.requestSupplierUpdateOrderStatus(orderInfo);
-		ServerResponseDataContainer response = ClientConsole.responseFromServer;
-		
-		if(ServerResponse.SUPPLIER_UPDATE_ORDER_STATUS_SUCCESS.equals(response.getResponse())) {
-			//let's remove the order from the approvedOrders map and list view.
-			for (Order order : approvedOrdersMap.keySet()) { //iterate on the keys of the map
-				if(order.getOrderID() == selectedOrderID) {	
-					//update map
-					approvedOrdersMap.remove(order); 
-					
-					//update lists view
-					approvedOrdersList.getItems().remove(selectedOrderID);
-					
-					resultMessage.setText("The order was updated to 'Ready' successfully\n" );
-					resultMessage.setStyle("-fx-text-fill: black;");
+
+		// Update the database status to 'Ready'.
+		int[] orderInfo = { selectedOrderID, 1, 0 }; // 1 indicates transition from 'Approved' to 'Ready'
+
+		for (Order specificOrder : approvedOrdersMap.keySet()) { // iterate on the keys of the map
+			if (specificOrder.getOrderID() == selectedOrderID) {
+				if (specificOrder.getSupplyOption().toString().equals("TakeAway")) {
+					isTakeAway = true;
+					orderInfo[2] = 1; // indicates takeaway
+					break;
+				} else {
+					orderInfo[2] = 0; // indicates not takeaway
 					break;
 				}
 			}
 		}
-		else {
-			resultMessage.setText("failed to update order because error in db");	
+		
+		if (!isTakeAway) {
+			if (!isValidTimeFormat(timeInput)) {
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setTitle("Invalid Time Format");
+				alert.setHeaderText(null);
+				alert.setContentText("Please enter a valid time in HH:mm format.");
+				alert.showAndWait();
+
+				arrivalTimeField.clear();
+				arrivalTimeField.requestFocus();
+				return;
+			}
+		}
+		
+
+		ClientMainController.requestSupplierUpdateOrderStatus(orderInfo);
+		ServerResponseDataContainer response = ClientConsole.responseFromServer;
+
+		if (ServerResponse.SUPPLIER_UPDATE_ORDER_STATUS_SUCCESS.equals(response.getResponse())) {
+			// let's remove the order from the approvedOrders map and list view.
+			for (Order order : approvedOrdersMap.keySet()) { // iterate on the keys of the map
+				if (order.getOrderID() == selectedOrderID) {
+					// update map
+					approvedOrdersMap.remove(order);
+
+					// update lists view
+					approvedOrdersList.getItems().remove(selectedOrderID);
+
+					resultMessage.setText("The order was updated to 'Ready' successfully\n");
+					resultMessage.setStyle("-fx-text-fill: black;");
+					break;
+				}
+			}
+		} else {
+			resultMessage.setText("failed to update order because error in db");
 			resultMessage.setStyle("-fx-text-fill: red;");
 		}
+		
+		String customerIDString = selectedOrder.getCustomerID();
+		if (isTakeAway) {
+			msg = "Email: " + selectedOrder.getRecipientEmail() + "\nPhone: " + selectedOrder.getRecipientPhone()
+            + "\nYour order is on the way!";
+		}
+		else {
+		    msg = "Email: " + selectedOrder.getRecipientEmail() + "\nPhone: " + selectedOrder.getRecipientPhone()
+            + "\nYour order is on the way!\nEstimated arrival time: " + timeInput;
+		}
+	    sendOrderStatusUpdate(customerIDString, msg, "Order Ready Simulation", "Order is Ready and on the way");
+	}
+	
+	private void sendOrderStatusUpdate(String customerIDString, String message, String title, String header) {
+	    int customerID = Integer.parseInt(customerIDString);
+	    ArrayList<Object> data = new ArrayList<>();
+	    data.add(customerID);
+	    data.add(message);
+	    
+	    ClientMainController.sendApproveReadyOrderToClient(data);
+	    ServerResponseDataContainer res = ClientConsole.responseFromServer;
+	    
+	    if (ServerResponse.MSG_WAS_SENT.equals(res.getResponse())) {
+	        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+	        alert.setTitle(title);
+	        alert.setHeaderText(header);
+	        alert.setContentText(message);
+	        alert.showAndWait();
+	    } else {
+	        problemAlert();
+	    }
+	}
+	
+	private void problemAlert() {
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle("Order Simulation");
+		alert.setHeaderText("Simulation");
+		alert.setContentText("there was a problem");
+		alert.showAndWait();
+	}
+	
+	private boolean isValidTimeFormat(String time) {
+	    // Check if the string is exactly 5 characters long
+	    if (time.length() != 5) {
+	        return false;
+	    }
+
+	    // Check each character
+	    for (int i = 0; i < 5; i++) {
+	        char c = time.charAt(i);
+	        if (i == 2) {
+	            // Check for a colon at position 2
+	            if (c != ':') {
+	                return false;
+	            }
+	        } else {
+	            // Check for digits at all other positions
+	            if (!Character.isDigit(c)) {
+	                return false;
+	            }
+	        }
+	    }
+
+	    // Extract the hour and minute values
+	    int hours = Integer.parseInt(time.substring(0, 2));
+	    int minutes = Integer.parseInt(time.substring(3, 5));
+
+	    // Check if hours and minutes are within valid ranges
+	    if (hours < 0 || hours > 23) {
+	        return false;
+	    }
+	    if (minutes < 0 || minutes > 59) {
+	        return false;
+	    }
+
+	    // If we've made it this far, the format is correct and the values are valid
+	    return true;
 	}
 }

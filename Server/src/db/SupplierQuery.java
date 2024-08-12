@@ -1,6 +1,9 @@
 package db;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,7 +34,7 @@ public class SupplierQuery {
     public ServerResponseDataContainer getOrdersData(Connection dbConn, int supplierID) {
         ServerResponseDataContainer response = new ServerResponseDataContainer();
         Map<Order, ArrayList<ItemInOrder>> ordersMap = new HashMap<>();
-        String ordersQuery = "SELECT o.*, c.Email FROM orders AS o JOIN customers AS c ON o.CustomerID = c.ID WHERE o.SupplierID = ? AND o.Status IN ('Approved', 'Awaiting');";
+        String ordersQuery = "SELECT o.*, c.Email, c.Phone FROM orders AS o JOIN customers AS c ON o.CustomerID = c.ID WHERE o.SupplierID = ? AND o.Status IN ('Approved', 'Awaiting');";
 
         try (PreparedStatement stmt = dbConn.prepareStatement(ordersQuery)) {
             stmt.setInt(1, supplierID);
@@ -62,22 +65,33 @@ public class SupplierQuery {
         ServerResponseDataContainer response = new ServerResponseDataContainer();
         int orderID = orderInfo[0];
         int statusFlag = orderInfo[1];
+        int takeaway = orderInfo[2]; //1 if its takeaway
         String newStatus = statusFlag == 0 ? "Approved" : "Ready";
-        String sql = statusFlag == 0 ? "UPDATE orders SET Status = ?, ApprovalTime = ? WHERE OrderID = ?" : "UPDATE orders SET Status = ? WHERE OrderID = ?";
-        Timestamp approvalTime = statusFlag == 0 ? new Timestamp(System.currentTimeMillis()) : null;
+        String sql = statusFlag == 0 ? "UPDATE orders SET Status = ?, ApprovalTime = ?, ApprovalDate = ? WHERE OrderID = ?" : "UPDATE orders SET Status = ? WHERE OrderID = ?";
+        //String approvalTime = statusFlag == 0 ? getCurrTime() : null;
+        String currDate = getTodayDate();
+        String currTime = getCurrTime();
 
         try (PreparedStatement stmt = dbConn.prepareStatement(sql)) {
-            stmt.setString(1, newStatus);
+			if (takeaway == 1) {
+				stmt.setString(1, "On-time");
+			} else {
+				stmt.setString(1, newStatus);
+			}
             if (statusFlag == 0) {
-                stmt.setTimestamp(2, approvalTime);
-                stmt.setInt(3, orderID);
+                stmt.setString(2, currTime);
+                stmt.setString(3, currDate);
+                stmt.setInt(4, orderID);
             } else {
                 stmt.setInt(2, orderID);
+                if (takeaway == 1) {
+                	updateTakeAwayArrivalTimeDate(dbConn,currTime,currDate,orderID);
+                }
             }
 
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected == 1) {
-                response.setMessage(statusFlag == 0 ? approvalTime : null);
+                response.setMessage(statusFlag == 0 ? currTime : null);
                 response.setResponse(ServerResponse.SUPPLIER_UPDATE_ORDER_STATUS_SUCCESS);
             } else {
                 response.setResponse(null);
@@ -88,6 +102,20 @@ public class SupplierQuery {
         }
 
         return response;
+    }
+    
+    private void updateTakeAwayArrivalTimeDate(Connection dbConn, String currTime, String currDate, int orderID) {
+    	String sql = "UPDATE orders SET  ArrivalTime = ?, ArrivalDate = ? WHERE OrderID = ?";
+    	try (PreparedStatement stmt = dbConn.prepareStatement(sql)){
+    		stmt.setString(1, currTime);
+    		stmt.setString(2, currDate);
+    		stmt.setInt(3, orderID);
+    		
+    		stmt.executeUpdate();
+    		
+    	} catch (SQLException e) {
+			e.printStackTrace();
+		}
     }
     
     /**
@@ -140,16 +168,16 @@ public class SupplierQuery {
         String supplyMethodName = rs.getString("SupplyOption");
         SupplyMethod supplyMethod;
         switch(supplyMethodName) {
-			case "TakeAway":
+			case "Takeaway":
 				supplyMethod = SupplyMethod.TAKEAWAY;
 				break;
-			case "Robot":
+			case "Robot Delivery":
 				supplyMethod = SupplyMethod.ROBOT;
 				break;
-			case "Basic":
+			case "Basic Delivery":
 				supplyMethod = SupplyMethod.BASIC;
 				break;
-			case "Shared":
+			case "Shared Delivery":
 				supplyMethod = SupplyMethod.SHARED;
 				break;
 			default:
@@ -176,8 +204,9 @@ public class SupplierQuery {
         float totalPrice = rs.getFloat("TotalPrice");
         String status = rs.getString("Status");
         String recipientEmail = rs.getString("Email");
+        String customerPhone = rs.getString("Phone");
 
-        return new Order(orderID, customerID, recipientName, recipientPhone, recipientEmail, city, address, supplyMethod, orderType, reqDate, reqTime, approvalTime, arrivalTime, totalPrice, status);
+        return new Order(orderID, customerID, recipientName, customerPhone, recipientEmail, city, address, supplyMethod, orderType, reqDate, reqTime, approvalTime, arrivalTime, totalPrice, status);
     }
 	    
 	    
@@ -211,4 +240,23 @@ public class SupplierQuery {
         }
         return itemsList;
     }  
+    
+    
+    /**
+     * Retrieves the current time formatted as HH:mm:ss.
+     *
+     * @return the current time as a string
+     */
+	private String getCurrTime() {
+		LocalTime currentTime = LocalTime.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        String formattedTime = currentTime.format(formatter);
+        return formattedTime;
+	}
+	
+	public String getTodayDate() {
+	    LocalDate today = LocalDate.now();
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	    return today.format(formatter);
+	}
 }
