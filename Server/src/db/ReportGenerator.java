@@ -31,7 +31,7 @@ public class ReportGenerator implements Runnable {
         while (running) {
             try {
                 LocalDate today = LocalDate.now();
-                if (today.getDayOfMonth() == 9) {
+                if (today.getDayOfMonth() == 1) {
                     generateOrdersReport();
                     generatePerformanceReport();
                     generateIncomeReport();

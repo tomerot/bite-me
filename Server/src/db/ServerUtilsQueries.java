@@ -308,8 +308,8 @@ public class ServerUtilsQueries {
      * 
      * @throws SQLException If a database access error occurs or the SQL statements fail.
      */
-    public void insertCustomersList(Connection dbConn) throws SQLException {
-        String query = "LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Users.csv' INTO TABLE users FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' IGNORE 1 LINES (Username,Password,IsLoggedIn,Type,Registered);";
+    public void insertCustomersList(Connection dbConn, String path) throws SQLException {
+        String query = "LOAD DATA INFILE '"+ path+  "Users.csv' INTO TABLE users FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' IGNORE 1 LINES (Username,Password,IsLoggedIn,Type,Registered);";
         try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
             int affectedRows = stmt.executeUpdate();
             System.out.println("Inserted " + affectedRows + " users into users.");
@@ -317,7 +317,7 @@ public class ServerUtilsQueries {
         catch (SQLException e) {
             e.printStackTrace();
         }
-        query = "LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customers.csv' INTO TABLE customers FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' IGNORE 1 LINES (Username,ID,Type,CompanyID,FirstName,LastName,Email,Phone,HomeBranch,Credit,CVV,ValidMonth,ValidYear,WalletBalance);";
+        query = "LOAD DATA INFILE '"+ path + "Customers.csv' INTO TABLE customers FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' IGNORE 1 LINES (Username,ID,Type,CompanyID,FirstName,LastName,Email,Phone,HomeBranch,Credit,CVV,ValidMonth,ValidYear,WalletBalance);";
         try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
             int affectedRows = stmt.executeUpdate();
             System.out.println("Inserted " + affectedRows + " customers into customers.");

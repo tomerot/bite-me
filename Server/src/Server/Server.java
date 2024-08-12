@@ -418,8 +418,8 @@ public class Server extends AbstractServer {
 	    QueryControl.serverQueries.insertIncomeReport(dbConn, data, branch, year, month);
 	}
 
-	public static void importCustomerSimulation() throws SQLException {
-		  QueryControl.serverQueries.insertCustomersList(dbConn);
+	public static void importCustomerSimulation(String path) throws SQLException {
+		  QueryControl.serverQueries.insertCustomersList(dbConn, path);
 
 	}
 

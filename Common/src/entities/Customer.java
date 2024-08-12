@@ -18,6 +18,8 @@ public class Customer extends Person {
 	private String credit;
 	private String cvv;
 	private Date validDate;
+	private int validYear;
+	private int validMonth;
 	
 	public Customer(String userName, int id, CustomerType type, int companyId, String firstName, String lastName, 
 			String email, String phoneNumber, Branch homeBranch, String credit, String cvv,
@@ -30,6 +32,19 @@ public class Customer extends Person {
 		this.credit = credit;
 		this.cvv = cvv;
 		this.validDate = validDate;
+	}
+	public Customer(String userName, int id, CustomerType type, int companyId, String firstName, String lastName, 
+			String email, String phoneNumber, Branch homeBranch, String credit, String cvv,
+			int validYear, int validMonth , float walletBalance, int isLoggedIn, int registered, String password) {
+		super(id, firstName, lastName, email, phoneNumber, userName, password, UserType.CUSTOMER , isLoggedIn, registered);
+		this.homeBranch = homeBranch;
+		this.walletBalance = walletBalance;
+		this.type = type;
+		this.companyId = companyId;
+		this.credit = credit;
+		this.cvv = cvv;
+		this.validYear=validYear;
+		this.validMonth=validMonth;
 	}
     // homeBranch getter and setter
     public Branch getHomeBranch() { return homeBranch; }
@@ -58,4 +73,12 @@ public class Customer extends Person {
     // validDate getter and setter
     public Date getValidDate() { return validDate; }
     public void setValidDate(Date validDate) { this.validDate=validDate; }
+    
+    // validYear getter and setter
+    public int getValidYear() { return validYear; }
+    public void setValidYear(int validYear) { this.validYear=validYear; }
+    
+    // validMonth getter and setter
+    public int getValidMonth() { return validMonth; }
+    public void setValidMonth(int validMonth) { this.validMonth=validMonth; }
 }

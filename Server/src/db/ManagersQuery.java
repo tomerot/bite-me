@@ -293,7 +293,8 @@ public class ManagersQuery {
 					String homeBranch = rs1.getString("HomeBranch");
 					String credit = rs1.getString("Credit");
 					String cvv = rs1.getString("CVV");
-					Date validDate = rs1.getDate("validDate");
+					int validYear = rs1.getInt("ValidYear");
+					int validMonth = rs1.getInt("ValidMonth");
 					float walletBalance = rs1.getFloat("WalletBalance");
 					int isLoggedIn= rs1.getInt("IsLoggedIn");
 					int registered= rs1.getInt("Registered");
@@ -302,31 +303,31 @@ public class ManagersQuery {
 					case "North":
 						if (type.equals("Private"))
 							customer = new Customer(username, id, CustomerType.PRIVATE, companyId, firstName, 
-									lastName, email, phone, Branch.NORTH, credit, cvv, validDate, walletBalance, 
+									lastName, email, phone, Branch.NORTH, credit, cvv, validYear, validMonth, walletBalance, 
 									isLoggedIn, registered, password);
 						else
 							customer = new Customer(username, id, CustomerType.BUSINESS, companyId, firstName, 
-									lastName, email, phone, Branch.NORTH, credit, cvv, validDate, walletBalance, 
+									lastName, email, phone, Branch.NORTH, credit, cvv, validYear, validMonth, walletBalance, 
 									isLoggedIn, registered, password);
 						break;
 					case "Center":
 						if (type.equals("Private"))
 							customer = new Customer(username, id, CustomerType.PRIVATE, companyId, firstName, 
-									lastName, email, phone, Branch.CENTER, credit, cvv, validDate, walletBalance, 
+									lastName, email, phone, Branch.CENTER, credit, cvv, validYear, validMonth, walletBalance, 
 									isLoggedIn, registered, password);
 						else
 							customer = new Customer(username, id, CustomerType.BUSINESS, companyId, firstName, 
-									lastName, email, phone, Branch.CENTER, credit, cvv, validDate, walletBalance, 
+									lastName, email, phone, Branch.CENTER, credit, cvv, validYear, validMonth, walletBalance, 
 									isLoggedIn, registered, password);
 						break;
 					case "South":
 						if (type.equals("Private"))
 							customer = new Customer(username, id, CustomerType.PRIVATE, companyId, firstName, 
-									lastName, email, phone, Branch.SOUTH, credit, cvv, validDate, walletBalance, 
+									lastName, email, phone, Branch.SOUTH, credit, cvv, validYear, validMonth, walletBalance, 
 									isLoggedIn, registered, password);
 						else
 							customer = new Customer(username, id, CustomerType.BUSINESS, companyId, firstName, 
-									lastName, email, phone, Branch.SOUTH, credit, cvv, validDate, walletBalance, 
+									lastName, email, phone, Branch.SOUTH, credit, cvv, validYear, validMonth, walletBalance, 
 									isLoggedIn, registered, password);
 						break;
 					default:

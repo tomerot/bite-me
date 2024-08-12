@@ -35,6 +35,7 @@
             <Font size="17.0" />
          </font>
       </Label>
-      <Button fx:id="importCustomerBtn" layoutX="287.0" layoutY="346.0" mnemonicParsing="false" onAction="#importCustomerSimulation" prefHeight="25.0" prefWidth="175.0" visible="false" text="Import Customer Information" />
+      <Button fx:id="importCustomerBtn" layoutX="287.0" layoutY="346.0" mnemonicParsing="false" onAction="#importCustomerSimulation" prefHeight="25.0" prefWidth="175.0" text="Import Customer Information" visible="false" />
+      <TextField fx:id="csvFilePath" layoutX="474.0" layoutY="346.0" text="C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/" prefHeight="26.0" prefWidth="186.0" visible="false" />
    </children>
 </Pane>
