@@ -340,7 +340,7 @@ public class Server extends AbstractServer {
 	}
 	
 	public void handleGetOrdersData(Integer supplierID, ConnectionToClient client){
-		ServerResponseDataContainer response=QueryControl.userQueries.getOrdersData(dbConn, supplierID);
+		ServerResponseDataContainer response=QueryControl.supplierQuery.getOrdersData(dbConn, supplierID);
 		try {
 			client.sendToClient(response);
 		}catch(IOException e) {

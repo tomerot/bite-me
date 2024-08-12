@@ -124,7 +124,9 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 		//get all the orders with "Awaiting" or "Approved" status of the restaurant.
 		ClientMainController.requestOrdersData(supplier.getSupplierID());
 		ServerResponseDataContainer response = ClientConsole.responseFromServer;
-		Map<Order, ArrayList<ItemInOrder>> ordersMap = (Map<Order, ArrayList<ItemInOrder>>) response.getMessage();
+		
+		System.out.println("Type of response message: " + response.getMessage().getClass());
+		Map<Order, ArrayList<ItemInOrder>> ordersMap =  (Map<Order, ArrayList<ItemInOrder>>) response.getMessage();
 		System.out.println("in controller: " + ordersMap);
 		
 		//let's divide the orders to awaiting and approved
