@@ -47,7 +47,7 @@ public class OrderQuery {
 			throws SQLException {
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
 		List<Supplier> suppliers = new ArrayList<>();
-		String query = "SELECT ID, Name, Email, Phone, Address, City FROM Suppliers WHERE Branch = ?";
+		String query = "SELECT ID, Name, Email, Phone, Address, City, ImageURL FROM Suppliers WHERE Branch = ?";
 
 		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
 			stmt.setString(1, branchName.toShortString());
@@ -62,8 +62,9 @@ public class OrderQuery {
 					String phone = rs.getString("Phone");
 					String address = rs.getString("Address");
 					String city = rs.getString("City");
+					String imageURL = rs.getString("ImageURL");
 
-					Supplier supplier = new Supplier(id, name, city, address, branchName, email, phone);
+					Supplier supplier = new Supplier(id, name, city, address, branchName, email, phone, imageURL);
 					suppliers.add(supplier);
 				}
 
@@ -224,8 +225,10 @@ public class OrderQuery {
                     boolean customDonenessDegree = rs.getBoolean("CustomDoneness");
                     boolean customRestrictions = rs.getBoolean("CustomRestrictions");
                     float price = rs.getFloat("Price");
+                    String imgURL = rs.getString("ImageURL");
                     
                     Item item = new Item(itemID, supplier.getSupplierID(), name, categoryStringToEnum(category), description, customSize, customDonenessDegree, customRestrictions, price);
+                    item.setImageURL(imgURL);
                     specificSupplierItems.add(item);
                 }
             }
@@ -512,38 +515,6 @@ public class OrderQuery {
 	            throw new IllegalArgumentException("Unexpected value: " + orderType);
 	    }
 	}
-	
-	
-    /**
-     * Determines if the order is late based on the time difference and order type.
-     *
-     * @param type the type of the order
-     * @param approvalTime the approval time of the order
-     * @return true if the order is late, false otherwise
-     */
-//	private boolean isLateByTimeDiffAndStatus(OrderType type , String approvalTime , String approvalDateStr) {
-//	    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // Adjust the pattern to match your date format
-//	    LocalDate approvalDate = LocalDate.parse(approvalDateStr, dateFormatter);
-//	    
-//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-//		LocalTime givenTime = LocalTime.parse(approvalTime, formatter);
-//		
-//		LocalTime currentTime = LocalTime.now();
-//		LocalDate currentDate = LocalDate.now();
-//		
-//		Duration duration = Duration.between(givenTime, currentTime);
-//		long totalMinutes = duration.toMinutes();
-//	    if (type.toString().equals("Regular")) {
-//	        if (totalMinutes > 60 || approvalDate.isBefore(currentDate)) {
-//	            return true;
-//	        }
-//	    } else if (type.toString().equals("PreOrder")) {
-//	        if (totalMinutes > 20 || approvalDate.isBefore(currentDate)) {
-//	            return true;
-//	        }
-//	    }
-//	    return false;
-//	}
 	
 	private boolean isLateByTimeDiffAndStatus(OrderType type, String requestedOrApprovalTime, String requestedOrApprovalDateStr) {
 	    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

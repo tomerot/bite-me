@@ -1,12 +1,7 @@
 package gui.controllers;
 
 import java.io.IOException;
-import java.sql.Time;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,17 +17,21 @@ import gui.loader.Screen;
 import gui.loader.ScreenLoader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 
 public class OrderSummaryScreenController {
 	
 	private ChooseRestaurantScreenController restaurantController;
 	
-	private Map<ItemInOrder, Integer> cart = new HashMap<>();
+	private Map<ItemInOrder, Integer> cart;
 	private Customer customer;
 	private Supplier supplier;
 	private Order order;
@@ -85,6 +84,12 @@ public class OrderSummaryScreenController {
 
     @FXML
     private Label totalPriceLbl;
+    
+    @FXML
+    private GridPane itemsGrid;
+    
+    @FXML
+    private ScrollPane itemsScroll;
 	
 	public OrderSummaryScreenController(HBox wholeScreen, Object prevController) {
 		this.wholeScreen = wholeScreen;
@@ -121,9 +126,71 @@ public class OrderSummaryScreenController {
 		}
 		if (!order.getSupplyOption().equals(SupplyMethod.SHARED)) {
 			supplyMethodLbl.setText(String.format("%s",order.getSupplyOption()));
-		}	
+		}
+		
+		int row = 0;
+		for(ItemInOrder item : cart.keySet()) {
+			AnchorPane card;
+			if(row % 2 == 0) 
+				card = createCartItemCard(item, Parity.EVEN);
+			else
+				card = createCartItemCard(item, Parity.ODD);
+			itemsGrid.add(card, 0, row);
+			row++;
+		}
+		
+		itemsScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 	}
 	
+	private enum Parity{
+		ODD,
+		EVEN;
+	}
+	
+	private AnchorPane createCartItemCard(ItemInOrder item, Parity cardPlaceParity) {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/view/CartItemCard.fxml"));
+		AnchorPane card = null;
+        try {
+            card = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        if(cardPlaceParity == Parity.ODD) {
+        	/*NEED TO CHANGE BACKGROUND COLOR*/
+        }
+        
+        //Labels
+        Label nameAndPrice = (Label) card.lookup("#nameAndPrice");
+        Label qty = (Label) card.lookup("#qty");
+        Label choices = (Label) card.lookup("#choices");
+        Label restrictions = (Label) card.lookup("#restrictions");
+        
+        //Labels adjustments
+        nameAndPrice.setText(item.getName() + " (" + item.getPrice() + "₪)");
+        qty.setText("Qty: 1");
+        if(item.getCustomSize() && item.getCustomDonenessDegree())
+        	choices.setText("Size: " + item.getSize().charAt(0) + ", " + "Doneness: " + item.getDonenessDegree());
+        else if(item.getCustomSize()) 
+        	choices.setText("Size: " + item.getSize().charAt(0));
+        else if(item.getCustomDonenessDegree())
+        	choices.setText("Doneness: " + item.getDonenessDegree());
+        else
+        	choices.setText("Size: N/A, Doneness: N/A");
+        if(item.getCustomRestrictions())
+        	restrictions.setText("Extras/Removals: " + item.getRestrictions());
+        else
+        	restrictions.setText("Extras/Removals: N/A");
+        
+        ImageView add = (ImageView) card.lookup("#add");
+        ImageView reduce = (ImageView) card.lookup("#reduce");
+        ImageView edit = (ImageView) card.lookup("#edit");
+        
+        add.setVisible(false);
+        reduce.setVisible(false);
+        edit.setVisible(false);
+        return card;
+	}
 	
 	
 	@FXML

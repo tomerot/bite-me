@@ -19,14 +19,15 @@
       <Button fx:id="backBtn" layoutX="555.0" layoutY="894.0" mnemonicParsing="false" onAction="#pressBack" prefHeight="31.0" prefWidth="91.0" text="Back" />
       <ScrollPane fitToHeight="true" fitToWidth="true" layoutX="21.0" layoutY="132.0" prefHeight="700.0" prefWidth="1158.0" style="-fx-border-color: transparent; -fx-border-width: 0; -fx-background-color: transparent;">
          <content>
-            <GridPane fx:id="gridPane" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="598.0" prefWidth="1158.0" scaleShape="false">
+            <GridPane fx:id="gridPane" alignment="CENTER" prefHeight="656.0" prefWidth="1156.0" scaleShape="false">
     <columnConstraints>
-        <ColumnConstraints fillWidth="true" halignment="CENTER" hgrow="ALWAYS" />
-        <ColumnConstraints fillWidth="true" halignment="CENTER" hgrow="ALWAYS" />
+        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="419.0" minWidth="305.0" prefWidth="383.0" />
+        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="410.0" minWidth="290.0" prefWidth="396.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="447.0" minWidth="10.0" prefWidth="371.0" />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints fillHeight="true" vgrow="ALWAYS" />
-        <RowConstraints fillHeight="true" vgrow="ALWAYS" />
+        <RowConstraints maxHeight="354.0" minHeight="291.0" prefHeight="352.0" vgrow="ALWAYS" />
+        <RowConstraints maxHeight="407.0" minHeight="344.0" prefHeight="346.0" vgrow="ALWAYS" />
         </rowConstraints>
 </GridPane>
          </content>

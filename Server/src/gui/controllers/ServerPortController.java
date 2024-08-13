@@ -145,6 +145,7 @@ public class ServerPortController {
 			e.printStackTrace();
 		}
 		importCustomerBtn.setVisible(false);
+		csvFilePath.setVisible(false);
 	}
 	//add connected client to the list
     public void addConnectedClient(String clientInfo) {

@@ -154,7 +154,7 @@ public class RestaurantMenuScreenController {
 			}
 			ttlPrice.setText(String.format("%.2f₪", totalPrice));
 		}
-		cartScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); //Hide horizontal scrollbar
+		//cartScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); //Hide horizontal scrollbar
 	}
 	
 	public void pressSalads(ActionEvent event) {
@@ -240,12 +240,12 @@ public class RestaurantMenuScreenController {
         
         //Image adjustments
         ImageView itemImage = (ImageView) card.lookup("#itemImage");
-        String imgPath = "/gui/resource/item" + item.getItemID() + ".png";
+        String imgPath = item.getImageURL();
         try {
         	Image image = new Image(imgPath);
         	itemImage.setImage(image);
         } catch(IllegalArgumentException e) { //Image not found
-        	Image no_image = new Image("gui/resource/No_image.png");
+        	Image no_image = new Image("/gui/resource/no_image.png");
         	itemImage.setImage(no_image);
         }
         

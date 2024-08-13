@@ -12,6 +12,7 @@ import entities.Supplier;
 import enums.Branch;
 import gui.loader.Screen;
 import gui.loader.ScreenLoader;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -117,9 +118,6 @@ import javafx.scene.layout.HBox;
 				gridPane.add(card, gridPane.getChildren().size() % 3, gridPane.getChildren().size() / 3); // Add to gridPane
 			}
 			
-			gridPane.setHgap(10); //Need to be fixed somehow
-		    gridPane.setVgap(30);
-			
 		}
 		
 		/**
@@ -145,12 +143,12 @@ import javafx.scene.layout.HBox;
 	        
 	        //Image adjustments
 	        ImageView restaurantImage = (ImageView) card.lookup("#restaurantImage");
-	        String imgPath = "/gui/resource/" + supplier.getSupplierID() + ".png";
+	        String imgPath = supplier.getImgURL();
 	        try {
 	        	Image image = new Image(imgPath);
 	        	restaurantImage.setImage(image);
 	        } catch(IllegalArgumentException e) { //Image not found
-	        	Image no_image = new Image("gui/resource/No_image.png");
+	        	Image no_image = new Image("gui/resource/no_image.png");
 	        	restaurantImage.setImage(no_image);
 	        }
 	        
