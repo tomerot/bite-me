@@ -172,7 +172,8 @@ import javafx.scene.layout.HBox;
 	    	dashboard.getChildren().add(nextDash); //Assign the new dashboard
 		}
 		
-		public void pressBack(ActionEvent event) throws IOException {
+		@FXML
+		private void pressBack(ActionEvent event) throws IOException {
 			ScreenLoader screenLoader = new ScreenLoader();
 			String path = "/gui/view/CustomerHomeScreen.fxml";
 			HBox prevWholeScreen = screenLoader.loadPreviousScreen(path, Screen.CUSTOMER_SCREEN, prevController);

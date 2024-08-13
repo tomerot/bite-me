@@ -56,9 +56,9 @@
             <Font size="22.0" />
          </font>
       </Label>
-      <Text layoutX="494.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Orders Overview">
+      <Text layoutX="440.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Orders Overview">
          <font>
-            <Font size="31.0" />
+            <Font name="Arial Bold Italic" size="40.0" />
          </font>
       </Text>
    </children>

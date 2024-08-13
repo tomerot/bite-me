@@ -39,6 +39,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * Controller for managing the menu screen of the chosen supplier.
+ * Handles item selection, cart and returning to the previous screen.
+ * @author Tomer Rotman
+ */
 public class RestaurantMenuScreenController {
 	
 	private ChooseRestaurantScreenController prevController;
@@ -58,7 +63,6 @@ public class RestaurantMenuScreenController {
 	
 	private float totalPrice;
 	
-	//private AnchorPane cloneDash;
 	private boolean firstInitialization = true; //If it's the first time this controller is initialized, this is true
 	
 	@FXML
@@ -128,11 +132,38 @@ public class RestaurantMenuScreenController {
 	private ScrollPane cartScroll;
 	
 	@FXML
+	private ScrollPane itemsScroll;
+	
+	@FXML
 	private GridPane cartGrid;
 	
 	@FXML
 	private Label ttlPrice;
-		
+	
+	@FXML
+	private Button saladsBtn;
+	
+	@FXML
+	private Button startersBtn;
+	
+	@FXML
+	private Button mainCoursesBtn;
+	
+	@FXML
+	private Button dessertsBtn;
+	
+	@FXML
+	private Button beveragesBtn;
+	
+	@FXML
+	private ImageView optionsImage;
+	
+	/**
+     * Constructs a RestaurantMenuScreenController.
+     * 
+     * @param wholeScreen the HBox container for the whole screen
+     * @param prevController the previous controller which is {@code ChooseRestaurantScreenController}
+     */
 	public RestaurantMenuScreenController(HBox wholeScreen, Object prevController) {
 		this.wholeScreen = wholeScreen;
 		this.prevController = (ChooseRestaurantScreenController) prevController;
@@ -154,7 +185,18 @@ public class RestaurantMenuScreenController {
 			}
 			ttlPrice.setText(String.format("%.2f₪", totalPrice));
 		}
-		//cartScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); //Hide horizontal scrollbar
+		if(salads.isEmpty())
+			saladsBtn.setDisable(true);
+		if(starters.isEmpty())
+			startersBtn.setDisable(true);
+		if(mainCourses.isEmpty())
+			mainCoursesBtn.setDisable(true);
+		if(desserts.isEmpty())
+			dessertsBtn.setDisable(true);
+		if(beverages.isEmpty())
+			beveragesBtn.setDisable(true);
+		cartScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); //Hide horizontal scrollbar
+		itemsScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); //Hide horizontal scrollbar
 	}
 	
 	public void pressSalads(ActionEvent event) {
@@ -215,6 +257,29 @@ public class RestaurantMenuScreenController {
 	    gridPane.setVgap(15);
 	}
 	
+	private String insertNewline(String description) {
+        int maxLength = 80;
+        
+        // If the description is shorter than or equal to the maximum length, return it as is
+        if (description.length() <= maxLength) {
+            return description;
+        }
+        
+        // Find the last space before or at the max length
+        int newlineIndex = description.lastIndexOf(' ', maxLength);
+
+        // If no space found and the string is longer than the max length, place the newline at maxLength
+        if (newlineIndex == -1) {
+            newlineIndex = maxLength;
+        }
+        
+        // Insert the newline character at the determined index
+        String firstPart = description.substring(0, newlineIndex).trim();
+        String secondPart = description.substring(newlineIndex).trim();
+        
+        return firstPart + "\n" + secondPart;
+    }
+	
 	/**
      * Creates an AnchorPane button for a single item
      * 
@@ -235,8 +300,9 @@ public class RestaurantMenuScreenController {
         Label itemDescriptionLabel = (Label) card.lookup("#description");
         Label priceLabel = (Label) card.lookup("#price");
         itemNameLabel.setText(item.getName());
-        itemDescriptionLabel.setText(item.getDescription());
-        priceLabel.setText(item.getPrice() + "₪");
+        String desc = insertNewline(item.getDescription());
+        itemDescriptionLabel.setText(desc);
+        priceLabel.setText(String.format("%.2f₪", item.getPrice()));
         
         //Image adjustments
         ImageView itemImage = (ImageView) card.lookup("#itemImage");
@@ -317,7 +383,14 @@ public class RestaurantMenuScreenController {
 		addToCartBtn.setDisable(false);
 		pickedItem.setText(item.getName());
 		pickedItem.setVisible(true);
-		/* NEED TO ADD IMAGE */
+		optionsImage.setVisible(true);
+		try {
+			Image img = new Image(item.getImageURL());
+			optionsImage.setImage(img);
+		} catch(IllegalArgumentException e) {
+			Image img = new Image("/gui/resource/no_image.png");
+			optionsImage.setImage(img);
+		}
 
 		setSizePane(isSizeCustomizable); // Enables size pane in case item has an option to change size
 		setDonenessPane(isDonenessCustomizable); // Enables doneness pane in case item has an option to change doneness
@@ -417,8 +490,7 @@ public class RestaurantMenuScreenController {
 					int quantity = cart.get(item);
 					AnchorPane card = cartCards.get(item);
 					Integer row = GridPane.getRowIndex(card);
-					Parity cardPlaceParity = (row % 2 == 0) ? Parity.EVEN : Parity.ODD;
-					AnchorPane newCard = createCartItemCard(itemInOrder, cardPlaceParity);
+					AnchorPane newCard = createCartItemCard(itemInOrder);
 					Label qty = (Label) newCard.lookup("#qty");
 					qty.setText("Qty: " + quantity);
 					cartGrid.getChildren().remove(card);
@@ -446,7 +518,7 @@ public class RestaurantMenuScreenController {
 		setRestrictionsPane(false);
 		addToCartBtn.setDisable(true);
 		pickedItem.setVisible(false);
-		/*NEED TO CHANGE ALSO IMAGE VISIBILITY*/
+		optionsImage.setVisible(false);
 	}
 	
 	private enum Operation{
@@ -476,29 +548,19 @@ public class RestaurantMenuScreenController {
 		}
 		else {
 			cart.put(item, 1);
-			Parity cardPlaceParity = (cart.size() % 2 == 0) ? Parity.EVEN : Parity.ODD;
-			AnchorPane card = createCartItemCard(item, cardPlaceParity);
+			AnchorPane card = createCartItemCard(item);
 			cartCards.put(item, card);
 			cartGrid.add(card, 0, cartCards.size() - 1);
 		}
 	}
 	
-	private enum Parity{
-		ODD,
-		EVEN;
-	}
-	
-	private AnchorPane createCartItemCard(ItemInOrder item, Parity cardPlaceParity) {
+	private AnchorPane createCartItemCard(ItemInOrder item) {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/view/CartItemCard.fxml"));
 		AnchorPane card = null;
         try {
             card = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        
-        if(cardPlaceParity == Parity.ODD) {
-        	/*NEED TO CHANGE BACKGROUND COLOR*/
         }
         
         //Labels
@@ -508,7 +570,7 @@ public class RestaurantMenuScreenController {
         Label restrictions = (Label) card.lookup("#restrictions");
         
         //Labels adjustments
-        nameAndPrice.setText(item.getName() + " (" + item.getPrice() + "₪)");
+        nameAndPrice.setText(String.format("%s (%.2f₪)", item.getName(), item.getPrice()));
         qty.setText("Qty: 1");
         if(item.getCustomSize() && item.getCustomDonenessDegree())
         	choices.setText("Size: " + item.getSize().charAt(0) + ", " + "Doneness: " + item.getDonenessDegree());
@@ -526,6 +588,10 @@ public class RestaurantMenuScreenController {
         ImageView add = (ImageView) card.lookup("#add");
         ImageView reduce = (ImageView) card.lookup("#reduce");
         ImageView edit = (ImageView) card.lookup("#edit");
+        //Set opacity of not editable item to 0.5
+        if(!(item.getCustomSize() || item.getCustomDonenessDegree() || item.getCustomRestrictions())) {
+        	edit.setOpacity(0.5);
+        }
         
         add.setOnMouseClicked(event -> {
         	totalPrice += item.getPrice();
@@ -540,7 +606,8 @@ public class RestaurantMenuScreenController {
         });
         
         edit.setOnMouseClicked(event -> {
-        	enableItemOptionsPane(item);
+        	if(item.getCustomSize() || item.getCustomDonenessDegree() || item.getCustomRestrictions())
+        		enableItemOptionsPane(item);
         });
         
         return card;
@@ -633,5 +700,14 @@ public class RestaurantMenuScreenController {
 	
 	public ChooseRestaurantScreenController getRestaurantController(){
 		return prevController;
+	}
+	
+	@FXML
+	private void pressBack(ActionEvent event) throws IOException {
+		ScreenLoader screenLoader = new ScreenLoader();
+		String path = "/gui/view/ChooseRestaurantScreen.fxml";
+		AnchorPane prevDash = screenLoader.loadPreviousDashboard(path, Screen.CHOOSE_RESTAURANT_SCREEN, prevController);
+		dashboard.getChildren().clear();
+		dashboard.getChildren().add(prevDash);
 	}
 }

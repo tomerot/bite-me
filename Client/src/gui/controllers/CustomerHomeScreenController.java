@@ -24,6 +24,8 @@ import javafx.stage.Stage;
 /**
  * The controller for the customer home screen user interface.
  * It manages the display of the customer home screen, user logout, and transitions to other screens.
+ * @author Tomer Rotman
+ * @author David Zorin
  */
 public class CustomerHomeScreenController {
 

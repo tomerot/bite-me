@@ -196,12 +196,12 @@ public class ScreenLoader {
 			case  CHECKOUT_SCREEN:
 				loader.setController((CheckoutScreenController) prevController);
 				break;
-				
+			case CHOOSE_RESTAURANT_SCREEN:
+				loader.setController((ChooseRestaurantScreenController) prevController);
 			default:
 				break;
 		}
 		AnchorPane dashboard = loader.load();
-		//dashboard = loader.getRoot();
 		return dashboard;
 	}
 }
