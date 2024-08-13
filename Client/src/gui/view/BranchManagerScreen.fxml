@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -15,19 +16,22 @@
    <children>
       <VBox fillWidth="false" prefHeight="950.0" prefWidth="300.0" HBox.hgrow="ALWAYS">
          <children>
-            <AnchorPane prefHeight="150.0" prefWidth="300.0" style="-fx-background-color: gray;">
+            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="250.0" prefWidth="300.0" style="-fx-background-color: #fff1e8;">
                <children>
-                  <ImageView fitHeight="85.0" fitWidth="219.0" layoutX="41.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fitHeight="203.0" fitWidth="268.0" layoutX="16.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resource/BiteMe%20(2)%20(1).png" />
+                     </image></ImageView>
                </children>
             </AnchorPane>
-            <AnchorPane prefHeight="150.0" prefWidth="300.0">
+            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: #fff1e8;">
                <children>
-                  <Label id="WelcomeMessageLabel" fx:id="welcomeLbl" alignment="CENTER" layoutX="41.0" layoutY="35.0" prefHeight="27.0" prefWidth="219.0">
+                  <Label id="WelcomeMessageLabel" fx:id="welcomeLbl" alignment="CENTER" layoutX="41.0" layoutY="12.0" prefHeight="27.0" prefWidth="219.0">
                      <font>
                         <Font size="18.0" />
                      </font></Label>
                </children></AnchorPane>
-            <AnchorPane prefHeight="650.0" prefWidth="300.0" style="-fx-background-color: gray;">
+            <AnchorPane prefHeight="650.0" prefWidth="300.0" style="-fx-background-color: #fff1e8;">
                <children>
                   <GridPane alignment="CENTER" layoutX="-1.0" layoutY="1.0" prefHeight="650.0" prefWidth="300.0">
                     <columnConstraints>
@@ -44,20 +48,29 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button id="RegisterCustomerButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#displayRegistrationScreen" prefHeight="42.0" prefWidth="178.0" text="Register customers" />
-                        <Button id="MonthlyReportsBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#displayMonthlyReportScreen" prefHeight="42.0" prefWidth="178.0" text="Monthly Reports" GridPane.rowIndex="1" />
-                        <Button id="logOutButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#logOut" prefHeight="42.0" prefWidth="117.0" text="Logout" GridPane.rowIndex="7" />
+                        <Button id="RegisterCustomerButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#displayRegistrationScreen" prefHeight="42.0" prefWidth="178.0" stylesheets="@NavigatorButton.css" text="Register customers">
+                           <font>
+                              <Font size="18.0" />
+                           </font></Button>
+                        <Button id="MonthlyReportsBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#displayMonthlyReportScreen" prefHeight="42.0" prefWidth="178.0" stylesheets="@NavigatorButton.css" text="Monthly Reports" GridPane.rowIndex="1">
+                           <font>
+                              <Font size="18.0" />
+                           </font></Button>
+                        <Button id="logOutButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#logOut" prefHeight="42.0" prefWidth="117.0" stylesheets="@NavigatorButton.css" text="Logout" GridPane.rowIndex="7">
+                           <font>
+                              <Font size="18.0" />
+                           </font></Button>
                      </children>
                   </GridPane>
                </children>
             </AnchorPane>
          </children>
       </VBox>
-      <AnchorPane id="dashboard" fx:id="dashboard" prefHeight="950.0" prefWidth="1200.0">
+      <AnchorPane id="dashboard" fx:id="dashboard" prefHeight="950.0" prefWidth="1200.0" style="-fx-background-color: white;">
          <children>
             <Label id="homeBranchLabel" fx:id="homeBranchLbl" alignment="CENTER" layoutX="269.0" layoutY="56.0" prefHeight="58.0" prefWidth="662.0" textAlignment="CENTER">
                <font>
-                  <Font size="40.0" />
+                  <Font name="Arial Bold Italic" size="40.0" />
                </font></Label>
          </children></AnchorPane>
    </children>

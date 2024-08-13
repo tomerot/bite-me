@@ -1,0 +1,9 @@
+.button {
+    -fx-background-color: #ffde59; /* Default button color */
+    -fx-background-radius: 15; /* Rounded edges */
+    -fx-border-radius: 15; /* Rounded edges */
+}
+
+.button:hover {
+    -fx-background-color: #ff914d; /* Color when hovered */
+}

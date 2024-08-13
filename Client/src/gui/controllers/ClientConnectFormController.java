@@ -1,6 +1,7 @@
 package gui.controllers;
 
 import client.ClientConsole;
+import client.ClientMainController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -125,6 +126,16 @@ public class ClientConnectFormController {
 		scene.getStylesheets().add(getClass().getResource("/gui/view/LoginScreen.css").toExternalForm());
 		primaryStage.setTitle("Main");
 		primaryStage.setScene(scene);
+		primaryStage.setOnCloseRequest(closeEvent ->{
+            try {
+        		ClientConsole.disconnectClientFromServer();
+                this.getExitBtn();
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+        });
 		primaryStage.show();
 	}
 

@@ -325,6 +325,15 @@ public class ServerUtilsQueries {
         catch (SQLException e) {
             e.printStackTrace();
         }
-        
+    }
+    public void setAllUsersLoggedOut(Connection dbConn) throws SQLException{
+    	  String query = "UPDATE users SET IsLoggedIn = ?";
+    	  try(PreparedStatement stmt = dbConn.prepareStatement(query)){
+    		  stmt.setInt(1, 0);
+    		  stmt.executeUpdate();
+    	  }
+    	  catch(SQLException e){
+    		  e.printStackTrace();
+    	  }
     }
 }
