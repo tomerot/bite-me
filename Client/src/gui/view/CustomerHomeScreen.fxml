@@ -69,6 +69,11 @@
       </VBox>
       <AnchorPane id="dashboard" fx:id="dashboard" prefHeight="950.0" prefWidth="1200.0" style="-fx-background-color: white;">
          <children>
+            <ImageView fitHeight="950.0" fitWidth="1200.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/MainPageLogo.png" />
+               </image>
+            </ImageView>
             <Text layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer Screen" textAlignment="CENTER" wrappingWidth="1200.0000078082085">
                <font>
                   <Font name="Arial Bold Italic" size="40.0" />

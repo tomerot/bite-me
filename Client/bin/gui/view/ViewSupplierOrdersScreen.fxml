@@ -11,12 +11,12 @@
 
 <AnchorPane fx:id="dashboard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="950.0" prefWidth="1200.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-            <Label layoutX="330.0" layoutY="124.0" prefHeight="52.0" prefWidth="200.0" text="Awaiting orders ID">
+            <Label layoutX="330.0" layoutY="124.0" prefHeight="52.0" prefWidth="200.0" text="Awaiting Orders ID">
                <font>
                   <Font size="22.0" />
                </font>
             </Label>
-            <Label layoutX="203.0" layoutY="475.0" prefHeight="53.0" prefWidth="200.0" text="Approved orders ID">
+            <Label layoutX="203.0" layoutY="475.0" prefHeight="53.0" prefWidth="200.0" text="Approved Orders ID">
                <font>
                   <Font size="22.0" />
                </font>
