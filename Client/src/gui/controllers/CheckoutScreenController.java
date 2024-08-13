@@ -133,6 +133,12 @@ public class CheckoutScreenController {
 	private HBox wholeScreen;
 	RestaurantMenuScreenController prevController;
 
+	/**
+	 * Initializes a new `CheckoutScreenController` with the given screen and previous controller.
+	 *
+	 * @param wholeScreen the main screen container for the checkout view
+	 * @param prevController the previous screen controller, expected to be of type `RestaurantMenuScreenController`
+	 */
 	public CheckoutScreenController(HBox wholeScreen, Object prevController) {
 		this.wholeScreen = wholeScreen;
 		this.prevController = (RestaurantMenuScreenController) prevController;
@@ -162,6 +168,11 @@ public class CheckoutScreenController {
 	}
 	
 	
+	/**
+	 * Sets up the initial UI state by configuring default values and states for UI components.
+	 * This includes setting default text, hiding labels, updating wallet and price labels,
+	 * populating DROPDOWN with cities, initializing the date picker, and configuring radio buttons.
+	 */
 	private void setupInitialUI() {
 	    // Set default values and states for UI components
 	    supplyTimeField.setText("00:00:00");
@@ -185,7 +196,11 @@ public class CheckoutScreenController {
 	    setupWalletField();
 	}
 	
-	
+	/**
+	 * Updates the wallet balance and item price labels in the UI.
+	 * Retrieves the customer's wallet balance and formats it for display,
+	 * and updates the item price label with the current item price.
+	 */
 	private void updateWalletAndPriceLabels() {
 	    float walletBalance = customer.getWalletBalance();
 	    customerWalletBalance = walletBalance;
@@ -194,7 +209,7 @@ public class CheckoutScreenController {
 	}
 
 	/**
-	 * Populates the city dropdown with relevant delivery cities.
+	 * Populates the city DROPDOWN with relevant delivery cities.
 	 */
 	private void populateCityDropdown() {
 	    ObservableList<String> citiesObservableList = FXCollections.observableArrayList(relevantDeliveryCities);
@@ -298,6 +313,9 @@ public class CheckoutScreenController {
 	    });
 	}
 	
+	/**
+	 * Sets up listener for the Robot radio button.
+	 */
 	/*private void setupRobotRadioButtonListener() { //Set for future implementation
 	    basicRadioBtn.selectedProperty().addListener((observable, oldValue, newValue) -> {
 	        if (newValue) {
@@ -699,14 +717,14 @@ public class CheckoutScreenController {
 	}
 	
 	/**
-	 * Updates the delivery price and total price labels based on the selected delivery option and the wallet amount.
+	 * Updates the price labels for delivery and total price.
 	 * 
 	 * This method calculates the delivery price based on the selected radio button:
 	 * - If {@code basicRadioBtn} is selected, the delivery price is set to 25.
 	 * - If {@code SharedRadioBtn} is selected, the delivery price depends on the quantity entered in {@code amountField}:
 	 *   - 1 : 25
 	 *   - 2 user: 40 (20 each)
-	 *   - More than 2 items: 15 per user
+	 *   - 3 or more: 15 per user
 	 * - If {@code takeAwayRadioBtn} or {@code RobotRadioBtn} is selected, the delivery price is 0.
 	 * 
 	 * The method also reads the wallet amount from {@code WalletField} and updates the labels {@code deliveryPriceLbl}
@@ -901,6 +919,13 @@ public class CheckoutScreenController {
     }
     
     
+    /**
+     * Loads and displays the order summary screen.
+     * using `ScreenLoader` to load the `OrderSummaryScreen.fxml` file,
+     * clears the current dashboard, and adds the new order summary screen to the dashboard.
+     *
+     * @throws IOException if an error occurs while loading the FXML file
+     */
 	@FXML
 	private void OrderSummaryScreen() throws IOException {
 		ScreenLoader screenLoader = new ScreenLoader();

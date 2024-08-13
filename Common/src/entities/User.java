@@ -18,7 +18,15 @@ public class User implements Serializable {
 	private UserType type;
 	private int registered;
 
-    // Constructor
+	/**
+	 * Constructs a {@code User} with the specified details.
+	 *
+	 * @param userName The username of the user for authentication purposes.
+	 * @param password The password of the user for authentication purposes.
+	 * @param isLoggedIn Indicates whether the user is currently logged in (1 for logged in, 0 for not).
+	 * @param type The type of user, represented by the {@link UserType} enum.
+	 * @param registered Indicates whether the user is registered (1 for registered, 0 for not).
+	 */
     public User(String userName, String password, int isLoggedIn, UserType type, int registered) {
         this.userName = userName;
         this.password = password;
@@ -27,11 +35,24 @@ public class User implements Serializable {
         this.registered = registered;
     }
 
+	/**
+	 * Constructs a {@code User} with the specified details.
+	 *
+	 * @param userName The username of the user for authentication purposes.
+	 * @param password The password of the user for authentication purposes.
+	 */
     public User(String userName, String password) {
     	this.userName = userName;
         this.password = password;
     }
     
+	/**
+	 * Constructs a {@code User} with the specified details.
+	 *
+	 * @param userName The username of the user for authentication purposes.
+	 * @param password The password of the user for authentication purposes.
+	 * @param type The type of user, represented by the {@link UserType} enum.
+	 */
     public User(String userName, String password, UserType type) {
     	this.userName = userName;
         this.password = password;

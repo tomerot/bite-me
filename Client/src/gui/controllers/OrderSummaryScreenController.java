@@ -91,6 +91,12 @@ public class OrderSummaryScreenController {
     @FXML
     private ScrollPane itemsScroll;
 	
+    /**
+     * Initializes the `OrderSummaryScreenController` with the given parameters.
+     * 
+     * @param wholeScreen is for the screen to be displayed
+     * @param prevController the previous controller from which data is retrieved
+     */
 	public OrderSummaryScreenController(HBox wholeScreen, Object prevController) {
 		this.wholeScreen = wholeScreen;
 		this.prevController = (CheckoutScreenController) prevController;
@@ -106,6 +112,9 @@ public class OrderSummaryScreenController {
 	}
 	
 	
+	/**
+	 * Initializes the order summary screen by setting up labels and displaying order details.
+	 */
 	@FXML
 	private void initialize() {
 		//initialize all the labels
@@ -147,6 +156,14 @@ public class OrderSummaryScreenController {
 		EVEN;
 	}
 	
+	
+	/**
+	 * Creates a cart item card for a given item and card placement parity.
+	 *
+	 * @param item The item to be displayed on the card.
+	 * @param cardPlaceParity The parity of the card placement (even or odd).
+	 * @return The populated AnchorPane representing the cart item card.
+	 */
 	private AnchorPane createCartItemCard(ItemInOrder item, Parity cardPlaceParity) {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/view/CartItemCard.fxml"));
 		AnchorPane card = null;
@@ -193,6 +210,11 @@ public class OrderSummaryScreenController {
 	}
 	
 	
+	/**
+	 * Navigates back to the Checkout Screen.
+	 *
+	 * @throws IOException If there is an issue loading the FXML file for the Checkout Screen.
+	 */
 	@FXML
 	private void goBack() throws IOException {
 		ScreenLoader screenLoader = new ScreenLoader();
@@ -204,6 +226,17 @@ public class OrderSummaryScreenController {
 	
 	
 	
+	/**
+	 * Handles the event when the "Approve Order" button is clicked.
+	 *
+	 * Updates the server with the current order and items in the cart.
+	 * Checks the server response to handle any errors or success messages.
+	 * If the order is successfully updated, updates the customer's wallet balance
+	 * Displays a "Thank You" screen to the user if the order is approved.
+	 * 
+	 * @param event The action event triggered by clicking the "Approve Order" button.
+	 * @throws IOException If there is an issue communicating with the server or loading the Thank You screen.
+	 */
     @FXML
 	void approveOrderClicked(ActionEvent event) throws IOException {
 //    	LocalTime currentTime = LocalTime.now();
@@ -244,7 +277,11 @@ public class OrderSummaryScreenController {
 		}
 	}
     
-    
+    /**
+     * Displays the "Thank You" screen.
+     * 
+     * @throws IOException If there is an issue loading the "Thank You" screen FXML file or accessing the dashboard.
+     */
 	@FXML
 	private void ThankYouScreen() throws IOException {
 		ScreenLoader screenLoader = new ScreenLoader();
@@ -255,6 +292,11 @@ public class OrderSummaryScreenController {
 	}
 	
 	
+	/**
+	 * Navigates back to the "Restaurant Menu" screen.
+	 *
+	 * @throws IOException If there is an issue loading the "Restaurant Menu" screen FXML file or accessing the dashboard.
+	 */
 	@FXML
 	private void backToRestaurant() throws IOException {
 		ScreenLoader screenLoader = new ScreenLoader();

@@ -16,9 +16,18 @@ public class Supplier extends User {
 	private String email;
 	private String phone;
 	private String imageURL;
-
-    // Constructor
-        
+  
+	/**
+	 * Constructs a {@code Supplier} with the specified details.
+	 *
+	 * @param supplierID The unique identifier for the supplier.
+	 * @param name The name of the supplier/ name of restaurant.
+	 * @param city The city where the supplier is located.
+	 * @param address The address of the supplier.
+	 * @param homeBranch The {@link Branch} where the supplier's home branch is located.
+	 * @param userName The username of the supplier for authentication purposes.
+	 * @param password The password of the supplier for authentication purposes.
+	 */
     public Supplier(int supplierID, String name, String city, String address, Branch homeBranch, String userName, String password) {
         super(userName, password,1, UserType.SUPPLIER,1);
     	this.supplierID = supplierID;
@@ -30,6 +39,15 @@ public class Supplier extends User {
         this.phone = phone;
     }
     
+	/**
+	 * Constructs a {@code Supplier} with the specified details.
+	 *
+	 * @param supplierID The unique identifier for the supplier.
+	 * @param name The name of the supplier/ name of restaurant.
+	 * @param city The city where the supplier is located.
+	 * @param address The address of the supplier.
+	 * @param homeBranch The {@link Branch} where the supplier's home branch is located.
+	 */
     public Supplier(int supplierID, String name, String city, String address, Branch homeBranch) {
         super(null, null);
     	this.supplierID = supplierID;
@@ -39,6 +57,18 @@ public class Supplier extends User {
         this.homeBranch = homeBranch;
     }
     
+	/**
+	 * Constructs a {@code Supplier} with the specified details.
+	 *
+	 * @param supplierID The unique identifier for the supplier.
+	 * @param name The name of the supplier/ name of restaurant.
+	 * @param city The city where the supplier is located.
+	 * @param address The address of the supplier.
+	 * @param homeBranch The {@link Branch} where the supplier's home branch is located.
+	 * @param email is the supplier email
+	 * @param phone is the supplier phone number
+	 * @param imageURL is image attached to the supplier
+	 */
     public Supplier(int supplierID, String name, String city, String address, Branch homeBranch, String email, String phone, String imageURL) {
     	super(null, null);
     	this.supplierID = supplierID;

@@ -17,6 +17,11 @@ public enum Branch {
         return name;
     }
     
+    /**
+     * Returns a short representation of the branch name.
+     * 
+     * @return A shortened string representing the branch name.
+     */
     public String toShortString() {
         String name=null;
         if(this.name.equals("North Branch"))
@@ -29,7 +34,12 @@ public enum Branch {
 
     }
     
-
+    /**
+     * Returns a short representation of the branch based on its enum value.
+     * 
+     * @return A shortened string representing the branch name.
+     * @throws IllegalArgumentException if the enum constant does not match any of the predefined values.
+     */
     public String toShortStringTwo() {
         switch (this) {
             case NORTH:

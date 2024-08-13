@@ -58,6 +58,12 @@ import javafx.scene.layout.HBox;
 		private List<Supplier> centerSuppliers = new ArrayList<>();
 		private List<Supplier> southSuppliers = new ArrayList<>();
 		
+		/**
+		 * Constructs a `ChooseRestaurantScreenController` with the specified UI and previous controller.
+		 * 
+		 * @param wholeScreen the main container for the UI
+		 * @param prevController the previous controller, cast to `CustomerHomeScreenController`
+		 */
 		public ChooseRestaurantScreenController(HBox wholeScreen, Object prevController) {
 			this.prevController = (CustomerHomeScreenController) prevController;
 			this.wholeScreen = wholeScreen;
@@ -163,6 +169,12 @@ import javafx.scene.layout.HBox;
 	        return card;
 		}
 	
+		/**
+		 * Displays the restaurant menu screen for the selected supplier.
+		 * 
+		 * @param supplier the supplier whose menu is to be displayed
+		 * @throws Exception if an error occurs while loading the FXML file
+		 */
 		private void displayRestaurantMenuScreen(Supplier supplier) throws Exception {
 			preferredSupplier = supplier; //The supplier that the customer has chosen
 			ScreenLoader screenLoader = new ScreenLoader();
@@ -172,6 +184,13 @@ import javafx.scene.layout.HBox;
 	    	dashboard.getChildren().add(nextDash); //Assign the new dashboard
 		}
 		
+		/**
+		 * Handles the action for the "Back" button by navigating to the customer home screen.
+		 * 
+		 *
+		 * @param event the action event triggered by the "Back" button
+		 * @throws IOException if an error occurs while loading the FXML file
+		 */
 		@FXML
 		private void pressBack(ActionEvent event) throws IOException {
 			ScreenLoader screenLoader = new ScreenLoader();
