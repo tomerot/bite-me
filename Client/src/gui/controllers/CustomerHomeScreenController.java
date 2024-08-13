@@ -66,7 +66,7 @@ public class CustomerHomeScreenController {
      */
 	public void UpdateLabel(Customer customer) {
 	    Platform.runLater(() -> {
-	        welcomeLbl.setText("Welcome, " + customer.getFirstName() + customer.getLastName());
+	        welcomeLbl.setText("Welcome, " + customer.getFirstName() +" " + customer.getLastName());
 	    });
 	}
 	

@@ -422,7 +422,10 @@ public class Server extends AbstractServer {
 		  QueryControl.serverQueries.insertCustomersList(dbConn, path);
 
 	}
-
+	
+	public static void setAllUsersLoggedOut() throws SQLException{
+		QueryControl.serverQueries.setAllUsersLoggedOut(dbConn);
+	}
 
 
     /**
@@ -685,28 +688,6 @@ public class Server extends AbstractServer {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
-			FROM HERE WE DONT TOUCH!
-	 * 
-	 * 
-	 * 
-	 * 
-	*/
-	
-	
-	
 	
     /**
      * Starts the server with the specified database connection details, port, and server controller.
