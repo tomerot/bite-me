@@ -33,6 +33,26 @@ public class Order implements Serializable{
     private String approvalDate;
     private String arrivalDate;
     
+    
+    /**
+     * Constructs an {@code Order} with specified details.
+     *
+     * @param itemsList A list of {@link ItemInOrder} objects representing the items in the order.
+     * @param orderID The unique identifier for the order.
+     * @param recipient The name of the recipient of the order.
+     * @param recipientPhone The phone number of the recipient.
+     * @param supplyOption The supply method for the order, represented by an instance of {@link SupplyMethod}.
+     * @param supplier The {@link Supplier} who provides the items in the order.
+     * @param customer The {@link Customer} who placed the order.
+     * @param branchName The {@link Branch} where the order is placed.
+     * @param requestedDate The date when the order is requested
+     * @param requestedTime The time when the order is requested
+     * @param type The type of the order, represented by an instance of {@link OrderType}.
+     * @param totalPrice The total price of the order.
+     * @param approvalTimer The time order is approved
+     * @param arrivalTime The arrival time of the order.
+     * @param status The current status of the order.
+     */
     public Order(List<ItemInOrder> itemsList, int orderID,String recipient,String recipientPhone,SupplyMethod supplyOption, Supplier supplier, Customer customer, Branch branchName, String requestedDate,
             String requestedTime, OrderType type, float totalPrice, String approvalTimer, String arrivalTime, String status) {
     	this.itemsList=itemsList;
@@ -52,6 +72,28 @@ public class Order implements Serializable{
     	this.status = status;
     }
     
+    
+    /**
+     * Constructs an {@code Order} with the specified details.
+     *
+     * @param itemsList A list of {@link ItemInOrder} objects representing the items in the order.
+     * @param orderID The unique identifier for the order.
+     * @param recipient The name of the recipient of the order.
+     * @param recipientPhone The phone number of the recipient.
+     * @param supplyOption The supply method for the order, represented by an instance of {@link SupplyMethod}.
+     * @param supplier The {@link Supplier} who provides the items in the order.
+     * @param customer The {@link Customer} who placed the order.
+     * @param branchName The {@link Branch} 
+     * @param requestedDate The date when the order is requested
+     * @param requestedTime The time when the order is requested
+     * @param type The type of the order, represented by an instance of {@link OrderType}.
+     * @param totalPrice The total price of the order.
+     * @param approvalTimer The approval time
+     * @param arrivalTime The arrival time .
+     * @param status The current status of the order.
+     * @param city The city where the order is to be delivered or picked up.
+     * @param address The detailed address for the order delivery or pickup.
+     */
     public Order(List<ItemInOrder> itemsList, int orderID,String recipient,String recipientPhone,SupplyMethod supplyOption, Supplier supplier, Customer customer, Branch branchName, String requestedDate,
             String requestedTime, OrderType type, float totalPrice, String approvalTimer, String arrivalTime, String status, String city, String address) {
     	this.itemsList=itemsList;
@@ -73,6 +115,29 @@ public class Order implements Serializable{
     	this.address = address;
     }
     
+    /**
+     * Constructs an {@code Order} with the specified details.
+     *
+     * @param itemsList A list of {@link ItemInOrder} objects representing the items in the order.
+     * @param orderID The unique identifier for the order.
+     * @param recipient The name of the recipient of the order.
+     * @param recipientPhone The phone number of the recipient.
+     * @param supplyOption The supply method for the order, represented by an instance of {@link SupplyMethod}.
+     * @param supplier The {@link Supplier} who provides the items in the order.
+     * @param customer The {@link Customer} who placed the order.
+     * @param branchName The {@link Branch}
+     * @param requestedDate The date when the order is requested
+     * @param requestedTime The time when the order is requested.
+     * @param type The type of the order, represented by an instance of {@link OrderType}.
+     * @param totalPrice The total price of the order.
+     * @param approvalTimer the approval time
+     * @param arrivalTime The arrival time.
+     * @param status The current status of the order.
+     * @param city The city where the order is to be delivered or picked up.
+     * @param address The detailed address for the order delivery or pickup.
+     * @param approvalDate The date of approval.
+     * @param arrivalDate the date of arrival.
+     */
     public Order(List<ItemInOrder> itemsList, int orderID,String recipient,String recipientPhone,SupplyMethod supplyOption, Supplier supplier, Customer customer, Branch branchName, String requestedDate,
             String requestedTime, OrderType type, float totalPrice, String approvalTimer, String arrivalTime, String status, String city, String address, String approvalDate, String arrivalDate) {
     	this.itemsList=itemsList;
@@ -95,7 +160,28 @@ public class Order implements Serializable{
     	this.approvalDate = approvalDate;
     	this.arrivalDate = arrivalDate;
     }
+    
+    
     //sagi
+    /**
+     * Constructs an {@code Order} with the specified details.
+     *
+     * @param orderID The unique identifier for the order.
+     * @param customerID The ID of the customer who placed the order.
+     * @param recipient The name of the recipient of the order.
+     * @param recipientPhone The phone number of the recipient.
+     * @param recipientEmail The email address of the recipient.
+     * @param city The city where the order is to be delivered or picked up.
+     * @param address The detailed address for the order delivery or pickup.
+     * @param supplyOption The supply method for the order, represented by an instance of {@link SupplyMethod}.
+     * @param type The type of the order, represented by an instance of {@link OrderType}.
+     * @param requestedDate The date when the order is requested
+     * @param requestedTime The time when the order is requested
+     * @param approvalTimer the approval time.
+     * @param arrivalTime the arrival time
+     * @param totalPrice The total price of the order.
+     * @param status The current status of the order.
+     */
     public Order(int orderID,String customerID, String recipient,String recipientPhone,String recipientEmail, String city,String address,SupplyMethod supplyOption, OrderType type,
     		String requestedDate, String requestedTime, String approvalTimer, String arrivalTime, float totalPrice, String status) {
     	this.orderID = orderID;
@@ -115,6 +201,10 @@ public class Order implements Serializable{
     	this.status = status;
     }
    
+    
+
+
+    //from here getters setters
     
 	public List<ItemInOrder> getItemsList() {
 		return itemsList;

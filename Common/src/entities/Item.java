@@ -1,10 +1,10 @@
 package entities;
+import java.io.Serializable;
+
 /**
  * This class represents an item in the system.
  * It includes details such as the item's ID, name, type, price, and customization options.
  */
-
-import java.io.Serializable;
 
 public class Item implements Serializable{
 	private int itemID;
@@ -18,6 +18,20 @@ public class Item implements Serializable{
     private boolean customRestrictions;
     private String imageURL;
     
+    
+    /**
+     * Constructs an {@code Item} with the specified details.
+     *
+     * @param itemID the item id
+     * @param supplierID The unique identifier for the supplier of the item.
+     * @param name The name of the item.
+     * @param type The category of the item, represented by an instance of {@link Category}.
+     * @param description A brief description of the item.
+     * @param customSize A boolean indicating whether the item has a custom size option.
+     * @param customDonenessDegree A boolean indicating whether the item has a custom doneness degree option.
+     * @param customRestrictions A boolean indicating whether the item has custom restrictions.
+     * @param price The price of the item.
+     */
     public Item(int itemID,int supplierID ,String name, Category type, String description, boolean customSize, 
     		    boolean customDonenessDegree, boolean customRestrictions, float price) {
     	this.itemID=itemID;

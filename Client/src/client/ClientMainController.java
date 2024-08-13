@@ -107,7 +107,7 @@ public class ClientMainController {
 
 	
     /**
-     * Requests to update the registration of customers with the server.
+     * Requests to update the registration of customers from the server.
      *
      * @param userList a list of user identifiers for customers to be registered
      */
@@ -116,11 +116,23 @@ public class ClientMainController {
 				userList);
 		ClientMainController.accept(request);
 	}
+	
+    /**
+     * Requests to import the reports data from the server.
+     *
+     * @param ReportInfo a list of strings
+     */
 	public static void requestReportData(List<String> ReportInfo) {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.FETCH_REPORT_DATA,
 				ReportInfo);
 		ClientMainController.accept(request);
 	}
+	
+    /**
+     * Requests to update the registration of customers with the server.
+     *
+     * @param userList a list of user identifiers for customers to be registered
+     */
 	public static void requestQuarterReportData(List<String> ReportInfo) {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.FETCH_QUARTER_REPORT_DATA,
 				ReportInfo);
@@ -130,25 +142,39 @@ public class ClientMainController {
 	/**
      * Requests all specific branch restaurants
      *
-     * @param customer the customer for whom restaurant data is requested
+     * @param branchName the branch for which restaurant data is requested
      */
 	public static void requestRestaurantsByBranch(Branch branchName) {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.FETCH_BRANCH_RESTAURANTS,branchName);
 		ClientMainController.accept(request);
 	}
 	
+	/**
+	 * Requests all waiting orders for a specific customer.
+	 *
+	 * @param customer the customer whose waiting orders are requested
+	 */
 	public static void requestAllCustomerWaitingOrders(Customer customer) {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.FETCH_CUSTOMER_WAITING_ORDERS,customer);
 		ClientMainController.accept(request);
 	}
 	
-	
+	/**
+	 * Requests the order history for a specific customer.
+	 *
+	 * @param customer the customer whose order history is requested
+	 */
 	public static void requestAllCustomerHistoryOrders(Customer customer) {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.FETCH_CUSTOMER_HISTORY_ORDERS,customer);
 		ClientMainController.accept(request);
 	}
 	
 
+	/**
+	 * Requests to update status and time of a specific order.
+	 *
+	 * @param order the order to be updated
+	 */
 	public static void requestToUpdateOrder(Order order) {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.UPDATE_ORDER_STATUS_AND_TIME,order);
 		ClientMainController.accept(request);
@@ -163,6 +189,7 @@ public class ClientMainController {
     	ClientRequestDataContainer request=new ClientRequestDataContainer(ClientRequest.GET_ORDERS_DATA, supplierID);
     	ClientMainController.accept(request);
     }
+    
     /**
      * Sends a request to add a new item.
      *
@@ -172,6 +199,7 @@ public class ClientMainController {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.ADD_ITEM_DATA, item);
 		ClientMainController.accept(request);
 	}
+	
 	/**
      * Sends a request to get the list of items for the specified supplier.
      *
@@ -183,6 +211,7 @@ public class ClientMainController {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.GET_ITEMS_LIST, suppID);
 		ClientMainController.accept(request);
 	}
+	
 	/**
      * Sends a request to get the full list of items for the specified supplier.
      *
@@ -194,6 +223,7 @@ public class ClientMainController {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.GET_FULL_ITEMS_LIST, suppID);
 		ClientMainController.accept(request);
 	}
+	
 	  /**
      * Sends a request to remove an item.
      *
@@ -204,6 +234,7 @@ public class ClientMainController {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.REMOVE_ITEM, itemData);
 		ClientMainController.accept(request);
 	}
+	
 	  /**
      * Sends a request to update an existing item.
      *
@@ -215,21 +246,41 @@ public class ClientMainController {
 		ClientMainController.accept(request);
 	}
 	
+	/**
+	 * Requests items for a specific supplier.
+	 *
+	 * @param supplier the supplier whose items are requested
+	 */
     public static void requestSupplierItems(Supplier supplier) {
         ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.GET_SUPPLIER_ITEMS, supplier);
         ClientMainController.accept(request);
     }
     
+    /**
+     * Requests all relevant cities - he deliver to for a specific supplier.
+     *
+     * @param supplier the supplier for whom relevant cities are requested
+     */
     public static void requestAllRelevantCitys(Supplier supplier) {
         ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.GET_RELEVANT_CITIES, supplier);
         ClientMainController.accept(request);
     }
 
+    /**
+     * Updates an order and its items_in_order with the provided data.
+     *
+     * @param list the list containing order[0] and item[1] data to be updated
+     */
     public static void updateOrderAndItems(List<Object> list) {
         ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.UPDATE_ORDER_AND_ITEMS, list);
         ClientMainController.accept(request);
     }
     
+    /**
+     * Updates the wallet balance for a customer.
+     *
+     * @param list the list containing order[0] wallet price to charge[1] update data for the customer
+     */
     public static void updateCustomerWallet(List<Object> list) {
         ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.UPDATE_CUSTOMER_WALLET, list);
         ClientMainController.accept(request);
@@ -244,6 +295,7 @@ public class ClientMainController {
     	ClientRequestDataContainer request=new ClientRequestDataContainer(ClientRequest.GET_ORDERS_DATA, supplierID);
     	ClientMainController.accept(request);
     }
+    
     /**
      * Sends a request to update the status of an order.
      *
@@ -254,17 +306,31 @@ public class ClientMainController {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.SUPPLIER_UPDATE_ORDER_STATUS, orderInfo);
 		ClientMainController.accept(request);
 	}
+    
+    /**
+     * refresh the awaiting orders for a specific supplier / import then again.
+     *
+     * @param supplierID the ID of the supplier whose awaiting orders are to be refreshed
+     */
     public static void requestSupplierRefreshAwaitingOrders(Integer supplierID) {
 		
  		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.SUPPLIER_REFRESH_AWAITING_ORDERS, supplierID);
  		ClientMainController.accept(request);
  	}
     
+    /**
+     * send server that customer logged out.
+     */
 	public static void customerLogout() {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.CUSTOMER_LOGOUT, null);
 		ClientMainController.accept(request);
 	}
 	
+	/**
+	 * Sends an new status message for a ready order to the relevant customer.
+	 *
+	 * @param data the data containing the approval message details customerID[0] msg[1]
+	 */
 	public static void sendApproveReadyOrderToClient(ArrayList<Object> data) {
 		ClientRequestDataContainer request = new ClientRequestDataContainer(ClientRequest.SEND_CUSTOMER_MSG, data);
 		ClientMainController.accept(request);

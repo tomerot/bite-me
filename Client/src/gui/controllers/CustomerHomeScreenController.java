@@ -131,6 +131,12 @@ public class CustomerHomeScreenController {
     	dashboard.getChildren().add(nextDash); //Assign the new dashboard
 	}
 	
+	/**
+	 * Displays the "My Orders" screen.
+	 * 
+	 * @param event the action event that triggers the display of the "My Orders" screen
+	 * @throws Exception if an error occurs while loading the FXML file
+	 */
 	public void displayMyOrderScreen(ActionEvent event) throws Exception{
     	ScreenLoader screenLoader = new ScreenLoader();
     	String path = "/gui/view/MyOrdersScreen.fxml";

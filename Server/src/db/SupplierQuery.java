@@ -104,6 +104,15 @@ public class SupplierQuery {
         return response;
     }
     
+    
+    /**
+     * Updates the arrival time and date of a takeaway order in the `orders` table.
+     * 
+     * @param dbConn the connection to the database
+     * @param currTime the current arrival time to be set, in `HH:mm:ss` format
+     * @param currDate the current arrival date to be set, in `yyyy-MM-dd` format
+     * @param orderID the unique identifier of the order to be updated
+     */
     private void updateTakeAwayArrivalTimeDate(Connection dbConn, String currTime, String currDate, int orderID) {
     	String sql = "UPDATE orders SET  ArrivalTime = ?, ArrivalDate = ? WHERE OrderID = ?";
     	try (PreparedStatement stmt = dbConn.prepareStatement(sql)){

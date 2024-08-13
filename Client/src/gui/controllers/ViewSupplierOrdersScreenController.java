@@ -245,6 +245,7 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 	
 	/**
      * Handles the event when the approve button is clicked. Updates the status of the selected order to "Approved".
+     * Prepares and sends an order status update to the customer.
      *
      * @param event the action event
      * @throws Exception if updating the order status fails
@@ -318,7 +319,8 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 	
 	/**
      * Handles the event when the update ready button is clicked. Updates the status of the selected order to "Ready".
-     *
+     * Prepares and sends an order status update to the customer based on the order type (Takeaway or Delivery).
+     * 
      * @param event the action event
      * @throws Exception if updating the order status fails
      */
@@ -401,6 +403,15 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 	    sendOrderStatusUpdate(customerIDString, msg, "Order Ready Simulation", "Order is Ready and on the way");
 	}
 	
+	
+	/**
+	 * Sends an order status update to a client and displays an alert based on the response.
+	 * 
+	 * @param customerIDString The customer ID as a string.
+	 * @param message The message to be sent and displayed in the alert.
+	 * @param title The title of the alert dialog.
+	 * @param header The header text of the alert dialog.
+	 */
 	private void sendOrderStatusUpdate(String customerIDString, String message, String title, String header) {
 	    int customerID = Integer.parseInt(customerIDString);
 	    ArrayList<Object> data = new ArrayList<>();
@@ -421,6 +432,9 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 	    }
 	}
 	
+	/**
+	 * Displays an informational alert to the user indicating a problem with the order simulation.
+	 */
 	private void problemAlert() {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("Order Simulation");
@@ -429,6 +443,13 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 		alert.showAndWait();
 	}
 	
+	/**
+	 * Validates whether a given string represents a valid time in the format HH:mm.
+	 * 
+	 * @param time the string to be validated
+	 * @return {@code true} if the string is in a valid time format and represents a 
+	 *         valid time; {@code false} otherwise
+	 */
 	private boolean isValidTimeFormat(String time) {
 	    // Check if the string is exactly 5 characters long
 	    if (time.length() != 5) {

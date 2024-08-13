@@ -219,6 +219,10 @@ public class RestaurantMenuScreenController {
 		loadCategory(beverages);
 	}
 	
+	
+	/**
+	 * Fetches items from the server and sorts them into categories based on their type.
+	 */
 	private void fetchItemsAndSort() {
 		ClientMainController.requestSupplierItems(supplier);
 		ServerResponseDataContainer response = ClientConsole.responseFromServer;
@@ -244,6 +248,10 @@ public class RestaurantMenuScreenController {
 		}
 	}
 	
+	/**
+	 * Loads and displays a list of items in the {@link GridPane} as individual cards.
+	 * @param items A list of {@link Item} objects to be displayed as cards in the {@link GridPane}.
+	 */
 	private void loadCategory(List<Item> items) {
 		gridPane.getChildren().clear();
 		int itemsCount = 0;
@@ -257,6 +265,13 @@ public class RestaurantMenuScreenController {
 	    gridPane.setVgap(15);
 	}
 	
+	
+	/**
+	 * Inserts a newline character into a given string description
+	 *
+	 * @param description The input string to be formatted with a newline.
+	 * @return A new string with a newline character
+	 */
 	private String insertNewline(String description) {
         int maxLength = 80;
         
@@ -322,6 +337,14 @@ public class RestaurantMenuScreenController {
         return card;
 	}
 	
+	/**
+	 * Displays an alert dialog with the specified type, title, and message.
+	 *
+	 * @param type The type of the alert, determining its icon and default button set.
+	 *             This should be a value from the AlertType enum.
+	 * @param title The text to show in the title bar of the alert dialog.
+	 * @param message The main content text to be displayed in the alert dialog.
+	 */
 	private void showAlert(AlertType type, String title, String message) {
 		Alert alert = new Alert(type);
 		alert.setTitle(title);
@@ -330,6 +353,17 @@ public class RestaurantMenuScreenController {
 		alert.showAndWait();
 	}
 	
+	
+	/**
+	 * This method adjusts the opacity of the size title and enables/disables
+	 * size selection buttons based on the input parameter. It also resets
+	 * the selection state of all size buttons and hides any alert indicators.
+	 *
+	 * @param set A boolean value that determines whether to enable (true) or 
+	 *            disable (false) the size selection functionality.
+	 *            When true, it makes the size selection fully visible and interactive.
+	 *            When false, it partially hides and disables the size selection.
+	 */
 	private void setSizePane(boolean set) {
 		if(set)
 			sizeTitle.setOpacity(1);
@@ -344,6 +378,17 @@ public class RestaurantMenuScreenController {
 		mustSelectSize.setVisible(false); //Rectangle to alert user
 	}
 	
+	
+	/**
+	 * Controls the visibility and interactivity of doneness selection components.
+	 *
+	 * This method adjusts the opacity of the doneness title and enables/disables
+	 * doneness selection buttons based on the input parameter. It also resets
+	 * the selection state of all doneness buttons and hides any alert indicators.
+	 *
+	 * @param set A boolean value that determines whether to enable (true) or 
+	 *            disable (false) the doneness selection functionality.
+	 */
 	private void setDonenessPane(boolean set) {
 		if(set)
 			donenessTitle.setOpacity(1);
@@ -360,6 +405,16 @@ public class RestaurantMenuScreenController {
 		mustSelectDoneness.setVisible(false); //Rectangle to alert user
 	}
 	
+	
+	/**
+	 * Updates the visibility, prompt text, and enabled state of the restrictions input field and its title.
+	 *
+	 * This method configures the restrictions input field and its title based on the provided set flag. If set is true,
+	 * the title is made fully visible, and the input field is enabled with a prompt text. If set is false, the title is
+	 * half transparent, and the input field is disabled with no prompt text.
+	 *
+	 * @param set A boolean value indicating whether to show and enable the restrictions input field and title.
+	 */
 	private void setRestrictionsPane(boolean set) {
 		if(set) {
 			restrictionsTitle.setOpacity(1);
@@ -373,6 +428,12 @@ public class RestaurantMenuScreenController {
 		restrictions.clear();
 	}
 	
+	
+	/**
+	 * Configures the item options pane based on the provided item, enabling customization options and handling item edits.
+	 *
+	 * @param item The item to be configured in the options pane.
+	 */
 	private void enableItemOptionsPane(Item item) {
 
 		boolean isSizeCustomizable = item.getCustomSize();
@@ -512,6 +573,9 @@ public class RestaurantMenuScreenController {
 		});
 	}
 	
+	/**
+	 * Disables the item options pane by hiding or disabling various UI components related to item customization.
+	 */
 	private void disableItemOptionsPane() {
 		setSizePane(false);
 		setDonenessPane(false);
@@ -532,6 +596,11 @@ public class RestaurantMenuScreenController {
 		}
 	}
 	
+	/**
+	 * Adds an item to the cart or updates its quantity if it already exists in the cart.
+	 * 
+	 * @param item The item to be added to the cart.
+	 */
 	private void addToCart(ItemInOrder item) {
 		
 		totalPrice += item.getPrice();
@@ -554,6 +623,12 @@ public class RestaurantMenuScreenController {
 		}
 	}
 	
+	/**
+	 * Creates a card representation for an item in the cart.
+	 * 
+	 * @param item The item to be represented in the cart.
+	 * @return The AnchorPane representing the cart item card.
+	 */
 	private AnchorPane createCartItemCard(ItemInOrder item) {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/view/CartItemCard.fxml"));
 		AnchorPane card = null;
@@ -613,6 +688,9 @@ public class RestaurantMenuScreenController {
         return card;
 	}
 	
+	/**
+	 * Enables and displays the cart interface with items.
+	 */
 	private void enableCart() {
 		emptyCart.setVisible(false);
 		checkoutBtn.setDisable(false);
@@ -626,6 +704,9 @@ public class RestaurantMenuScreenController {
 		cartScroll.setVisible(true);
 	}
 	
+	/**
+	 * Disables and hides the cart interface when it is empty.
+	 */
 	private void disableCart() {
 		emptyCart.setVisible(true);
 		checkoutBtn.setDisable(true);
@@ -633,6 +714,13 @@ public class RestaurantMenuScreenController {
 		cartScroll.setVisible(false);
 	}
 	
+	
+	/**
+	 * Updates the quantity of an item in the cart and adjusts the cart display.
+	 *
+	 * @param item The item whose quantity is being updated.
+	 * @param op The operation to perform (add or reduce).
+	 */
 	private void updateQuantity(ItemInOrder item, Operation op) {
 		int quantity = cart.get(item) + op.value; //Adds or reduces quantity according to the operation
 		cart.put(item, quantity);
@@ -662,6 +750,11 @@ public class RestaurantMenuScreenController {
 		
 	}
 	
+	/**
+	 * Clears all items from the cart, updates the cart display, and resets the total price.
+	 *
+	 * @param event The ActionEvent triggered by the discard action.
+	 */
 	@FXML
 	private void discardAllItems(ActionEvent event) {
 		cart.clear();
@@ -672,6 +765,12 @@ public class RestaurantMenuScreenController {
 		ttlPrice.setText(String.format("%.2f₪", totalPrice));
 	}
 	
+	/**
+	 * Handles the action when the user presses the checkout button.
+	 * This method navigates to the CheckoutScreen by loading the corresponding FXML file.
+	 *
+	 * @throws IOException If an error occurs while loading the FXML file.
+	 */
 	@FXML
 	private void pressCheckout() throws IOException {
 		ScreenLoader screenLoader = new ScreenLoader();
@@ -702,6 +801,13 @@ public class RestaurantMenuScreenController {
 		return prevController;
 	}
 	
+	/**
+	 * Handles the action when the user presses the back button.
+	 * This method navigates back to the Choose Restaurant screen by loading the corresponding FXML file.
+	 *
+	 * @param event The action event triggered by pressing the back button.
+	 * @throws IOException If an error occurs while loading the FXML file.
+	 */
 	@FXML
 	private void pressBack(ActionEvent event) throws IOException {
 		ScreenLoader screenLoader = new ScreenLoader();

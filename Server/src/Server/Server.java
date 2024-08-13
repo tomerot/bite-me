@@ -292,6 +292,12 @@ public class Server extends AbstractServer {
 }
 	
 	
+	/**
+	 * Sends a message to a specific client identified by their customer ID.
+	 * 
+	 * @param customerID the unique identifier of the client to whom the message should be sent
+	 * @param msg the message to be sent to the client
+	 */
 	public void sendToSpecificClient(int customerID, String msg) {
 	    ConnectionToClient client = clientMap.get(customerID);
 	    ServerResponseDataContainer response = new ServerResponseDataContainer();
@@ -308,6 +314,11 @@ public class Server extends AbstractServer {
 	    }
 	}
 	
+	/**
+	 * Handles the process of logging out a customer and removing their connection from the client map.
+	 * 
+	 * @param client the `ConnectionToClient` object representing the client's connection to be logged out
+	 */
 	private void customerLogoutRemoveFromMap(ConnectionToClient client) {
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
 		response.setResponse(ServerResponse.CUSTOMER_LOGGED_OUT);
@@ -319,6 +330,16 @@ public class Server extends AbstractServer {
 		}
 	}
 	
+	/**
+	 * Handles the process of updating a customer's wallet balance based on an order and the amount used,
+	 * and sends a response to the client.
+	 * 
+	 * @param order the `Order` object containing information about the order related to the wallet update
+	 * @param walletUsedAmount the amount deducted from the customer's wallet
+	 * @param client the `ConnectionToClient` object representing the client to whom the response will be sent
+	 * 
+	 * @throws SQLException if an error occurs while updating the wallet balance in the database
+	 */
 	private void handleUpdateCustomerWallet(Order order,Float walletUsedAmount ,ConnectionToClient client) throws SQLException {
 		QueryControl.orderQueries.updateCustomerWalletBalance(dbConn, order, walletUsedAmount);
 		try {
@@ -328,6 +349,18 @@ public class Server extends AbstractServer {
 		}
 	}
 	
+	
+	/**
+	 * Handles the process of updating an order and its associated items in the database, and sends
+	 * a response to the client.
+	 * 
+	 * @param order the `Order` object containing information about the order to be updated
+	 * @param receivedCart a map where keys are `ItemInOrder` objects representing items in the order,
+	 * and values are integers representing the quantities of those items
+	 * @param client the `ConnectionToClient` object representing the client to whom the response will be sent
+	 * 
+	 * @throws SQLException if an error occurs while updating the order and items in the database
+	 */
 	private void handleUpdateOrderAndItem(Order order,Map<ItemInOrder, Integer> receivedCart ,ConnectionToClient client) throws SQLException {
 		ServerResponseDataContainer response =QueryControl.orderQueries.updateOrderAndItems(dbConn, order, receivedCart);
 		try {
@@ -337,6 +370,15 @@ public class Server extends AbstractServer {
 		}
 	}
 	
+	
+	/**
+	 * Handles the process of updating an item's information in the database and sends the response
+	 * to the client.
+	 * 
+	 * @param item the `Item` object containing updated information about the item
+	 * @param client the `ConnectionToClient` object representing the client to whom the response will be sent
+	 * @throws SQLException if an error occurs while updating the item information in the database
+	 */
 	private void handleUpdateItemRequest(Item item, ConnectionToClient client) {
 		ServerResponseDataContainer response = QueryControl.employeeQuery.UpdateItemInfo(dbConn, item);
 		try {
@@ -346,6 +388,16 @@ public class Server extends AbstractServer {
 		}
 	}
 	
+	
+	/**
+	 * Handles the request to retrieve the full list of items for a specified supplier and sends
+	 * the response to the client.
+	 * 
+	 * @param supplierID the ID of the supplier for whom the full list of items is requested
+	 * @param client the `ConnectionToClient` object representing the client to whom the response will be sent
+	 * 
+	 * @throws SQLException if an error occurs while retrieving the item list from the database
+	 */
 	private void handleGetFullItemsListRequest(Integer supplierID, ConnectionToClient client) {
 		ServerResponseDataContainer response = QueryControl.employeeQuery.FetchFullItemsListInfo(dbConn, supplierID);
 		try {
@@ -355,6 +407,15 @@ public class Server extends AbstractServer {
 		}
 	}
 	
+	/**
+	 * Handles the request to retrieve a list of items for a specified supplier and sends
+	 * the response to the client.
+	 * 
+	 * @param supplierID the ID of the supplier for whom the list of items is requested
+	 * @param client the `ConnectionToClient` object representing the client to whom the response will be sent
+	 * 
+	 * @throws SQLException if an error occurs while retrieving the item list from the database
+	 */
 	private void handleGetItemsListRequest(Integer supplierID, ConnectionToClient client) {
 		ServerResponseDataContainer response = QueryControl.employeeQuery.FetchItemsListInfo(dbConn, supplierID);
 		try {
@@ -364,6 +425,15 @@ public class Server extends AbstractServer {
 		}
 	}
 	
+	/**
+	 * Handles the request to add a new item to the database and sends the response
+	 * to the client.
+	 *
+	 * @param item the `Item` object containing the data to be added to the database
+	 * @param client the `ConnectionToClient` object representing the client to whom the response will be sent
+	 * 
+	 * @throws SQLException if an error occurs while adding the item to the database
+	 */
 	private void handleAddItemData(Item item, ConnectionToClient client) {
 		ServerResponseDataContainer response = QueryControl.employeeQuery.AddItemInfo(dbConn, item);
 		try {
@@ -373,6 +443,15 @@ public class Server extends AbstractServer {
 		}
 	}
 	
+	/**
+	 * Handles the request to remove an item from the database and sends the response
+	 * to the client.
+	 * 
+	 * @param itemData a map containing the item data required to identify and remove the item from the database.
+	 * @param client the `ConnectionToClient` object representing the client to whom the response will be sent.
+	 * 
+	 * @throws SQLException if an error occurs while removing the item from the database.
+	 */
 	private void handleRemoveItemData(Map<String,Integer> itemData, ConnectionToClient client) {
 		ServerResponseDataContainer response = QueryControl.employeeQuery.RemoveItemInfo(dbConn, itemData);
 		try {
@@ -382,6 +461,15 @@ public class Server extends AbstractServer {
 		}
 	}
 	
+	/**
+	 * Handles the request to fetch orders data for a specific supplier and sends the response
+	 * to the client.
+	 * 
+	 * @param supplierID the ID of the supplier for whom the orders data is to be fetched.
+	 * @param client the `ConnectionToClient` object representing the client to whom the response will be sent.
+	 * 
+	 * @throws IOException if an error occurs while sending the response to the client.
+	 */
 	public void handleGetOrdersData(Integer supplierID, ConnectionToClient client){
 		ServerResponseDataContainer response=QueryControl.supplierQuery.getOrdersData(dbConn, supplierID);
 		try {
@@ -392,37 +480,110 @@ public class Server extends AbstractServer {
 		
 	}
 	
+	/**
+	 * Fetches data for a report based on the specified date range and branch.
+	 * 
+	 * @param startOfLastMonth the start date of the last month for which the report data is to be fetched.
+	 * @param endOfLastMonth the end date of the last month for which the report data is to be fetched.
+	 * @param branch the branch for which the report data is to be retrieved.
+	 * 
+	 * @return a {@link ServerResponseDataContainer} containing the fetched report data.
+	 */
 	public static ServerResponseDataContainer fetchDataForReport(LocalDate startOfLastMonth, LocalDate endOfLastMonth, String branch) {
 	    ServerResponseDataContainer response = QueryControl.serverQueries.fetchOrdersReportData(dbConn, startOfLastMonth, endOfLastMonth, branch);
 	    return response;
 	}
 	
+	/**
+	 * Inserts data for a report into the database.
+	 * 
+	 * @param data is a HASHMAP containing the report data, where the keys are data labels and the values
+	 * are the corresponding numerical data to be inserted.
+	 * @param branch the branch associated with the report data.
+	 * @param year the year associated with the report data.
+	 * @param month the month associated with the report data.
+	 */
 	public static void insertDataForReport(HashMap<String, Integer> data, String branch, int year, int month) {
 	    QueryControl.serverQueries.insertOrdersReportData(dbConn, data, branch, year, month);
 	}
 	
+	
+	/**
+	 * Fetches performance report data from the database.
+	 * 
+	 * @param startOfLastMonth the start date of the reporting period, which is the beginning of the last month.
+	 * @param endOfLastMonth the end date of the reporting period, which is the end of the last month.
+	 * @param branch the branch for which the performance report data is to be fetched.
+	 * 
+	 * @return a {@link ServerResponseDataContainer} containing the fetched performance report data.
+	 */
 	public static ServerResponseDataContainer fetchDataForPerformanceReport(LocalDate startOfLastMonth, LocalDate endOfLastMonth, String branch) {
 	    ServerResponseDataContainer response = QueryControl.serverQueries.fetchPerformanceReportData(dbConn, startOfLastMonth, endOfLastMonth, branch);
 	    return response;
 	}
 	
+	/**
+	 * Inserts performance report data into the database.
+	 * 
+	 * @param data is a HASHMAP containing the performance report data, where keys are data labels and values are corresponding integers.
+	 * @param branch the branch to which the performance report data belongs.
+	 * @param year the year for which the performance report data is being inserted.
+	 * @param month the month for which the performance report data is being inserted.
+	 * 
+	 * @throws SQLException if there is an error accessing the database.
+	 */
 	public static void insertDataForPerformanceReport(HashMap<String, Integer> data, String branch, int year, int month) throws SQLException {
 	    QueryControl.serverQueries.insertPerformanceReport(dbConn, data, branch, year, month);
 	}
 
+	/**
+	 * Fetches income report data from the database for the specified period and branch.
+	 * 
+	 * @param startOfLastMonth the start date of the last month for which income report data is being fetched.
+	 * @param endOfLastMonth the end date of the last month for which income report data is being fetched.
+	 * @param branch the branch for which income report data is being fetched.
+	 * 
+	 * @return a {@link ServerResponseDataContainer} containing the income report data.
+	 */
 	public static ServerResponseDataContainer fetchDataForIncomeReport(LocalDate startOfLastMonth, LocalDate endOfLastMonth, String branch) {
 	    ServerResponseDataContainer response = QueryControl.serverQueries.fetchIncomeReportData(dbConn, startOfLastMonth, endOfLastMonth, branch);
 	    return response;
 	}
+	
+	
+	/**
+	 * Inserts income report data into the database for the specified month and year.
+	 * 
+	 * @param data is a LIST of {@link SupplierIncome} objects containing the income report data to be inserted.
+	 * @param branch the branch for which the income report data is being inserted.
+	 * @param year the year for which the income report data is being inserted.
+	 * @param month the month for which the income report data is being inserted.
+	 * 
+	 * @throws SQLException if there is an error while interacting with the database.
+	 */
 	public static void insertDataForIncomeReport(List<SupplierIncome> data, String branch, int year, int month) throws SQLException {
 	    QueryControl.serverQueries.insertIncomeReport(dbConn, data, branch, year, month);
 	}
 
+	
+	/**
+	 * Imports a list of customers from a specified file and inserts them into the database.
+	 * 
+	 * @param path the file path where the customer data is located.
+	 * 
+	 * @throws SQLException if there is an error while interacting with the database, or FilePath problems
+	 * 
+	 */
 	public static void importCustomerSimulation(String path) throws SQLException {
 		  QueryControl.serverQueries.insertCustomersList(dbConn, path);
 
 	}
 	
+	/**
+	 * Marks all users as logged out in the database.
+	 * 
+	 * @throws SQLException if there is an error while interacting with the database.
+	 */
 	public static void setAllUsersLoggedOut() throws SQLException{
 		QueryControl.serverQueries.setAllUsersLoggedOut(dbConn);
 	}

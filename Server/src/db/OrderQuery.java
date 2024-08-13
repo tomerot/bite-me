@@ -208,6 +208,14 @@ public class OrderQuery {
 		}
 	}
 	
+	/**
+	 * Imports items from a specific supplier and returns them in a {@link ServerResponseDataContainer}.
+	 *
+	 * @param dbConn the database connection to use for querying the database
+	 * @param supplier the supplier whose items are to be imported
+	 * @return a {@link ServerResponseDataContainer} containing a list of {@link Item} objects and a response message
+	 * @throws SQLException if there is an error accessing the database or executing the query
+	 */
     public ServerResponseDataContainer importSupplierItems(Connection dbConn, Supplier supplier) throws SQLException{
         ServerResponseDataContainer response = new ServerResponseDataContainer();
         String query = "SELECT * FROM items WHERE SupplierID = ?";
@@ -241,6 +249,14 @@ public class OrderQuery {
 	
     
     
+    /**
+     * Fetches a list of cities relevant to a specific supplier from the database.
+     *
+     * @param dbConn the database connection to use for querying the database
+     * @param supplier the supplier whose relevant cities are to be fetched
+     * @return a {@link ServerResponseDataContainer} containing a list of city names and a response message
+     * @throws SQLException if there is an error accessing the database or executing the query
+     */
 	public ServerResponseDataContainer FetchRelevantCities(Connection dbConn, Supplier supplier) throws SQLException {
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
 		List<String> cities = new ArrayList<>();
@@ -268,6 +284,15 @@ public class OrderQuery {
 	}
 	
 	
+	/**
+	 * Updates the database with a new order and associated items.
+	 *
+	 * @param dbConn the database connection to use for the transaction
+	 * @param order the order to be inserted into the database
+	 * @param receivedCart a map of {@link ItemInOrder} objects and their quantities to be inserted into the `items_in_orders` table
+	 * @return a {@link ServerResponseDataContainer} containing either the new order ID or an error message
+	 * @throws SQLException if there is an error accessing the database, executing the query, or handling the transaction
+	 */
 	public ServerResponseDataContainer updateOrderAndItems(Connection dbConn, Order order, Map<ItemInOrder, Integer> receivedCart)
 			throws SQLException {
 		ServerResponseDataContainer response = new ServerResponseDataContainer();
@@ -459,6 +484,13 @@ public class OrderQuery {
 		}
 	}
 	
+	/**
+	 * Converts a {@link SupplyMethod} enum value to its corresponding database representation.
+	 *
+	 * @param supplyMethod the {@link SupplyMethod} enum value to be converted
+	 * @return the corresponding string representation for the database
+	 * @throws IllegalArgumentException if the provided supplyMethod is not recognized
+	 */
 	private  String getDatabaseSupplyOption(SupplyMethod supplyMethod) {
 	    switch (supplyMethod) {
 	        case TAKEAWAY:
@@ -505,6 +537,13 @@ public class OrderQuery {
 		}
 	}
 	
+	/**
+	 * Converts an {@link OrderType} enum value to its corresponding database representation.
+	 * 
+	 * @param orderType the {@link OrderType} enum value to be converted
+	 * @return the corresponding string representation for the database
+	 * @throws IllegalArgumentException if the provided orderType is not recognized
+	 */
 	private  String getDatabaseOrderType(OrderType orderType) {
 	    switch (orderType) {
 	        case PRE_ORDER:
@@ -516,6 +555,15 @@ public class OrderQuery {
 	    }
 	}
 	
+	/**
+	 * Determines if an order is late based on the type of order and the time difference
+	 * between the current time and the requested or approval time.
+	 *
+	 * @param type the {@link OrderType} of the order (e.g., REGULAR or PRE_ORDER)
+	 * @param requestedOrApprovalTime the time of the request or approval in "HH:mm:ss" format
+	 * @param requestedOrApprovalDateStr the date of the request or approval in "yyyy-MM-dd" format
+	 * @return true if the order is late based on the type and time difference, false otherwise
+	 */
 	private boolean isLateByTimeDiffAndStatus(OrderType type, String requestedOrApprovalTime, String requestedOrApprovalDateStr) {
 	    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	    LocalDate requestedOrApprovalDate = LocalDate.parse(requestedOrApprovalDateStr, dateFormatter);
@@ -554,12 +602,23 @@ public class OrderQuery {
         return formattedTime;
 	}
 	
+	/**
+	 * Returns the current date in "yyyy-MM-dd" format.
+	 * 
+	 * @return the current date as a string in "yyyy-MM-dd" format
+	 */
 	public String getTodayDate() {
 	    LocalDate today = LocalDate.now();
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	    return today.format(formatter);
 	}
 	
+	/**
+	 * Converts a string representation of a category to its corresponding {@link Category} enum value.
+	 *
+	 * @param type the string representation of the category
+	 * @return the corresponding {@link Category} enum value
+	 */
 	private Category categoryStringToEnum(String type) {
         if (type.equals("Main Course")) {
             return Category.MAINCOURSE;
