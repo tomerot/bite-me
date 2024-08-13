@@ -24,9 +24,9 @@
       <ComboBox fx:id="categoryField" layoutX="185.0" layoutY="168.0" onAction="#onCategoryClicked" prefWidth="150.0" promptText="Category" />
       <ListView fx:id="listOfItems" layoutX="371.0" layoutY="168.0" prefHeight="255.0" prefWidth="411.0" />
       <Label fx:id="resultMessage" layoutX="417.0" layoutY="771.0" prefHeight="51.0" prefWidth="367.0" />
-      <Text layoutX="526.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit Items" wrappingWidth="148.99999999999994">
+      <Text layoutX="500.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit Items" wrappingWidth="199.99999999999994">
          <font>
-            <Font size="31.0" />
+            <Font name="Arial Bold Italic" size="40.0" />
          </font>
       </Text>
    </children>

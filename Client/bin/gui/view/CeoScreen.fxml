@@ -69,7 +69,7 @@
       </VBox>
       <AnchorPane id="dashboard" fx:id="dashboard" prefHeight="950.0" prefWidth="1200.0" style="-fx-background-color: white;">
          <children>
-            <Text layoutX="484.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CEO Screen">
+            <Text layoutX="484.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CEO Screen">
                <font>
                   <Font name="Arial Bold Italic" size="40.0" />
                </font>

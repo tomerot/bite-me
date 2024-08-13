@@ -24,9 +24,9 @@
       <RadioButton fx:id="sizeField" layoutX="919.0" layoutY="569.0" mnemonicParsing="false" text="Size" />
       <RadioButton fx:id="restrictionsField" layoutX="919.0" layoutY="603.0" mnemonicParsing="false" text="Restrictions" />
       <ComboBox fx:id="categoryField" layoutX="174.0" layoutY="565.0" prefWidth="150.0" promptText="Category" />
-      <Text layoutX="530.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add Items">
+      <Text layoutX="530.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add Items">
          <font>
-            <Font size="31.0" />
+            <Font name="Arial Bold Italic" size="40.0" />
          </font>
       </Text>
    </children>

@@ -18,9 +18,9 @@
       <ComboBox fx:id="monthSelect" layoutX="603.0" layoutY="183.0" onAction="#setMonthSelection" prefHeight="25.0" prefWidth="118.0" promptText="Select month" />
       <ComboBox fx:id="yearSelect" layoutX="738.0" layoutY="183.0" onAction="#setYearSelection" prefHeight="25.0" prefWidth="118.0" promptText="Select year" />
       <Button fx:id="displayReport" layoutX="873.0" layoutY="183.0" mnemonicParsing="false" onAction="#displayReport" prefHeight="25.0" prefWidth="108.0" text="Display report" />
-      <Text layoutX="412.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Monthly Report Screen" wrappingWidth="388.9999999999999">
+      <Text layoutX="379.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Monthly Report Screen" wrappingWidth="447.9999999999999">
          <font>
-            <Font size="36.0" />
+            <Font name="Arial Bold Italic" size="40.0" />
          </font>
       </Text>
       <Label fx:id="errorLabel" alignment="CENTER" layoutX="-1.0" layoutY="286.0" prefHeight="30.0" prefWidth="1200.0" textAlignment="CENTER">

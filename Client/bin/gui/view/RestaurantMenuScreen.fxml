@@ -15,7 +15,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="dashboard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="950.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="dashboard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="950.0" prefWidth="1200.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane layoutX="870.0" prefHeight="950.0" prefWidth="330.0">
          <children>
@@ -52,14 +52,17 @@
                         </GridPane>
                      </content>
                   </ScrollPane>
-                  <Button fx:id="checkoutBtn" disable="true" layoutX="33.0" layoutY="351.0" mnemonicParsing="false" onAction="#pressCheckout" prefHeight="38.0" prefWidth="137.0" text="Checkout" />
-                  <Button fx:id="garbageBtn" disable="true" layoutX="188.0" layoutY="351.0" mnemonicParsing="false" onAction="#discardAllItems" prefHeight="38.0" prefWidth="38.0" style="-fx-background-color: red;" />
+                  <Button fx:id="checkoutBtn" disable="true" layoutX="33.0" layoutY="351.0" mnemonicParsing="false" onAction="#pressCheckout" prefHeight="38.0" prefWidth="118.0" text="Checkout" />
+                  <Button fx:id="garbageBtn" disable="true" layoutX="165.0" layoutY="351.0" mnemonicParsing="false" onAction="#discardAllItems" prefHeight="38.0" prefWidth="61.0" style="-fx-background-color: #7a0101;" text="Trash" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Button>
                   <Label layoutX="164.0" layoutY="14.0" text="Total Amt:" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <Label fx:id="ttlPrice" layoutX="180.0" layoutY="34.0" text="0.00₪" textFill="WHITE">
+                  <Label fx:id="ttlPrice" alignment="CENTER" contentDisplay="CENTER" layoutX="156.0" layoutY="34.0" prefHeight="17.0" prefWidth="78.0" text="0.00₪" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
@@ -68,14 +71,14 @@
             </AnchorPane>
             <AnchorPane fx:id="itemOptionsPane" layoutX="35.0" layoutY="26.0" opacity="0.5" prefHeight="455.0" prefWidth="260.0" style="-fx-background-radius: 20; -fx-background-color: gray;">
                <children>
-                  <ImageView fitHeight="113.0" fitWidth="152.0" layoutX="54.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="optionsImage" fitHeight="113.0" fitWidth="152.0" layoutX="54.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
                   <Label fx:id="pickedItem" alignment="CENTER" contentDisplay="CENTER" layoutY="131.0" prefHeight="25.0" prefWidth="260.0" text="PickedItemName" textAlignment="CENTER" textFill="WHITE" visible="false">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
                   <Line endX="167.0" layoutX="92.0" layoutY="164.0" startX="-93.0" stroke="WHITE" />
-                  <Button fx:id="addToCartBtn" disable="true" layoutX="89.0" layoutY="414.0" mnemonicParsing="false" text="Add to Cart" />
+                  <Button fx:id="addToCartBtn" prefWidth="78" prefHeight="25" disable="true" layoutX="89.0" layoutY="414.0" mnemonicParsing="false" text="Add to Cart" />
                   <Line endX="167.0" layoutX="92.0" layoutY="401.0" startX="-93.0" stroke="WHITE" />
                   <GridPane layoutX="-1.0" layoutY="165.0" prefHeight="235.0" prefWidth="260.0">
                     <columnConstraints>
@@ -130,30 +133,28 @@
                   <Line endX="167.0" layoutX="91.0" layoutY="323.0" startX="-93.0" stroke="WHITE" />
                </children></AnchorPane>
          </children></AnchorPane>
-      <Label alignment="CENTER" layoutX="14.0" layoutY="24.0" prefHeight="50.0" prefWidth="870.0" text="Pick Items">
+      <Label alignment="CENTER" layoutX="14.0" layoutY="26.0" prefHeight="50.0" prefWidth="870.0" text="Pick Items from Various Categories">
          <font>
-            <Font size="34.0" />
+            <Font name="Arial Bold Italic" size="40.0" />
          </font>
       </Label>
-      <Button fx:id="saladsBtn" layoutX="275.0" layoutY="105.0" mnemonicParsing="false" onAction="#pressSalads" text="Salads" />
-      <Button fx:id="startersBtn" layoutX="338.0" layoutY="105.0" mnemonicParsing="false" onAction="#pressStarters" text="Starters" />
-      <Button fx:id="mainCoursesBtn" layoutX="407.0" layoutY="105.0" mnemonicParsing="false" onAction="#pressMainCourses" text="Main Courses" />
-      <Button fx:id="dessertsBtn" layoutX="507.0" layoutY="105.0" mnemonicParsing="false" onAction="#pressDesserts" text="Desserts" />
-      <Button fx:id="beveragesBtn" layoutX="580.0" layoutY="105.0" mnemonicParsing="false" onAction="#pressBeverages" text="Beverages" />
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="77.0" prefHeight="17.0" prefWidth="870.0" text="From Various Categories:" />
-      <ScrollPane fx:id="itemsScroll" layoutX="49.0" layoutY="149.0" prefHeight="765.0" prefWidth="810.0" style="-fx-border-color: transparent; -fx-background-color: transparent; -fx-border-width: 0;">
+      <Button fx:id="saladsBtn" layoutX="275.0" layoutY="89.0" mnemonicParsing="false" onAction="#pressSalads" text="Salads" />
+      <Button fx:id="startersBtn" layoutX="338.0" layoutY="89.0" mnemonicParsing="false" onAction="#pressStarters" text="Starters" />
+      <Button fx:id="mainCoursesBtn" layoutX="407.0" layoutY="89.0" mnemonicParsing="false" onAction="#pressMainCourses" text="Main Courses" />
+      <Button fx:id="dessertsBtn" layoutX="507.0" layoutY="89.0" mnemonicParsing="false" onAction="#pressDesserts" text="Desserts" />
+      <Button fx:id="beveragesBtn" layoutX="580.0" layoutY="89.0" mnemonicParsing="false" onAction="#pressBeverages" text="Beverages" />
+      <ScrollPane fx:id="itemsScroll" layoutX="49.0" layoutY="149.0" prefHeight="722.0" prefWidth="810.0" style="-fx-border-color: transparent; -fx-background-color: white; -fx-border-width: 0;">
          <content>
-            <GridPane fx:id="gridPane" alignment="CENTER" maxHeight="Infinity" maxWidth="Infinity" minHeight="0" minWidth="0" prefHeight="139.0" prefWidth="812.0">
-            <columnConstraints>
-                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="150.0" prefWidth="150.0" />
-                <!-- Adjust the number of columns as needed -->
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints minHeight="105.0" prefHeight="105.0" vgrow="SOMETIMES" />
-                <!-- Adjust the number of rows as needed -->
-            </rowConstraints>
-        </GridPane>
+            <GridPane fx:id="gridPane" prefHeight="722.0" prefWidth="812.0" style="-fx-background-color: white;" vgap="15.0">
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER" minWidth="765.0" prefWidth="765.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="105.0" prefHeight="105.0" vgrow="NEVER" />
+    </rowConstraints>
+</GridPane>
          </content>
       </ScrollPane>
+      <Button fx:id="backBtn" layoutX="420.0" layoutY="885.0" mnemonicParsing="false" onAction="#pressBack" prefHeight="38.0" prefWidth="78.0" text="Back" />
    </children>
 </AnchorPane>

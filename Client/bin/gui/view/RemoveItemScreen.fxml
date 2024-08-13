@@ -14,9 +14,9 @@
       <ListView fx:id="listOfItems" layoutX="401.0" layoutY="174.0" prefHeight="407.0" prefWidth="398.0" />
       <ComboBox fx:id="categoryField" layoutX="211.0" layoutY="174.0" onAction="#onCategoryClicked" prefWidth="150.0" promptText="Category" />
       <Label fx:id="resultMessage" layoutX="449.0" layoutY="637.0" prefHeight="46.0" prefWidth="303.0" />
-      <Text layoutX="503.0" layoutY="103.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Remove Items">
+      <Text layoutX="494.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Remove Items">
          <font>
-            <Font size="31.0" />
+            <Font name="Arial Bold Italic" size="40.0" />
          </font>
       </Text>
    </children>
