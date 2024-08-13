@@ -1,6 +1,7 @@
 package gui.controllers;
 
 import client.ClientConsole;
+import client.ClientMainController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -62,6 +63,7 @@ public class ClientConnectFormController {
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add(getClass().getResource("/gui/view/ClientConnectForm.css").toExternalForm());
 		primaryStage.setTitle("Client Connection");
+		primaryStage.setResizable(false);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
@@ -122,9 +124,19 @@ public class ClientConnectFormController {
 		Stage primaryStage = new Stage();
 		Pane root = loader.load(getClass().getResource("/gui/view/LoginScreen.fxml").openStream());
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(getClass().getResource("/gui/view/LoginScreen.css").toExternalForm());
 		primaryStage.setTitle("Main");
 		primaryStage.setScene(scene);
+		primaryStage.setOnCloseRequest(closeEvent ->{
+            try {
+        		ClientConsole.disconnectClientFromServer();
+                this.getExitBtn();
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+        });
+		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
 

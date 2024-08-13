@@ -27,10 +27,12 @@ public class ItemInOrder extends Item {
 	public ItemInOrder(Item item) {
 		super(item.getItemID(), item.getSupplierID(), item.getName(), item.getType(), item.getDescription(),
 			  item.getCustomSize(), item.getCustomDonenessDegree(), item.getCustomRestrictions(), item.getPrice());
+		super.setImageURL(item.getImageURL());
 		this.size = "None";
 		this.donenessDegree = "None";
 		this.restrictions = "None";
 	}
+	
 	//sagi
 	public ItemInOrder(int itemID, String name, String size, String donenessDegree,String restrictions,int quantity, float price) {
 		super(itemID,0, name, null ,null, false, false, false, price); // null/false -> we don't need those fields.
@@ -71,4 +73,5 @@ public class ItemInOrder extends Item {
 	public void setQuantity(int quantity) {
 		 this.quantity = quantity;
 	}
+
 }

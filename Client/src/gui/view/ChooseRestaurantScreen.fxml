@@ -9,31 +9,38 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="dashboard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="950.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="dashboard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="950.0" prefWidth="1200.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label alignment="CENTER" layoutY="23.0" prefHeight="53.0" prefWidth="1200.0" text="Explore our Restaurant Partners">
          <font>
-            <Font size="36.0" />
+            <Font name="Arial Bold Italic" size="40.0" />
          </font>
       </Label>
       <Button fx:id="backBtn" layoutX="555.0" layoutY="894.0" mnemonicParsing="false" onAction="#pressBack" prefHeight="31.0" prefWidth="91.0" text="Back" />
-      <ScrollPane fitToHeight="true" fitToWidth="true" layoutX="21.0" layoutY="132.0" prefHeight="700.0" prefWidth="1158.0" style="-fx-border-color: transparent; -fx-border-width: 0; -fx-background-color: transparent;">
+      <ScrollPane fitToHeight="true" fitToWidth="true" layoutX="21.0" layoutY="132.0" prefHeight="700.0" prefWidth="1158.0" style="-fx-border-color: white; -fx-border-width: 0; -fx-background-color: white;">
          <content>
-            <GridPane fx:id="gridPane" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="598.0" prefWidth="1158.0" scaleShape="false">
+            <GridPane fx:id="gridPane" alignment="CENTER" prefHeight="656.0" prefWidth="1156.0" scaleShape="false" style="-fx-background-color: white;" vgap="15">
     <columnConstraints>
-        <ColumnConstraints fillWidth="true" halignment="CENTER" hgrow="ALWAYS" />
-        <ColumnConstraints fillWidth="true" halignment="CENTER" hgrow="ALWAYS" />
+        <!-- Each column width should be 338 -->
+        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="338.0" prefWidth="338.0" />
+        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="338.0" prefWidth="338.0" />
+        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="338.0" prefWidth="338.0" />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints fillHeight="true" vgrow="ALWAYS" />
-        <RowConstraints fillHeight="true" vgrow="ALWAYS" />
-        </rowConstraints>
+        <!-- Each row height should be 256 -->
+        <RowConstraints maxHeight="256.0" minHeight="256.0" prefHeight="256.0" vgrow="NEVER" />
+        <RowConstraints maxHeight="256.0" minHeight="256.0" prefHeight="256.0" vgrow="NEVER" />
+        <RowConstraints maxHeight="256.0" minHeight="256.0" prefHeight="256.0" vgrow="NEVER" />
+    </rowConstraints>
 </GridPane>
          </content>
       </ScrollPane>
       <Button fx:id="northBtn" layoutX="499.0" layoutY="85.0" mnemonicParsing="false" onAction="#pressNorth" text="North Branch" />
       <Button fx:id="centerBtn" layoutX="600.0" layoutY="85.0" mnemonicParsing="false" onAction="#pressCenter" text="Center Branch" />
       <Button fx:id="southBtn" layoutX="705.0" layoutY="85.0" mnemonicParsing="false" onAction="#pressSouth" text="South Branch" />
-      <Label layoutX="409.0" layoutY="90.0" text="Switch Branch:" />
+      <Label layoutX="399.0" layoutY="88.0" text="Switch Branch:">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
    </children>
 </AnchorPane>

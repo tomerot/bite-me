@@ -1,5 +1,6 @@
 package gui.controllers;
 
+import client.ClientConsole;
 import client.ClientMainController;
 import entities.Ceo;
 import entities.Customer;
@@ -23,6 +24,8 @@ import javafx.stage.Stage;
 /**
  * The controller for the customer home screen user interface.
  * It manages the display of the customer home screen, user logout, and transitions to other screens.
+ * @author Tomer Rotman
+ * @author David Zorin
  */
 public class CustomerHomeScreenController {
 
@@ -66,7 +69,7 @@ public class CustomerHomeScreenController {
      */
 	public void UpdateLabel(Customer customer) {
 	    Platform.runLater(() -> {
-	        welcomeLbl.setText("Welcome, " + customer.getFirstName() + customer.getLastName());
+	        welcomeLbl.setText("Welcome, " + customer.getFirstName() +" " + customer.getLastName());
 	    });
 	}
 	
@@ -98,9 +101,18 @@ public class CustomerHomeScreenController {
 		Stage primaryStage = new Stage();
 		Pane root = loader.load(getClass().getResource("/gui/view/LoginScreen.fxml").openStream());
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(getClass().getResource("/gui/view/LoginScreen.css").toExternalForm());
 		primaryStage.setTitle("Login");
 		primaryStage.setScene(scene);
+		primaryStage.setOnCloseRequest(closeEvent ->{
+            try {
+        		ClientConsole.disconnectClientFromServer();
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+        });
+		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
 	

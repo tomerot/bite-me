@@ -7,53 +7,59 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="dashboard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="950.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="dashboard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="950.0" prefWidth="1200.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-            <Label layoutX="67.0" layoutY="65.0" prefHeight="52.0" prefWidth="396.0" text="Awaiting orders ID">
+            <Label layoutX="330.0" layoutY="124.0" prefHeight="52.0" prefWidth="200.0" text="Awaiting orders ID">
                <font>
                   <Font size="22.0" />
                </font>
             </Label>
-            <Label layoutX="67.0" layoutY="455.0" prefHeight="53.0" prefWidth="374.0" text="Approved orders ID">
+            <Label layoutX="203.0" layoutY="475.0" prefHeight="53.0" prefWidth="200.0" text="Approved orders ID">
                <font>
                   <Font size="22.0" />
                </font>
             </Label>
-            <Button fx:id="btnApprove" layoutX="752.0" layoutY="242.0" mnemonicParsing="false" onAction="#onApproveClicked" prefHeight="46.0" prefWidth="98.0" text="approve">
+            <Button fx:id="btnApprove" layoutX="318.0" layoutY="385.0" mnemonicParsing="false" onAction="#onApproveClicked" prefHeight="46.0" prefWidth="98.0" text="Approve">
                <font>
                   <Font size="18.0" />
                </font>
             </Button>
-            <Button fx:id="btnUpdateReady" layoutX="752.0" layoutY="604.0" mnemonicParsing="false" onAction="#onUpdateReadyClicked" prefHeight="61.0" prefWidth="200.0" text="update ready order">
+            <Button fx:id="btnUpdateReady" layoutX="877.0" layoutY="591.0" mnemonicParsing="false" onAction="#onUpdateReadyClicked" prefHeight="46.0" prefWidth="141.0" text="Mark as Ready">
          <font>
             <Font size="18.0" />
          </font></Button>
-      <ListView fx:id="awaitingOrdersList" layoutX="67.0" layoutY="121.0" prefHeight="285.0" prefWidth="245.0" />
-      <ListView fx:id="approvedOrdersList" layoutX="67.0" layoutY="513.0" prefHeight="273.0" prefWidth="245.0" />
-      <TextArea fx:id="awaitingOrderTextArea" layoutX="400.0" layoutY="122.0" prefHeight="285.0" prefWidth="259.0" />
-      <TextArea fx:id="approvedOrderTextArea" layoutX="407.0" layoutY="513.0" prefHeight="273.0" prefWidth="259.0" />
-      <Label layoutX="400.0" layoutY="74.0" text="Awaiting Order Info">
-         <font>
-            <Font size="23.0" />
-         </font>
-      </Label>
-      <Label layoutX="406.0" layoutY="466.0" text="Approved Order Info">
+      <ListView fx:id="awaitingOrdersList" layoutX="281.0" layoutY="180.0" prefHeight="171.0" prefWidth="284.0" />
+      <ListView fx:id="approvedOrdersList" layoutX="161.0" layoutY="528.0" prefHeight="171.0" prefWidth="284.0" />
+      <TextArea fx:id="awaitingOrderTextArea" layoutX="636.0" layoutY="180.0" prefHeight="255.0" prefWidth="284.0" />
+      <TextArea fx:id="approvedOrderTextArea" layoutX="510.0" layoutY="526.0" prefHeight="255.0" prefWidth="284.0" />
+      <Label layoutX="682.0" layoutY="134.0" text="Awaiting Order Info">
          <font>
             <Font size="22.0" />
          </font>
       </Label>
-      <Button fx:id="btnRefresh" layoutX="752.0" layoutY="421.0" mnemonicParsing="false" onAction="#onRefreshClicked" prefHeight="53.0" prefWidth="111.0" text="Refresh">
+      <Label layoutX="551.0" layoutY="484.0" text="Approved Order Info">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnRefresh" layoutX="445.0" layoutY="385.0" mnemonicParsing="false" onAction="#onRefreshClicked" prefHeight="46.0" prefWidth="98.0" text="Refresh">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Label fx:id="resultMessage" layoutX="200.0" layoutY="816.0" prefHeight="126.0" prefWidth="459.0" />
-      <TextField fx:id="arrivalTimeField" layoutX="875.0" layoutY="715.0" prefHeight="34.0" prefWidth="170.0" />
-      <Label layoutX="686.0" layoutY="718.0" text="Estimated arrival time:">
+      <Label fx:id="resultMessage" layoutX="351.0" layoutY="814.0" prefHeight="91.0" prefWidth="499.0" />
+      <TextField fx:id="arrivalTimeField" layoutX="862.0" layoutY="528.0" prefHeight="34.0" prefWidth="170.0" />
+      <Label layoutX="840.0" layoutY="486.0" text="Estimated Arrival Time">
          <font>
-            <Font size="18.0" />
+            <Font size="22.0" />
          </font>
       </Label>
+      <Text layoutX="440.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Orders Overview">
+         <font>
+            <Font name="Arial Bold Italic" size="40.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>

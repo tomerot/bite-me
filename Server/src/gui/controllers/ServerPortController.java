@@ -116,6 +116,12 @@ public class ServerPortController {
 			disconnectBtn.setDisable(false);
 			importCustomerBtn.setVisible(true);
 			csvFilePath.setVisible(true);
+			try {
+				Server.setAllUsersLoggedOut();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else {
 			updateServerStatus("Failed to start server.");
 		}
@@ -139,6 +145,7 @@ public class ServerPortController {
 			e.printStackTrace();
 		}
 		importCustomerBtn.setVisible(false);
+		csvFilePath.setVisible(false);
 	}
 	//add connected client to the list
     public void addConnectedClient(String clientInfo) {

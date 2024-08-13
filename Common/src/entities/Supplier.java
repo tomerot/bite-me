@@ -15,6 +15,7 @@ public class Supplier extends User {
 	private Branch homeBranch;
 	private String email;
 	private String phone;
+	private String imageURL;
 
     // Constructor
         
@@ -29,17 +30,6 @@ public class Supplier extends User {
         this.phone = phone;
     }
     
-    
-    // Constructor
-//    public Supplier(int supplierID, String name, String city, String address, Branch homeBranch, String userName, String password) {
-//        super(userName, password);
-//    	this.supplierID = supplierID;
-//        this.name = name;
-//        this.city = city;
-//        this.address = address;
-//        this.homeBranch = homeBranch;
-//    }
-    
     public Supplier(int supplierID, String name, String city, String address, Branch homeBranch) {
         super(null, null);
     	this.supplierID = supplierID;
@@ -47,6 +37,18 @@ public class Supplier extends User {
         this.city = city;
         this.address = address;
         this.homeBranch = homeBranch;
+    }
+    
+    public Supplier(int supplierID, String name, String city, String address, Branch homeBranch, String email, String phone, String imageURL) {
+    	super(null, null);
+    	this.supplierID = supplierID;
+        this.name = name;
+        this.city = city;
+        this.address = address;
+        this.homeBranch = homeBranch;
+        this.email = email;
+        this.phone = phone;
+        this.imageURL = imageURL;
     }
 
     // SupplierID getter and setter
@@ -68,4 +70,6 @@ public class Supplier extends User {
     // HomeBranch getter and setter
     public Branch getHomeBranch() { return homeBranch; }
     public void setHomeBranch(Branch homeBranch) { this.homeBranch = homeBranch; }
+    
+    public String getImgURL() { return imageURL; }
 }

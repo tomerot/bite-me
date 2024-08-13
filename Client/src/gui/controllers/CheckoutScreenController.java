@@ -88,9 +88,6 @@ public class CheckoutScreenController {
 	private TextField addressField;
 
 	@FXML
-	private Label DateLbl;
-
-	@FXML
 	private Button finishBtn;
 
 	@FXML
@@ -241,6 +238,7 @@ public class CheckoutScreenController {
 	    setupWalletFieldListener();
 	    setupDatePickerListener();
 	    setupSupplyTimeFieldListener();
+	  //setupRobotRadioButtonListener(); //Set for future implementation
 	}
 
 	/**
@@ -275,6 +273,8 @@ public class CheckoutScreenController {
 	            validateWalletField();
 	            updatePriceLabels();
 	            orderTypeLbl.setVisible(true);
+	            addressField.clear();
+	            CityChoise.requestFocus();
 	        }
 	    });
 	}
@@ -292,10 +292,28 @@ public class CheckoutScreenController {
 	            updatePriceLabels();
 	            validateWalletField();
 	            orderTypeLbl.setVisible(true);
+	            addressField.clear();
+	            CityChoise.requestFocus();
 	        }
 	    });
 	}
-
+	
+	/*private void setupRobotRadioButtonListener() { //Set for future implementation
+	    basicRadioBtn.selectedProperty().addListener((observable, oldValue, newValue) -> {
+	        if (newValue) {
+	            amountField.setText("1");
+	            amountField.setDisable(true);
+	            amountField.setStyle("-fx-border-color: green; -fx-border-width: 2px;");
+	            CityChoise.setDisable(false);
+	            updatePriceLabels();
+	            validateWalletField();
+	            orderTypeLbl.setVisible(true);
+	            addressField.clear();
+	            CityChoise.requestFocus();
+	        }
+	    });
+	}*/
+	
 	/**
 	 * Sets up listener for the takeaway radio button.
 	 */
