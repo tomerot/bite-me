@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -8,147 +7,113 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="dashboard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="950.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="dashboard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="950.0" prefWidth="1200.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button fx:id="backBtn" layoutX="957.0" layoutY="802.0" mnemonicParsing="false" onAction="#goBack" prefHeight="25.0" prefWidth="73.0" text="Back" />
-      <Button fx:id="approveBtn" layoutX="912.0" layoutY="749.0" mnemonicParsing="false" onAction="#approveOrderClicked" prefHeight="25.0" prefWidth="164.0" text="Approve Order!" />
-      <VBox layoutX="72.0" layoutY="90.0" prefHeight="805.0" prefWidth="703.0">
-         <children>
-            <Label prefHeight="40.0" prefWidth="345.0" text="Recipient Name:">
-               <VBox.margin>
-                  <Insets left="100.0" />
-               </VBox.margin>
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-            <Label fx:id="nameLbl" prefHeight="40.0" prefWidth="345.0">
-               <VBox.margin>
-                  <Insets left="250.0" />
-               </VBox.margin>
-            </Label>
-            <Label prefHeight="40.0" prefWidth="345.0" text="Recipient Phone:">
-               <VBox.margin>
-                  <Insets left="100.0" />
-               </VBox.margin>
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-            <Label fx:id="phoneLbl" prefHeight="40.0" prefWidth="345.0">
-               <VBox.margin>
-                  <Insets left="250.0" />
-               </VBox.margin>
-            </Label>
-            <Label prefHeight="40.0" prefWidth="345.0" text="City:">
-               <VBox.margin>
-                  <Insets left="100.0" />
-               </VBox.margin>
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-            <Label fx:id="cityLbl" prefHeight="40.0" prefWidth="345.0">
-               <VBox.margin>
-                  <Insets left="250.0" />
-               </VBox.margin>
-            </Label>
-            <Label prefHeight="40.0" prefWidth="345.0" text="Address:">
-               <VBox.margin>
-                  <Insets left="100.0" />
-               </VBox.margin>
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-            <Label fx:id="addressLbl" prefHeight="40.0" prefWidth="345.0">
-               <VBox.margin>
-                  <Insets left="250.0" />
-               </VBox.margin>
-            </Label>
-            <Label prefHeight="40.0" prefWidth="345.0" text="Supply Method:">
-               <VBox.margin>
-                  <Insets left="100.0" />
-               </VBox.margin>
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-            <Label fx:id="supplyMethodLbl" prefHeight="40.0" prefWidth="345.0">
-               <VBox.margin>
-                  <Insets left="250.0" />
-               </VBox.margin>
-            </Label>
-            <Label prefHeight="40.0" prefWidth="345.0" text="Requested Date:">
-               <VBox.margin>
-                  <Insets left="100.0" />
-               </VBox.margin>
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-            <Label fx:id="requestedDateLbl" prefHeight="40.0" prefWidth="345.0">
-               <VBox.margin>
-                  <Insets left="250.0" />
-               </VBox.margin>
-            </Label>
-            <Label prefHeight="40.0" prefWidth="345.0" text="Requested Time:">
-               <VBox.margin>
-                  <Insets left="100.0" />
-               </VBox.margin>
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-            <Label fx:id="requestedTimeLbl" prefHeight="40.0" prefWidth="345.0">
-               <VBox.margin>
-                  <Insets left="250.0" />
-               </VBox.margin>
-            </Label>
-            <Label prefHeight="40.0" prefWidth="345.0" text="Order Type:">
-               <VBox.margin>
-                  <Insets left="100.0" />
-               </VBox.margin>
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-            <Label fx:id="orderTypeLbl" prefHeight="40.0" prefWidth="345.0">
-               <VBox.margin>
-                  <Insets left="250.0" />
-               </VBox.margin>
-            </Label>
-            <Label prefHeight="40.0" prefWidth="345.0" text="Price Information:">
-               <VBox.margin>
-                  <Insets left="100.0" />
-               </VBox.margin>
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-            <Label fx:id="priceInfoLbl" prefHeight="40.0" prefWidth="345.0">
-               <VBox.margin>
-                  <Insets left="250.0" />
-               </VBox.margin>
-            </Label>
-            <Label prefHeight="40.0" prefWidth="345.0" text="Total Price:">
-               <VBox.margin>
-                  <Insets left="100.0" />
-               </VBox.margin>
-               <font>
-                  <Font name="System Bold Italic" size="12.0" />
-               </font>
-            </Label>
-            <Label fx:id="totalPriceLbl" prefHeight="40.0" prefWidth="345.0">
-               <VBox.margin>
-                  <Insets left="250.0" />
-               </VBox.margin>
-            </Label>
-         </children>
-      </VBox>
+      <Button fx:id="backBtn" layoutX="957.0" layoutY="788.0" mnemonicParsing="false" onAction="#goBack" prefHeight="25.0" prefWidth="73.0" text="Back" />
+      <Button fx:id="approveBtn" layoutX="912.0" layoutY="740.0" mnemonicParsing="false" onAction="#approveOrderClicked" prefHeight="25.0" prefWidth="164.0" text="Approve Order!" />
+      <Label layoutX="231.0" layoutY="176.0" prefHeight="40.0" prefWidth="144.0" text="Recipient Name:">
+         <font>
+            <Font name="Arial Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="nameLbl" layoutX="407.0" layoutY="176.0" prefHeight="40.0" prefWidth="421.0">
+         <font>
+            <Font name="Arial Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="231.0" layoutY="226.0" prefHeight="40.0" prefWidth="154.0" text="Recipient Phone:">
+         <font>
+            <Font name="Arial Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="phoneLbl" layoutX="406.0" layoutY="226.0" prefHeight="40.0" prefWidth="421.0">
+         <font>
+            <Font name="Arial Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="231.0" layoutY="285.0" prefHeight="27.0" prefWidth="53.0" text="City:">
+         <font>
+            <Font name="Arial Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="cityLbl" layoutX="406.0" layoutY="279.0" prefHeight="40.0" prefWidth="421.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="231.0" layoutY="329.0" prefHeight="40.0" prefWidth="97.0" text="Address:">
+         <font>
+            <Font name="Arial Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="addressLbl" layoutX="407.0" layoutY="329.0" prefHeight="40.0" prefWidth="421.0">
+         <font>
+            <Font name="Arial Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="231.0" layoutY="380.0" prefHeight="40.0" prefWidth="154.0" text="Supply Method:">
+         <font>
+            <Font name="Arial Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="supplyMethodLbl" layoutX="407.0" layoutY="380.0" prefHeight="40.0" prefWidth="421.0">
+         <font>
+            <Font name="Arial Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="231.0" layoutY="431.0" prefHeight="40.0" prefWidth="144.0" text="Requested Date:">
+         <font>
+            <Font name="Arial Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="requestedDateLbl" layoutX="406.0" layoutY="431.0" prefHeight="40.0" prefWidth="421.0">
+         <font>
+            <Font name="Arial Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="231.0" layoutY="479.0" prefHeight="40.0" prefWidth="164.0" text="Requested Time:">
+         <font>
+            <Font name="Arial Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="requestedTimeLbl" layoutX="406.0" layoutY="479.0" prefHeight="40.0" prefWidth="421.0">
+         <font>
+            <Font name="Arial Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="231.0" layoutY="530.0" prefHeight="40.0" prefWidth="114.0" text="Order Type:">
+         <font>
+            <Font name="Arial Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="orderTypeLbl" layoutX="406.0" layoutY="530.0" prefHeight="40.0" prefWidth="421.0">
+         <font>
+            <Font name="Arial Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="229.0" layoutY="580.0" prefHeight="40.0" prefWidth="164.0" text="Price Information:">
+         <font>
+            <Font name="Arial Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="priceInfoLbl" layoutX="405.0" layoutY="580.0" prefHeight="40.0" prefWidth="421.0">
+         <font>
+            <Font name="Arial Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="227.0" layoutY="629.0" prefHeight="40.0" prefWidth="114.0" text="Total Price:">
+         <font>
+            <Font name="Arial Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="totalPriceLbl" layoutX="404.0" layoutY="629.0" prefHeight="40.0" prefWidth="421.0">
+         <font>
+            <Font name="Arial Bold Italic" size="18.0" />
+         </font>
+      </Label>
       <AnchorPane layoutX="859.0" layoutY="103.0" prefHeight="608.0" prefWidth="269.0" style="-fx-background-radius: 20; -fx-background-color: gray;">
          <children>
             <ScrollPane fx:id="itemsScroll" layoutY="63.0" prefHeight="516.0" prefWidth="269.0" style="-fx-border-color: transparent; -fx-border-width: 0; -fx-background-color: transparent;">
@@ -172,5 +137,10 @@
             </Label>
          </children>
       </AnchorPane>
+      <Text layoutX="443.0" layoutY="93.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Order Summary" wrappingWidth="314.0">
+         <font>
+            <Font name="Arial Bold Italic" size="40.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>

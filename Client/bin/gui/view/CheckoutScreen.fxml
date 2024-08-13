@@ -8,58 +8,21 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="dashboard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="950.0" prefWidth="1200.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+
    <children>
       <Button fx:id="backBtn" layoutX="549.0" layoutY="885.0" mnemonicParsing="false" onAction="#pressBack" prefHeight="30.0" prefWidth="92.0" text="Back" />
-      <Label layoutX="159.0" layoutY="174.0" prefHeight="17.0" prefWidth="188.0" text="Delivery Type:">
+      <Label layoutX="185.0" layoutY="357.0" prefHeight="25.0" prefWidth="180.0" text="Delivery Information:">
          <font>
             <Font name="Bell MT" size="20.0" />
          </font>
       </Label>
-      <RadioButton fx:id="basicRadioBtn" layoutX="347.0" layoutY="247.0" mnemonicParsing="false" text="Basic" />
-      <RadioButton fx:id="SharedRadioBtn" layoutX="518.0" layoutY="247.0" mnemonicParsing="false" text="Shared" />
-      <RadioButton fx:id="RobotRadioBtn" layoutX="873.0" layoutY="247.0" mnemonicParsing="false" text="Robot" />
-      <Label layoutX="175.0" layoutY="88.0" prefHeight="25.0" prefWidth="118.0" text="Supply Time:">
-         <font>
-            <Font name="Bell MT" size="20.0" />
-         </font>
-      </Label>
-      <TextField fx:id="supplyTimeField" layoutX="376.0" layoutY="90.0" prefHeight="25.0" prefWidth="164.0" promptText="HH:mm:ss" />
-      <Label layoutX="159.0" layoutY="354.0" prefHeight="25.0" prefWidth="118.0" text="Delivery Info:">
-         <font>
-            <Font name="Bell MT" size="20.0" />
-         </font>
-      </Label>
-      <Label layoutX="277.0" layoutY="410.0" prefHeight="17.0" prefWidth="149.0" text="Recipient Name:" />
-      <Label layoutX="669.0" layoutY="410.0" prefHeight="17.0" prefWidth="118.0" text="Recipient Phone:" />
-      <Label layoutX="333.0" layoutY="459.0" prefHeight="17.0" prefWidth="31.0" text="City:" />
-      <TextField fx:id="reciverNameField" layoutX="376.0" layoutY="406.0" prefHeight="25.0" prefWidth="164.0" />
-      <TextField fx:id="reciverPhoneField" layoutX="774.0" layoutY="406.0" prefHeight="25.0" prefWidth="164.0" />
-      <TextField fx:id="addressField" layoutX="774.0" layoutY="455.0" prefHeight="25.0" prefWidth="164.0" />
-      <Label layoutX="705.0" layoutY="459.0" prefHeight="17.0" prefWidth="46.0" text="Address:" />
-      <Label layoutX="610.0" layoutY="86.0" prefHeight="30.0" prefWidth="118.0" text="Supply Date:">
-         <font>
-            <Font name="Bell MT" size="20.0" />
-         </font>
-      </Label>
-      <Label fx:id="DateLbl" layoutX="774.0" layoutY="35.0" prefHeight="25.0" prefWidth="164.0" />
       <Button fx:id="finishBtn" layoutX="484.0" layoutY="838.0" mnemonicParsing="false" onAction="#ContinueToSummary" prefHeight="30.0" prefWidth="229.0" text="Continue to order summary" />
-      <Label layoutX="486.0" layoutY="288.0" prefHeight="17.0" prefWidth="54.0" text="Amount:" />
-      <TextField fx:id="amountField" layoutX="540.0" layoutY="284.0" prefHeight="25.0" prefWidth="58.0" />
-      <RadioButton fx:id="takeAwayRadioBtn" layoutX="703.0" layoutY="247.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="84.0" text="Takeaway" />
-      <DatePicker fx:id="datePicker" layoutX="762.0" layoutY="87.0" prefHeight="30.0" prefWidth="188.0" />
-      <Label layoutX="128.0" layoutY="513.0" prefHeight="25.0" prefWidth="149.0" text="Payment Method:">
-         <font>
-            <Font name="Bell MT" size="20.0" />
-         </font>
-      </Label>
-      <RadioButton fx:id="WalletRadioBtn" layoutX="334.0" layoutY="530.0" mnemonicParsing="false" text="Refund Wallet" />
-      <Label layoutX="334.0" layoutY="558.0" prefHeight="17.0" prefWidth="84.0" text="Wallet Balance:" />
-      <Label fx:id="walletBalanceLbl" layoutX="426.0" layoutY="558.0" prefHeight="17.0" prefWidth="84.0" />
-      <VBox layoutX="486.0" layoutY="622.0" prefHeight="209.0" prefWidth="229.0" spacing="5.0">
+      <VBox layoutX="742.0" layoutY="591.0" prefHeight="209.0" prefWidth="229.0" spacing="5.0">
          <children>
             <Label prefHeight="19.0" prefWidth="79.0" text="Items Price:">
                <font>
@@ -105,17 +68,82 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
       </VBox>
-      <TextField fx:id="WalletField" layoutX="535.0" layoutY="526.0" prefHeight="25.0" prefWidth="69.0" />
-      <Label layoutX="458.0" layoutY="530.0" prefHeight="17.0" prefWidth="84.0" text="Use Amount:" />
-      <ChoiceBox fx:id="CityChoise" layoutX="376.0" layoutY="455.0" prefHeight="25.0" prefWidth="164.0" />
-      <Label layoutX="623.0" layoutY="288.0" prefHeight="17.0" prefWidth="92.0" text="Min: 1 | Max: 999" textFill="#cd0303" />
-      <Label fx:id="orderTypeLbl" layoutX="486.0" layoutY="589.0" prefHeight="33.0" prefWidth="229.0">
+      <Label fx:id="orderTypeLbl" layoutX="742.0" layoutY="558.0" prefHeight="33.0" prefWidth="229.0">
          <font>
             <Font name="System Bold Italic" size="13.0" />
          </font></Label>
-      <Label fx:id="preOrderStatusLbl" layoutX="95.0" layoutY="662.0" prefHeight="87.0" prefWidth="246.0" textFill="RED">
+      <Label fx:id="preOrderStatusLbl" layoutX="286.0" layoutY="731.0" prefHeight="87.0" prefWidth="246.0" textFill="RED">
          <font>
             <Font size="13.0" />
+         </font>
+      </Label>
+      <Pane layoutX="169.0" layoutY="382.0" prefHeight="167.0" prefWidth="829.0" style="-fx-background-color: #ffd8bf; -fx-background-radius: 20;">
+         <children>
+            <Label layoutX="130.0" layoutY="84.0" prefHeight="17.0" prefWidth="31.0" text="City:" />
+            <TextField fx:id="reciverNameField" layoutX="218.0" layoutY="41.0" prefHeight="25.0" prefWidth="164.0" />
+            <Label layoutX="82.0" layoutY="45.0" prefHeight="17.0" prefWidth="96.0" text="Recipient Name:" />
+            <ChoiceBox fx:id="CityChoise" layoutX="218.0" layoutY="80.0" prefHeight="25.0" prefWidth="164.0" />
+            <Label layoutX="471.0" layoutY="45.0" prefHeight="17.0" prefWidth="96.0" text="Recipient Phone:" />
+            <TextField fx:id="reciverPhoneField" layoutX="580.0" layoutY="41.0" prefHeight="25.0" prefWidth="164.0" />
+            <Label layoutX="519.0" layoutY="84.0" prefHeight="17.0" prefWidth="46.0" text="Address:" />
+            <TextField fx:id="addressField" layoutX="580.0" layoutY="80.0" prefHeight="25.0" prefWidth="164.0" />
+         </children>
+      </Pane>
+      <Pane layoutX="168.0" layoutY="135.0" prefHeight="202.0" prefWidth="829.0" style="-fx-background-color: #ffc19c; -fx-background-radius: 20;">
+         <children>
+            <RadioButton fx:id="takeAwayRadioBtn" layoutX="480.0" layoutY="86.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="84.0" text="Takeaway" />
+            <Label layoutX="50.0" layoutY="61.0" prefHeight="25.0" prefWidth="118.0" text="Supply Time:">
+               <font>
+                  <Font name="Bell MT" size="20.0" />
+               </font>
+            </Label>
+            <TextField fx:id="supplyTimeField" layoutX="188.0" layoutY="61.0" prefHeight="25.0" prefWidth="164.0" promptText="HH:mm:ss" />
+            <Label layoutX="50.0" layoutY="111.0" prefHeight="30.0" prefWidth="118.0" text="Supply Date:">
+               <font>
+                  <Font name="Bell MT" size="20.0" />
+               </font>
+            </Label>
+            <DatePicker fx:id="datePicker" layoutX="188.0" layoutY="111.0" prefHeight="30.0" prefWidth="188.0" />
+            <RadioButton fx:id="basicRadioBtn" layoutX="480.0" layoutY="56.0" mnemonicParsing="false" text="Basic" />
+            <Label layoutX="464.0" layoutY="22.0" prefHeight="25.0" prefWidth="134.0" text="Delivery Type:">
+               <font>
+                  <Font name="Bell MT" size="20.0" />
+               </font>
+            </Label>
+            <RadioButton fx:id="RobotRadioBtn" layoutX="480.0" layoutY="114.0" mnemonicParsing="false" text="Robot" />
+            <RadioButton fx:id="SharedRadioBtn" layoutX="480.0" layoutY="141.0" mnemonicParsing="false" text="Shared" />
+            <Label layoutX="500.0" layoutY="168.0" prefHeight="17.0" prefWidth="128.0" text="Number of Participants:" />
+            <TextField fx:id="amountField" layoutX="635.0" layoutY="164.0" prefHeight="25.0" prefWidth="58.0" />
+            <Label layoutX="704.0" layoutY="168.0" prefHeight="17.0" prefWidth="92.0" text="Min: 1 | Max: 999" textFill="#cd0303" />
+         </children>
+      </Pane>
+      <Label layoutX="185.0" layoutY="110.0" prefHeight="25.0" prefWidth="149.0" text="Supply Preference">
+         <font>
+            <Font name="Bell MT" size="20.0" />
+         </font>
+      </Label>
+      <Pane layoutX="212.0" layoutY="587.0" prefHeight="136.0" prefWidth="473.0" style="-fx-background-color: #fce6d7; -fx-background-radius: 20;">
+         <children>
+            <Label layoutX="14.0" layoutY="24.0" prefHeight="25.0" prefWidth="149.0" text="Payment Method:">
+               <font>
+                  <Font name="Bell MT" size="20.0" />
+               </font>
+            </Label>
+            <TextField fx:id="WalletField" layoutX="248.0" layoutY="67.0" prefHeight="25.0" prefWidth="69.0" />
+            <Label layoutX="161.0" layoutY="71.0" prefHeight="17.0" prefWidth="79.0" text="Use Amount:" />
+            <Label layoutX="149.0" layoutY="107.0" prefHeight="17.0" prefWidth="84.0" text="Wallet Balance:" />
+            <Label fx:id="walletBalanceLbl" layoutX="238.0" layoutY="107.0" prefHeight="17.0" prefWidth="79.0" />
+            <RadioButton fx:id="WalletRadioBtn" layoutX="41.0" layoutY="71.0" mnemonicParsing="false" text="Refund Wallet" />
+         </children>
+      </Pane>
+      <Label layoutX="228.0" layoutY="562.0" prefHeight="25.0" prefWidth="188.0" text="Payment Information:">
+         <font>
+            <Font name="Bell MT" size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="493.0" layoutY="40.0" prefHeight="47.0" prefWidth="215.0" text="Check-Out">
+         <font>
+            <Font name="Arial Bold Italic" size="40.0" />
          </font>
       </Label>
    </children>
