@@ -58,7 +58,6 @@ public class EmployeeQuery {
 
 							
 							int res = insertStm.executeUpdate();
-							System.out.println("second Query passed");
 							if(res>0) {
 								response.setMessage("The item was added successuflly!");
 								response.setResponse(ServerResponse.ADD_SUCCESS);
@@ -93,7 +92,6 @@ public class EmployeeQuery {
 		 * @return a {@link ServerResponseDataContainer} containing a map of item names to categories and a response message
 		 */
 		public ServerResponseDataContainer FetchItemsListInfo(Connection dbConn, int supplierID) {
-			System.out.println("stam");
 			String query = "SELECT Name, Category FROM items WHERE SupplierID = ?";
 			ServerResponseDataContainer response = new ServerResponseDataContainer();
 			Map<String,String> map = new HashMap<>();
@@ -102,10 +100,8 @@ public class EmployeeQuery {
 				stmt.setInt(1, supplierID);
 
 				try (ResultSet rs = stmt.executeQuery()) {
-					System.out.println("before while");
 					while(rs.next()) {
 						map.put(rs.getString("Name"), rs.getString("Category"));
-						System.out.println("in while");
 					}
 
 				} catch (SQLException e) {
@@ -114,7 +110,6 @@ public class EmployeeQuery {
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-			System.out.println(map);
 			response.setMessage(map);
 			response.setResponse(null);
 			return response;
@@ -128,7 +123,6 @@ public class EmployeeQuery {
 		 * @return a {@link ServerResponseDataContainer} containing a map of item names to {@link Item} instances and a response message
 		 */
 		public ServerResponseDataContainer FetchFullItemsListInfo(Connection dbConn, int supplierID) {
-			System.out.println("Thanks God... We are going to bring the items full list");
 			String query = "SELECT * FROM items WHERE SupplierID = ?;";
 			ServerResponseDataContainer response = new ServerResponseDataContainer();
 			Map<String,Item> itemsMap = new HashMap<>();

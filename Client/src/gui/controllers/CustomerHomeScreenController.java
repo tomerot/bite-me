@@ -1,5 +1,6 @@
 package gui.controllers;
 
+import client.ClientConsole;
 import client.ClientMainController;
 import entities.Ceo;
 import entities.Customer;
@@ -98,9 +99,18 @@ public class CustomerHomeScreenController {
 		Stage primaryStage = new Stage();
 		Pane root = loader.load(getClass().getResource("/gui/view/LoginScreen.fxml").openStream());
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(getClass().getResource("/gui/view/LoginScreen.css").toExternalForm());
 		primaryStage.setTitle("Login");
 		primaryStage.setScene(scene);
+		primaryStage.setOnCloseRequest(closeEvent ->{
+            try {
+        		ClientConsole.disconnectClientFromServer();
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+        });
+		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
 	

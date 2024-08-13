@@ -63,6 +63,7 @@ public class ClientConnectFormController {
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add(getClass().getResource("/gui/view/ClientConnectForm.css").toExternalForm());
 		primaryStage.setTitle("Client Connection");
+		primaryStage.setResizable(false);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
@@ -123,7 +124,6 @@ public class ClientConnectFormController {
 		Stage primaryStage = new Stage();
 		Pane root = loader.load(getClass().getResource("/gui/view/LoginScreen.fxml").openStream());
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(getClass().getResource("/gui/view/LoginScreen.css").toExternalForm());
 		primaryStage.setTitle("Main");
 		primaryStage.setScene(scene);
 		primaryStage.setOnCloseRequest(closeEvent ->{
@@ -136,6 +136,7 @@ public class ClientConnectFormController {
             }
 
         });
+		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
 
