@@ -7,33 +7,33 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="105.0" prefWidth="765.0" style="-fx-border-radius: 15; -fx-border-color: black;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="105.0" prefWidth="765.0" style="-fx-border-radius: 15; -fx-border-color: #b8b8b8; -fx-background-color: #e8e8e8;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView fx:id="itemImage" fitHeight="85.0" fitWidth="120.0" layoutX="11.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true" />
       <Line endX="100.0" layoutX="643.0" layoutY="45.0" startX="-502.0" stroke="#616161" strokeWidth="0.5" />
-      <VBox alignment="CENTER_LEFT" layoutX="141.0" layoutY="20.0" prefHeight="26.0" prefWidth="221.0">
+      <VBox alignment="CENTER_LEFT" layoutX="141.0" layoutY="20.0" prefHeight="26.0" prefWidth="522.0">
          <children>
-            <Label fx:id="itemName" text="ItemName">
+            <Label fx:id="itemName" prefHeight="25.0" prefWidth="521.0" text="ItemName" textFill="#e59400">
                <font>
-                  <Font size="16.0" />
+                  <Font name="System Bold" size="16.0" />
                </font>
             </Label>
          </children>
       </VBox>
       <VBox layoutX="141.0" layoutY="46.0" prefHeight="42.0" prefWidth="603.0">
          <children>
-            <Label fx:id="description" prefHeight="24.0" prefWidth="602.0" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor">
+            <Label fx:id="description" prefHeight="24.0" prefWidth="602.0" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" textFill="#656565">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
          </children>
       </VBox>
-      <VBox alignment="CENTER_RIGHT" layoutX="522.0" layoutY="20.0" prefHeight="26.0" prefWidth="221.0">
+      <VBox alignment="CENTER_RIGHT" layoutX="669.0" layoutY="17.0" prefHeight="33.0" prefWidth="74.0">
          <children>
-            <Label fx:id="price" alignment="CENTER_RIGHT" text="99.99₪">
+            <Label fx:id="price" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="59.0" text="99.99₪" textFill="#9a0000">
                <font>
-                  <Font size="16.0" />
+                  <Font name="System Bold" size="16.0" />
                </font>
             </Label>
          </children>

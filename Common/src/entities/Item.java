@@ -16,6 +16,7 @@ public class Item implements Serializable{
     private boolean customSize;
     private boolean customDonenessDegree;
     private boolean customRestrictions;
+    private String imageURL;
     
     public Item(int itemID,int supplierID ,String name, Category type, String description, boolean customSize, 
     		    boolean customDonenessDegree, boolean customRestrictions, float price) {
@@ -66,5 +67,8 @@ public class Item implements Serializable{
     //customRestrictions getter and setter
     public boolean getCustomRestrictions() { return customRestrictions; }
     public void setCustomRestrictions(boolean customRestrictions) { this.customRestrictions = customRestrictions; }
+    
+    public void setImageURL(String imageURL) { this.imageURL = imageURL; }
+    public String getImageURL() { return imageURL; }
     
 }

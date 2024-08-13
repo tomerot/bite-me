@@ -5,16 +5,21 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="restaurantCard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="265.0" prefWidth="350.0" style="-fx-border-color: black; -fx-border-radius: 20;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="restaurantCard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="256.0" prefWidth="338.0" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #b8b8b8; -fx-background-color: #e8e8e8;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox alignment="CENTER" prefHeight="255.0" prefWidth="350.0">
+      <VBox alignment="CENTER" prefHeight="255.0" prefWidth="338.0">
          <children>
-            <ImageView fx:id="restaurantImage" fitHeight="188.0" fitWidth="336.0" pickOnBounds="true" smooth="false" />
-            <VBox alignment="CENTER" prefHeight="36.0" prefWidth="350.0">
+            <ImageView fx:id="restaurantImage" fitHeight="173.0" fitWidth="309.0" pickOnBounds="true" smooth="false" />
+            <VBox alignment="CENTER" prefHeight="36.0" prefWidth="322.0">
                <children>
                   <Line endX="198.2928924560547" startX="-100.0" stroke="#a8a8a8" />
-                  <Label fx:id="restaurantName" alignment="CENTER" contentDisplay="CENTER" prefHeight="28.0" prefWidth="406.0" text="Restaurant Name" />
+                  <Label fx:id="restaurantName" alignment="CENTER" contentDisplay="CENTER" prefHeight="28.0" prefWidth="337.0" text="Restaurant Name" textFill="#e59400">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
                </children>
             </VBox>
             <VBox alignment="CENTER" prefHeight="20.0" prefWidth="350.0">
