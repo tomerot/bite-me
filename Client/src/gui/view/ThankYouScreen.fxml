@@ -6,24 +6,29 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="dashboard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="dashboard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="950.0" prefWidth="1200.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label layoutX="279.0" layoutY="75.0" prefHeight="94.0" prefWidth="393.0" text="Thank You For Your Order!">
+      <Label layoutX="332.0" layoutY="29.0" prefHeight="94.0" prefWidth="537.0" text="Thank You For Your Order!">
          <font>
-            <Font name="System Bold Italic" size="31.0" />
+            <Font name="Arial Bold Italic" size="40.0" />
          </font>
       </Label>
-      <Label layoutX="216.0" layoutY="169.0" prefHeight="71.0" prefWidth="489.0" text="Your order payment is confirmed, and moved on to the supplier">
+      <Label layoutX="356.0" layoutY="169.0" prefHeight="36.0" prefWidth="489.0" text="Your order payment is confirmed, and moved on to the supplier">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <ImageView fitHeight="417.0" fitWidth="462.0" layoutX="252.0" layoutY="309.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="421.0" fitWidth="477.0" layoutX="404.0" layoutY="382.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../resource/logo.png" />
+            <Image url="@../resource/foodIsReady.png" />
          </image>
       </ImageView>
       <Label fx:id="orderIDLbl" layoutX="392.0" layoutY="240.0" prefHeight="71.0" prefWidth="138.0">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="452.0" layoutY="215.0" prefHeight="36.0" prefWidth="296.0" text="Track your orders in 'My Orders' page">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
