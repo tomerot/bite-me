@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane fx:id="playButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="548.0" prefWidth="859.0" stylesheets="@ServerPort.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.ServerPortController">
+<Pane fx:id="playButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="548.0" prefWidth="859.0" stylesheets="@ServerPort.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.ServerPortController">
    <children>
       <TextField fx:id="ipField" layoutX="300.0" layoutY="68.0" text="localhost" />
       <Text layoutX="59.0" layoutY="85.0" strokeType="OUTSIDE" strokeWidth="0.0" text="IP" wrappingWidth="123.9140625" />
@@ -36,6 +36,6 @@
          </font>
       </Label>
       <Button fx:id="importCustomerBtn" layoutX="287.0" layoutY="346.0" mnemonicParsing="false" onAction="#importCustomerSimulation" prefHeight="25.0" prefWidth="175.0" text="Import Customer Information" visible="false" />
-      <TextField fx:id="csvFilePath" layoutX="474.0" layoutY="346.0" text="C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/" prefHeight="26.0" prefWidth="186.0" visible="false" />
+      <TextField fx:id="csvFilePath" layoutX="474.0" layoutY="346.0" prefHeight="26.0" prefWidth="186.0" text="C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\" visible="false" />
    </children>
 </Pane>

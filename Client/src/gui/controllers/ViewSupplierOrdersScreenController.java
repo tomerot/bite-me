@@ -49,6 +49,8 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 	private HBox wholeScreen;
 	private Supplier supplier;
 	private Order selectedOrder;
+	private Order orderToSendMsgApproved;
+	private Order orderToSendMsgReady;
 	
 	
 	@FXML
@@ -259,7 +261,14 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 			resultMessage.setText("No item selected.");	
         	return;
 		}
-
+		
+		for (Order order : awaitingOrdersMap.keySet()) {
+	        if(order.getOrderID() == selectedOrderID) {
+	        	orderToSendMsgApproved = order;
+	            break;
+	        }
+	    }
+		
 		 // Update the database status to 'Approved' and set the approval time
 	    int[] orderInfo = {selectedOrderID, 0 , 0}; // 0 indicates transition from Awaiting to Approved
 		ClientMainController.requestSupplierUpdateOrderStatus(orderInfo);
@@ -293,8 +302,9 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 			resultMessage.setStyle("-fx-text-fill: red;");
 		}
 		
-		String customerIDString = selectedOrder.getCustomerID();
-	    String msg = "Email: " + selectedOrder.getRecipientEmail() + "\nPhone: " + selectedOrder.getRecipientPhone() + "\norder was approved!";
+		// 
+		String customerIDString = orderToSendMsgApproved.getCustomerID();
+	    String msg = "Email: " + orderToSendMsgApproved.getRecipientEmail() + "\nPhone: " + orderToSendMsgApproved.getRecipientPhone() + "\norder was approved!";
 	    sendOrderStatusUpdate(customerIDString, msg, "Order Approved Simulation", "Order Approved");
 	}
 	
@@ -337,6 +347,14 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 			return;
 		}
 
+
+		for (Order order : approvedOrdersMap.keySet()) {
+	        if(order.getOrderID() == selectedOrderID) {
+	        	orderToSendMsgReady = order;
+	            break;
+	        }
+	    }
+		
 		// Update the database status to 'Ready'.
 		int[] orderInfo = { selectedOrderID, 1, 0 }; // 1 indicates transition from 'Approved' to 'Ready'
 
@@ -375,6 +393,7 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 			// let's remove the order from the approvedOrders map and list view.
 			for (Order order : approvedOrdersMap.keySet()) { // iterate on the keys of the map
 				if (order.getOrderID() == selectedOrderID) {
+					
 					// update map
 					approvedOrdersMap.remove(order);
 
@@ -391,13 +410,13 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 			resultMessage.setStyle("-fx-text-fill: red;");
 		}
 		
-		String customerIDString = selectedOrder.getCustomerID();
+		String customerIDString = orderToSendMsgReady.getCustomerID();
 		if (isTakeAway) {
-			msg = "Email: " + selectedOrder.getRecipientEmail() + "\nPhone: " + selectedOrder.getRecipientPhone()
+			msg = "Email: " + orderToSendMsgReady.getRecipientEmail() + "\nPhone: " + orderToSendMsgReady.getRecipientPhone()
             + "\nYour order is on the way!";
 		}
 		else {
-		    msg = "Email: " + selectedOrder.getRecipientEmail() + "\nPhone: " + selectedOrder.getRecipientPhone()
+		    msg = "Email: " + orderToSendMsgReady.getRecipientEmail() + "\nPhone: " + orderToSendMsgReady.getRecipientPhone()
             + "\nYour order is on the way!\nEstimated arrival time: " + timeInput;
 		}
 	    sendOrderStatusUpdate(customerIDString, msg, "Order Ready Simulation", "Order is Ready and on the way");
