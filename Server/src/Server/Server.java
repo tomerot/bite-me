@@ -301,10 +301,10 @@ public class Server extends AbstractServer {
 	public void sendToSpecificClient(int customerID, String msg) {
 	    ConnectionToClient client = clientMap.get(customerID);
 	    ServerResponseDataContainer response = new ServerResponseDataContainer();
-	    response.setMessage(msg);
-	    response.setResponse(ServerResponse.MSG_TO_DISPLAY_FOR_CUSTOEMR);
 	    if (client != null && client.isAlive()) {
 	        try {
+	        	response.setMessage(msg);
+	    	    response.setResponse(ServerResponse.MSG_TO_DISPLAY_FOR_CUSTOEMR);
 	            client.sendToClient(response);
 	        } catch (IOException e) {
 	            System.out.println("Error sending message to client: " + e.getMessage());

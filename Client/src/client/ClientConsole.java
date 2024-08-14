@@ -1,6 +1,7 @@
 package client;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * This class manages the client's connection to the server using the OSCF framework.
@@ -102,7 +103,7 @@ public class ClientConsole extends AbstractClient {
 		if(ServerResponse.MSG_TO_DISPLAY_FOR_CUSTOEMR.equals(response.getResponse())){
 
 			// In the client code, inside handleMessageFromServer
-			System.out.println("Message received by client: " + this.getHost());
+        	System.out.println("Message received Client host: " + this.getHost());
 			
 			Platform.runLater(() -> {
 	            Alert alert = new Alert(Alert.AlertType.INFORMATION);
