@@ -271,6 +271,7 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 			for (Order order : awaitingOrdersMap.keySet()) { //iterate on the keys of the map
 				if(order.getOrderID() == selectedOrderID) {
 
+					selectedOrder = order;
 					order.setApprovalTime(response.getMessage().toString());
 					order.setStatus("Approved");
 					
@@ -293,6 +294,7 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 			resultMessage.setStyle("-fx-text-fill: red;");
 		}
 		
+		// 
 		String customerIDString = selectedOrder.getCustomerID();
 	    String msg = "Email: " + selectedOrder.getRecipientEmail() + "\nPhone: " + selectedOrder.getRecipientPhone() + "\norder was approved!";
 	    sendOrderStatusUpdate(customerIDString, msg, "Order Approved Simulation", "Order Approved");
@@ -375,6 +377,8 @@ public class ViewSupplierOrdersScreenController implements Initializable{
 			// let's remove the order from the approvedOrders map and list view.
 			for (Order order : approvedOrdersMap.keySet()) { // iterate on the keys of the map
 				if (order.getOrderID() == selectedOrderID) {
+					
+					selectedOrder = order;
 					// update map
 					approvedOrdersMap.remove(order);
 

@@ -100,6 +100,10 @@ public class ClientConsole extends AbstractClient {
 		
 		ServerResponseDataContainer response = ClientConsole.responseFromServer;
 		if(ServerResponse.MSG_TO_DISPLAY_FOR_CUSTOEMR.equals(response.getResponse())){
+
+			// In the client code, inside handleMessageFromServer
+			System.out.println("Message received by client: " + this.getHost());
+			
 			Platform.runLater(() -> {
 	            Alert alert = new Alert(Alert.AlertType.INFORMATION);
 	            alert.setTitle("Order Status Notification Simulation");
