@@ -136,7 +136,7 @@ public class SupplierQuery {
      */
     public ServerResponseDataContainer RefreshAwaitingOrders(Connection dbConn, int supplierID) {
         ServerResponseDataContainer response = new ServerResponseDataContainer();
-        String query = "SELECT o.*, c.Email FROM orders AS o JOIN customers AS c ON o.CustomerID = c.ID WHERE o.SupplierID = ? AND o.Status ='Awaiting';";
+        String query = "SELECT o.*, c.Email, c.Phone FROM orders AS o JOIN customers AS c ON o.CustomerID = c.ID WHERE o.SupplierID = ? AND o.Status ='Awaiting';";
         Map<Order, ArrayList<ItemInOrder>> ordersMap = new HashMap<>();
 
         try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
