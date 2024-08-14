@@ -122,11 +122,12 @@ public class OrderSummaryScreenController {
 		phoneLbl.setText(order.getRecipientPhone());
 		cityLbl.setText(order.getCity());
 		addressLbl.setText(order.getAddress());
-		supplyMethodLbl.setText(String.format("%s, participents: %d",order.getSupplyOption(),peopleInOrder));
+		supplyMethodLbl.setText(String.format("%s, participants: %d",order.getSupplyOption(),peopleInOrder));
 		requestedDateLbl.setText(order.getRequestedDate());
 		requestedTimeLbl.setText(order.getRequestedTime());
 		orderTypeLbl.setText(order.getType().toString());
-		priceInfoLbl.setText(String.format("items: %.2f₪, delivery: %.2f₪, ,\n%.2f₪ is gonna be used from wallet",itemsPrice,deliveryPrice,walletUsedAmount));
+		priceInfoLbl.setText(String.format("items: %.2f₪, delivery: %.2f₪, \n%.2f₪ is going to be charged from wallet",
+				itemsPrice,deliveryPrice,walletUsedAmount));
 		totalPriceLbl.setText(String.format("%.2f₪", order.getTotalPrice()));
 		
 		if ("PreOrder".equals(order.getType().toString())) {
@@ -140,20 +141,12 @@ public class OrderSummaryScreenController {
 		int row = 0;
 		for(ItemInOrder item : cart.keySet()) {
 			AnchorPane card;
-			if(row % 2 == 0) 
-				card = createCartItemCard(item, Parity.EVEN);
-			else
-				card = createCartItemCard(item, Parity.ODD);
+			card = createCartItemCard(item);
 			itemsGrid.add(card, 0, row);
 			row++;
 		}
 		
 		itemsScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-	}
-	
-	private enum Parity{
-		ODD,
-		EVEN;
 	}
 	
 	
@@ -164,17 +157,13 @@ public class OrderSummaryScreenController {
 	 * @param cardPlaceParity The parity of the card placement (even or odd).
 	 * @return The populated AnchorPane representing the cart item card.
 	 */
-	private AnchorPane createCartItemCard(ItemInOrder item, Parity cardPlaceParity) {
+	private AnchorPane createCartItemCard(ItemInOrder item) {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/view/CartItemCard.fxml"));
 		AnchorPane card = null;
         try {
             card = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        
-        if(cardPlaceParity == Parity.ODD) {
-        	/*NEED TO CHANGE BACKGROUND COLOR*/
         }
         
         //Labels
@@ -184,8 +173,9 @@ public class OrderSummaryScreenController {
         Label restrictions = (Label) card.lookup("#restrictions");
         
         //Labels adjustments
-        nameAndPrice.setText(item.getName() + " (" + item.getPrice() + "₪)");
-        qty.setText("Qty: 1");
+        
+        nameAndPrice.setText(String.format("%s (%.2f₪)", item.getName(), item.getPrice()));
+        qty.setText(String.format("Qty: %d", cart.get(item)));
         if(item.getCustomSize() && item.getCustomDonenessDegree())
         	choices.setText("Size: " + item.getSize().charAt(0) + ", " + "Doneness: " + item.getDonenessDegree());
         else if(item.getCustomSize()) 

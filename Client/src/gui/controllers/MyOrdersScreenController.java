@@ -107,7 +107,7 @@ public class MyOrdersScreenController {
             createStyledLabel("Recipient info: " + order.getRecipient() + ", " + order.getRecipientPhone()),
             createStyledLabel("Supply Method: " + order.getSupplyOption()),
             createStyledLabel("Status: " + order.getStatus(), order.getStatus()),
-            createStyledLabel("Total Price: $" + order.getTotalPrice())
+            createStyledLabel("Total Price: ₪" + order.getTotalPrice())
         );
 
         // we only add the approve button if the order status is Ready or Approved
