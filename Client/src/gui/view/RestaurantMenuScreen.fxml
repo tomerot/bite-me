@@ -57,7 +57,7 @@
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font></Button>
-                  <Label layoutX="164.0" layoutY="14.0" text="Total Amt:" textFill="WHITE">
+                  <Label layoutX="152.0" layoutY="14.0" text="Total Amount:" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
@@ -78,7 +78,7 @@
                      </font>
                   </Label>
                   <Line endX="167.0" layoutX="92.0" layoutY="164.0" startX="-93.0" stroke="WHITE" />
-                  <Button fx:id="addToCartBtn" prefWidth="78" prefHeight="25" disable="true" layoutX="89.0" layoutY="414.0" mnemonicParsing="false" text="Add to Cart" />
+                  <Button fx:id="addToCartBtn" disable="true" layoutX="89.0" layoutY="414.0" mnemonicParsing="false" prefHeight="25" prefWidth="78" text="Add to Cart" />
                   <Line endX="167.0" layoutX="92.0" layoutY="401.0" startX="-93.0" stroke="WHITE" />
                   <GridPane layoutX="-1.0" layoutY="165.0" prefHeight="235.0" prefWidth="260.0">
                     <columnConstraints>

@@ -94,12 +94,12 @@
             <Font name="Arial Bold Italic" size="18.0" />
          </font>
       </Label>
-      <Label layoutX="229.0" layoutY="580.0" prefHeight="40.0" prefWidth="164.0" text="Price Information:">
+      <Label layoutX="229.0" layoutY="581.0" prefHeight="40.0" prefWidth="164.0" text="Price Information:">
          <font>
             <Font name="Arial Bold Italic" size="18.0" />
          </font>
       </Label>
-      <Label fx:id="priceInfoLbl" layoutX="405.0" layoutY="580.0" prefHeight="40.0" prefWidth="421.0">
+      <Label fx:id="priceInfoLbl" layoutX="405.0" layoutY="576.0" prefHeight="52.0" prefWidth="421.0">
          <font>
             <Font name="Arial Bold Italic" size="18.0" />
          </font>
@@ -109,7 +109,7 @@
             <Font name="Arial Bold Italic" size="18.0" />
          </font>
       </Label>
-      <Label fx:id="totalPriceLbl" layoutX="404.0" layoutY="629.0" prefHeight="40.0" prefWidth="421.0">
+      <Label fx:id="totalPriceLbl" layoutX="404.0" layoutY="631.0" prefHeight="40.0" prefWidth="421.0">
          <font>
             <Font name="Arial Bold Italic" size="18.0" />
          </font>
